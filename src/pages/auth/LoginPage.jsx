@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Shield, Lock, Globe } from "lucide-react";
+import { Shield, Lock, Globe, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { authService } from "../../services/authService";
+import { toast } from 'react-toastify';
 
 // Role definitions
 const ROLES = {
@@ -18,22 +20,56 @@ const ROLES = {
   IT_ADMIN: "IT/System Admin",
 };
 
-const Login = () => {
-  const [authEmail, setAuthEmail] = useState("");
-  const [authPassword, setAuthPassword] = useState("");
+const LoginPage = () => {
+  const [authEmail, setAuthEmail] = useState("admin@krimson.com");
+  const [authPassword, setAuthPassword] = useState("admin");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   // Initialize the navigation hook
   const navigate = useNavigate();
+
+  const handleRealLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      if (!authEmail || !authPassword) {
+        throw new Error("Please enter both email and password");
+      }
+
+      await authService.login(authEmail, authPassword);
+
+      // Redirect to Welcome Landing
+      toast.success("Welcome back! Login successful.");
+      setTimeout(() => navigate("/welcome"), 500); // Small delay for toast visibility
+    } catch (err) {
+      console.error(err);
+      const msg = err.message || "Login failed";
+      setError(msg);
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogin = (role) => {
     console.log(`Attempting login as: ${role}`);
 
     // Check if the selected role is Administrator
     if (role === ROLES.ADMIN) {
-      navigate("/dashboard/admin");
+      // For simulation purposes, simpler bypass, but ideally we force real login
+      // navigate("/dashboard/admin");
+      toast.info("Please use the login form with valid credentials for API access.");
+    } else if (role === ROLES.STUDENT) {
+      navigate("/dashboard/student");
+    } else if (role === ROLES.TEACHER) {
+      navigate("/dashboard/teacherdashboard");
     } else {
+
       // Placeholder for other roles
-      alert(
+      toast.warning(
         `The ${role} dashboard is coming soon! Please select 'Administrator' to see the demo.`
       );
     }
@@ -94,8 +130,14 @@ const Login = () => {
             Access the Singapore Campus Portal. Authentication via SSO.
           </p>
 
-          {/* Simulation of SSO Login Form */}
-          <div className="space-y-4 mb-6 sm:mb-8">
+          {/* Real Login Form */}
+          <form onSubmit={handleRealLogin} className="space-y-4 mb-6 sm:mb-8">
+            {error && (
+              <div className="p-3 bg-rose-100 text-rose-700 rounded-xl text-sm flex items-center gap-2">
+                <AlertCircle className="h-4 w-4" />
+                {error}
+              </div>
+            )}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
                 Email / User ID
@@ -105,7 +147,7 @@ const Login = () => {
                 value={authEmail}
                 onChange={(e) => setAuthEmail(e.target.value)}
                 className="w-full p-3 border border-slate-200 bg-white/50 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm sm:text-base"
-                placeholder="e.g. aarav.p@krimson.edu"
+                placeholder="e.g. admin@krimson.edu"
               />
             </div>
             <div>
@@ -120,11 +162,18 @@ const Login = () => {
                 placeholder="••••••••"
               />
             </div>
-          </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all disabled:opacity-50"
+            >
+              {loading ? "Authenticating..." : "Secure Login"}
+            </button>
+          </form>
 
           {/* Role Selection Grid */}
           <p className="text-xs text-slate-400 mb-3 sm:mb-4 uppercase font-bold tracking-wider">
-            Select Role to Simulate Access:
+            Simulate Access (Demo Mode):
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 max-h-[250px] sm:max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
@@ -147,4 +196,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
