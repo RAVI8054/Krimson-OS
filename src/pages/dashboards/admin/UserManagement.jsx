@@ -143,15 +143,21 @@ const UserManagement = () => {
               onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
             >
               {[
-                "Student",
-                "Teacher",
-                "Parent",
-                "Administrator",
-                "Principal",
-                "Finance Officer",
+                { label: "Student", value: "Student" },
+                { label: "Teacher", value: "Teacher" },
+                { label: "Parent", value: "Parent" },
+                { label: "Administrator", value: "Administrator" },
+                { label: "Principal", value: "Principal" },
+                { label: "Finance Officer", value: "Finance" },
+                { label: "Registrar", value: "Registrar" },
+                { label: "Academic Coordinator", value: "Academic Coordinator" },
+                { label: "Counselor", value: "Counselor" },
+                { label: "Librarian", value: "Librarian" },
+                { label: "Management", value: "Management" },
+                { label: "IT/System Admin", value: "IT/System Admin" },
               ].map((r) => (
-                <option key={r} value={r}>
-                  {r}
+                <option key={r.value} value={r.value}>
+                  {r.label}
                 </option>
               ))}
             </select>
@@ -223,12 +229,15 @@ const UserManagement = () => {
                     </td>
                     <td className="p-4 text-sm text-slate-600">
                       <span
-                        className={`px-2 py-1 rounded text-xs font-bold ${user.role === "Administrator"
-                          ? "bg-purple-100 text-purple-700"
-                          : user.role === "Teacher"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-blue-100 text-blue-700"
-                          }`}
+                        className={`px-2 py-1 rounded text-xs font-bold ${
+                          user.role === "Administrator" ? "bg-purple-100 text-purple-700" :
+                          user.role === "Principal" ? "bg-rose-100 text-rose-700" :
+                          user.role === "Teacher" ? "bg-amber-100 text-amber-700" :
+                          user.role === "Student" ? "bg-blue-100 text-blue-700" :
+                          user.role === "Finance" ? "bg-emerald-100 text-emerald-700" :
+                          user.role === "IT/System Admin" ? "bg-slate-800 text-slate-200" :
+                          "bg-slate-100 text-slate-600"
+                        }`}
                       >
                         {user.role}
                       </span>
