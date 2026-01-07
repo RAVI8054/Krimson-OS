@@ -14,6 +14,7 @@ import {
 import { authService } from "../../services/authService";
 import RoleSwitcher from "../../components/common/RoleSwitcher";
 import { toast } from 'react-toastify';
+import { getDashboardPath } from "../../utils/roleNavigation";
 
 const WelcomeLanding = () => {
     const navigate = useNavigate();
@@ -44,15 +45,8 @@ const WelcomeLanding = () => {
 
     if (!user) return null;
 
-    // Determine dashboard link based on role
-    const getDashboardLink = (role) => {
-        switch (role) {
-            case "Administrator": return "/dashboard/admin";
-            case "Teacher": return "/dashboard/teacherdashboard";
-            case "Student": return "/dashboard/student";
-            default: return "/dashboard/student"; // Fallback
-        }
-    };
+    // Use shared utility for dashboard link
+    const dashboardPath = getDashboardPath(user.role);
 
     // Mock Announcements
     const announcements = [
@@ -125,7 +119,7 @@ const WelcomeLanding = () => {
 
                 {/* Quick Actions Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                    <Link to={getDashboardLink(user.role)} className="group p-6 bg-white rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-blue-900/5 hover:border-blue-100 transition-all">
+                    <Link to={dashboardPath} className="group p-6 bg-white rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-blue-900/5 hover:border-blue-100 transition-all">
                         <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                             <LayoutDashboard className="h-6 w-6" />
                         </div>

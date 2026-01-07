@@ -1,103 +1,115 @@
-import React from 'react';
-import {
-    LayoutDashboard, UserPlus, Users, Settings, Briefcase,
-    DollarSign, CheckSquare, Bell, Lock, FileText,
-    Shield, Scan, LogOut
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { 
+  LayoutDashboard, Users, UserPlus, Settings, Briefcase, 
+  DollarSign, CheckSquare, Bell, FileText, Activity, 
+  Server, BarChart, LifeBuoy, Shield, Database, LogOut,
+  Building, Menu 
 } from 'lucide-react';
 
 export const ADMIN_MENU_ITEMS = [
-    { id: "ad1", title: "Control Dashboard", icon: LayoutDashboard },
-    { id: "ad2", title: "Admissions Console", icon: UserPlus },
-    { id: "ad3", title: "User Management", icon: Users },
-    { id: "ad4", title: "Class Config", icon: Settings },
-    { id: "ad5", title: "HR Admin", icon: Briefcase },
-    { id: "ad6", title: "Finance Control", icon: DollarSign },
-    { id: "ad7", title: "Attendance Oversight", icon: CheckSquare },
-    { id: "ad8", title: "Notification Center", icon: Bell },
-    { id: "ad9", title: "Compliance Vault", icon: Lock },
-    { id: "ad10", title: "Audit Trail", icon: FileText },
-
+  { id: 'ad1', name: "Dashboard", path: "/dashboard/admin/", icon: <LayoutDashboard size={20} />, title: "Admin Overview" },
+  { id: 'ad2', name: "Admissions", path: "/dashboard/admin/admissions", icon: <UserPlus size={20} />, title: "Admissions Console" },
+  { id: 'ad3', name: "Users", path: "/dashboard/admin/users", icon: <Users size={20} />, title: "User Management" },
+  { id: 'ad4', name: "Classes", path: "/dashboard/admin/classes", icon: <Building size={20} />, title: "Class Configuration" },
+  { id: 'ad5', name: "HR & Staff", path: "/dashboard/admin/hr", icon: <Briefcase size={20} />, title: "HR Administration" },
+  { id: 'ad6', name: "Finance", path: "/dashboard/admin/finance", icon: <DollarSign size={20} />, title: "Finance Control" },
+  { id: 'ad7', name: "Attendance", path: "/dashboard/admin/attendance", icon: <CheckSquare size={20} />, title: "Attendance Oversight" },
+  { id: 'ad8', name: "Notifications", path: "/dashboard/admin/notifications", icon: <Bell size={20} />, title: "Communication Center" },
+  { id: 'ad9', name: "Compliance", path: "/dashboard/admin/compliance", icon: <FileText size={20} />, title: "Compliance Vault" },
+  { id: 'ad10', name: "Audit Log", path: "/dashboard/admin/audit", icon: <Activity size={20} />, title: "System Audit Trail" },
+  { id: 'ad11', name: "Infrastructure", path: "/dashboard/admin/infrastructure", icon: <Server size={20} />, title: "Asset Management" },
+  { id: 'ad12', name: "Backups", path: "/dashboard/admin/backup", icon: <Database size={20} />, title: "Data Recovery" },
+  { id: 'ad13', name: "Analytics", path: "/dashboard/admin/analytics", icon: <BarChart size={20} />, title: "Analytics Engine" },
+  { id: 'ad14', name: "Settings", path: "/dashboard/admin/settings", icon: <Settings size={20} />, title: "System Configuration" },
+  { id: 'ad15', name: "Helpdesk", path: "/dashboard/admin/helpdesk", icon: <LifeBuoy size={20} />, title: "Support Tickets" },
 ];
 
-const Sidebar = ({ activeScreenId, setActiveScreenId, isMobileMenuOpen, setIsMobileMenuOpen, onLogout }) => {
-    return (
-        <aside
-            className={`fixed inset-y-4 left-4 z-50 w-[280px] flex flex-col overflow-hidden rounded-[2.5rem] shadow-2xl shadow-blue-900/10 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-[120%]"
-                } md:translate-x-0`}
-        >
-            <div className="absolute inset-0 bg-gradient-to-b from-cyan-300 via-blue-300 to-pink-300"></div>
+const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen, onLogout }) => {
+  const navigate = useNavigate();
 
-            <div className="relative z-10 flex-1 flex flex-col p-6 overflow-hidden">
-                <div className="flex items-center gap-4 mb-8 shrink-0">
-                    <div className="w-10 h-10 bg-white/40 backdrop-blur rounded-xl flex items-center justify-center shadow-sm">
-                        <Shield className="h-6 w-6 text-slate-800" />
-                    </div>
-                    <div>
-                        <h1 className="font-bold text-xl tracking-tight leading-none text-slate-800">
-                            Krimson OS
-                        </h1>
-                        <p className="text-xs text-slate-700 mt-1 font-medium">
-                            Singapore
-                        </p>
-                    </div>
-                </div>
+  const handleLogout = () => {
+    if (onLogout) {
+       onLogout();
+    } else {
+       navigate('/login');
+    }
+  };
 
-                <nav className="flex-1 overflow-y-auto space-y-1 custom-scrollbar py-2 min-h-0 pr-1">
-                    {ADMIN_MENU_ITEMS.map((item) => {
-                        const Icon = item.icon;
-                        const isActive = activeScreenId === item.id;
-                        return (
-                            <button
-                                key={item.id}
-                                onClick={() => {
-                                    setActiveScreenId(item.id);
-                                    if (setIsMobileMenuOpen) setIsMobileMenuOpen(false);
-                                }}
-                                className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-200 group relative ${isActive
-                                    ? "bg-white/40 backdrop-blur text-slate-900 font-bold shadow-sm"
-                                    : "text-slate-700 hover:text-slate-900 hover:bg-white/20"
-                                    }`}
-                            >
-                                <Icon
-                                    className={`h-5 w-5 ${isActive ? "text-slate-900" : "group-hover:text-slate-900"
-                                        }`}
-                                />
-                                <span className="tracking-wide text-sm truncate">
-                                    {item.title}
-                                </span>
-                                {isActive && (
-                                    <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-slate-800"></div>
-                                )}
-                            </button>
-                        );
-                    })}
-                </nav>
+  return (
+    <>
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsMobileMenuOpen && setIsMobileMenuOpen(false)}
+        />
+      )}
 
-                <div className="mt-auto pt-4 border-t border-white/30 shrink-0">
-                    <div className="bg-white/30 backdrop-blur rounded-2xl p-3 flex items-center gap-3 border border-white/20 shadow-sm">
-                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-600 font-bold text-xs shadow-sm">
-                            A
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold text-slate-800 truncate">
-                                Administrator
-                            </p>
-                            <div className="flex items-center gap-1 text-[10px] text-slate-700 font-medium">
-                                <Scan className="h-2 w-2" />
-                                <span>Verified</span>
-                            </div>
-                        </div>
-                        <button
-                            onClick={onLogout}
-                            className="text-slate-600 hover:text-white transition-colors"
-                        >
-                            <LogOut className="h-4 w-4" />
-                        </button>
-                    </div>
-                </div>
+      {/* Floating Sidebar Container */}
+      <div className={`
+        fixed inset-y-0 left-0 z-50 w-72 p-4 flex flex-col transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
+         {/* Gradient Box */}
+         <div className="h-full w-full rounded-3xl bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 p-4 flex flex-col text-white shadow-2xl relative overflow-hidden">
+            
+            {/* Decorative Elements */}
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+            <div className="absolute bottom-10 -left-10 w-40 h-40 bg-purple-400 opacity-20 rounded-full blur-2xl"></div>
+
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-6 pl-2 relative z-10">
+               <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shadow-md">
+                  <Shield size={24} className="text-white" />
+               </div>
+               <div>
+                  <h1 className="font-bold text-lg tracking-wide">Krimson OS</h1>
+                  <p className="text-xs text-white/80">Admin Console</p>
+               </div>
             </div>
-        </aside>
-    );
+
+            {/* Navigation */}
+            <div className="flex-1 overflow-y-auto space-y-1 relative z-10 custom-scrollbar pr-1">
+               {ADMIN_MENU_ITEMS.map((item) => (
+                  <NavLink
+                     key={item.id}
+                     to={item.path}
+                     end={item.path === '/dashboard/admin/'}
+                     onClick={() => setIsMobileMenuOpen && setIsMobileMenuOpen(false)}
+                     className={({ isActive }) => `
+                        flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
+                        ${isActive 
+                           ? "bg-white text-blue-600 shadow-lg font-bold" 
+                           : "text-white/90 hover:bg-white/10 hover:translate-x-1"
+                        }
+                     `}
+                  >
+                     <span className={({ isActive }) => isActive ? "text-blue-500" : "text-white"}>{item.icon}</span>
+                     <span className="text-xs font-medium">{item.name}</span>
+                  </NavLink>
+               ))}
+            </div>
+
+            {/* Footer */}
+            <div className="mt-4 pt-4 border-t border-white/20 relative z-10">
+               <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors">
+                  <div className="flex items-center gap-3 flex-1">
+                     <div className="w-8 h-8 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold text-xs shadow-sm">A</div>
+                     <div className="flex-1">
+                        <p className="text-sm font-semibold">Administrator</p>
+                        <p className="text-[10px] opacity-80">:: Verified</p>
+                     </div>
+                  </div>
+                  <button onClick={handleLogout} className="text-white hover:text-red-200 p-1 transition-colors">
+                     <LogOut size={16} />
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+    </>
+  );
 };
 
 export default Sidebar;

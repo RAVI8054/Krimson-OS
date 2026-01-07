@@ -1,73 +1,95 @@
 import React from 'react';
-import {
-    LayoutDashboard, Calendar, CheckSquare, FileText,
-    BookOpen, ClipboardList, BarChart, MessageSquare, Activity,
-    DollarSign, Shield, Scan, LogOut
+import { NavLink, useNavigate } from 'react-router-dom';
+import { 
+  LayoutDashboard, Calendar, CalendarCheck, FileText, BookOpen, 
+  CheckSquare, Award, MessageSquare, BarChart2, CreditCard, 
+  Activity, UserCircle, Users, Trophy, HelpCircle, LogOut 
 } from 'lucide-react';
 
-// Matches the user provided NAV_ITEMS, but exported for use in Dashboard
-export const STUDENT_MENU_ITEMS = [
-    { id: 'dashboard', title: 'Home Dashboard', icon: LayoutDashboard },
-    { id: 'timetable', title: 'Timetable', icon: Calendar },
-    { id: 'attendance', title: 'Attendance Tracker', icon: CheckSquare },
-    { id: 'assignments', title: 'Assignments', icon: FileText },
-    { id: 'resources', title: 'Lesson Resources', icon: BookOpen },
-    { id: 'exams', title: 'Exam Dashboard', icon: ClipboardList },
-    { id: 'grades', title: 'Grades & Reports', icon: BarChart },
-    { id: 'communication', title: 'Communication Hub', icon: MessageSquare },
-    { id: 'analytics', title: 'Performance Analytics', icon: Activity },
-    { id: 'fees', title: 'Fee Status', icon: DollarSign },
-];
+const Sidebar = () => {
+  const navigate = useNavigate();
 
-const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen, onLogout }) => {
-    return (
-        <aside className={`fixed inset-y-4 left-4 z-50 w-[280px] flex flex-col overflow-hidden rounded-[2.5rem] shadow-2xl shadow-blue-900/10 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-[120%]'} md:translate-x-0`}>
-            <div className="absolute inset-0 bg-gradient-to-b from-cyan-300 via-blue-300 to-pink-300"></div>
+  const handleLogout = () => {
+    navigate('/login');
+  };
 
-            <div className="relative z-10 flex-1 flex flex-col p-6 overflow-hidden">
-                {/* Brand */}
-                <div className="flex items-center gap-4 mb-8 shrink-0">
-                    <div className="w-10 h-10 bg-white/40 backdrop-blur rounded-xl flex items-center justify-center shadow-sm">
-                        <Shield className="h-6 w-6 text-slate-800" />
-                    </div>
-                    <div>
-                        <h1 className="font-bold text-xl tracking-tight leading-none text-slate-800">Krimson OS</h1>
-                        <p className="text-xs text-slate-700 mt-1 font-medium">Singapore</p>
-                    </div>
+  const menuItems = [
+    { name: "Dashboard", path: "/dashboard/student/", icon: <LayoutDashboard size={20} /> }, // Screen 1
+    { name: "Timetable", path: "/dashboard/student/timetable", icon: <Calendar size={20} /> }, // Screen 2
+    { name: "Attendance", path: "/dashboard/student/attendance", icon: <CalendarCheck size={20} /> }, // Screen 3
+    { name: "Assignments", path: "/dashboard/student/assignments", icon: <FileText size={20} /> }, // Screen 4
+    { name: "Resources", path: "/dashboard/student/resources", icon: <BookOpen size={20} /> }, // Screen 5
+    { name: "Exams", path: "/dashboard/student/exams", icon: <CheckSquare size={20} /> }, // Screen 6
+    { name: "Grades", path: "/dashboard/student/grades", icon: <Award size={20} /> }, // Screen 7
+    { name: "Messages", path: "/dashboard/student/communication", icon: <MessageSquare size={20} /> }, // Screen 8
+    { name: "Analytics", path: "/dashboard/student/analytics", icon: <BarChart2 size={20} /> }, // Screen 9
+    { name: "Fees", path: "/dashboard/student/fees", icon: <CreditCard size={20} /> }, // Screen 10
+    { name: "Behavior", path: "/dashboard/student/behavior", icon: <Activity size={20} /> }, // Screen 11
+    { name: "Profile", path: "/dashboard/student/profile", icon: <UserCircle size={20} /> }, // Screen 12
+    { name: "Parent Link", path: "/dashboard/student/parentlink", icon: <Users size={20} /> }, // Screen 13
+    { name: "Activities", path: "/dashboard/student/activities", icon: <Trophy size={20} /> }, // Screen 14
+    { name: "Support", path: "/dashboard/student/support", icon: <HelpCircle size={20} /> }, // Screen 15
+  ];
+
+  return (
+    <div className="h-screen w-72 p-4 flex flex-col fixed left-0 top-0 z-50">
+      {/* Gradient Container - Blue Tone for Student */}
+      <div className="h-full w-full rounded-3xl bg-gradient-to-b from-blue-500 via-indigo-500 to-purple-500 p-4 flex flex-col text-white shadow-2xl relative overflow-hidden">
+        
+        {/* Decorative Elements */}
+        <div className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-10 -left-10 w-40 h-40 bg-teal-400 opacity-20 rounded-full blur-2xl"></div>
+
+        {/* Logo */}
+        <div className="flex items-center gap-3 mb-6 pl-2 relative z-10">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+             <Trophy size={24} className="text-white" />
+          </div>
+          <div>
+            <h1 className="font-bold text-lg tracking-wide">Krimson OS</h1>
+            <p className="text-xs text-white/80">Student Portal</p>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <div className="flex-1 overflow-y-auto space-y-1 relative z-10 custom-scrollbar pr-1">
+          {menuItems.map((item, index) => (
+            <NavLink
+              key={index}
+              to={item.path}
+              end={item.path === '/dashboard/student/'} // Only exact match for root
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 ${
+                  isActive 
+                    ? "bg-white text-blue-600 shadow-md font-bold" 
+                    : "text-white/90 hover:bg-white/10 hover:translate-x-1"
+                }`
+              }
+            >
+              <span className={({ isActive }) => isActive ? "text-blue-500" : "text-white"}>{item.icon}</span>
+              <span className="text-xs font-medium">{item.name}</span>
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Profile Footer */}
+        <div className="mt-4 pt-4 border-t border-white/20 relative z-10">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors">
+            <NavLink to="/dashboard/student/profile" className="flex items-center gap-3 flex-1">
+                <div className="w-8 h-8 rounded-full bg-white text-blue-500 flex items-center justify-center font-bold text-xs">S</div>
+                <div className="flex-1">
+                <p className="text-sm font-semibold">Student</p>
+                <p className="text-[10px] opacity-80">:: Scholar</p>
                 </div>
-
-                {/* Navigation */}
-                <nav className="flex-1 overflow-y-auto space-y-1 custom-scrollbar py-2 min-h-0">
-                    {STUDENT_MENU_ITEMS.map((item) => {
-                        const isActive = activeTab === item.id;
-                        return (
-                            <button
-                                key={item.id}
-                                onClick={() => { setActiveTab(item.id); if (setIsOpen) setIsOpen(false); }}
-                                className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-200 group relative ${isActive ? 'bg-white/40 backdrop-blur text-slate-900 font-bold shadow-sm' : 'text-slate-700 hover:text-slate-900 hover:bg-white/20'}`}
-                            >
-                                <item.icon className={`h-5 w-5 ${isActive ? 'text-slate-900' : 'group-hover:text-slate-900'}`} />
-                                <span className="tracking-wide text-sm truncate">{item.title}</span>
-                                {isActive && <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-slate-800"></div>}
-                            </button>
-                        )
-                    })}
-                </nav>
-
-                {/* User Profile */}
-                <div className="mt-auto pt-4 border-t border-white/30 shrink-0">
-                    <div className="bg-white/30 backdrop-blur rounded-2xl p-3 flex items-center gap-3 border border-white/20 shadow-sm">
-                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-600 font-bold text-xs shadow-sm">S</div>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold text-slate-800 truncate">Aarav Patel</p>
-                            <div className="flex items-center gap-1 text-[10px] text-slate-700 font-medium"><Scan className="h-2 w-2" /><span>Verified</span></div>
-                        </div>
-                        <button onClick={onLogout} className="text-slate-600 hover:text-white transition-colors"><LogOut className="h-4 w-4" /></button>
-                    </div>
-                </div>
-            </div>
-        </aside>
-    );
+            </NavLink>
+            <button onClick={handleLogout} className="text-white hover:text-blue-100 p-1">
+                <LogOut size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Sidebar;

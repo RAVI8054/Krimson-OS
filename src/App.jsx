@@ -1,62 +1,49 @@
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import React from 'react';
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Import your pages
-import LoginPage from "./pages/auth/LoginPage";
-import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
-import WelcomeLanding from "./pages/landing/WelcomeLanding";
-import AdminDashboard from "./pages/dashboards/AdminDashboard";
-import StudentDashboard from "./pages/dashboards/StudentDashboard";
-import TeacherDashboard from "./pages/dashboards/TeacherDashboard";
-
-
-// --- Helper Component ---
-import { toast } from 'react-toastify';
-
-// ... (imports)
-
-// This wrapper ensures the dashboard can access the router to log out
-const AdminDashboardWrapper = () => {
-  const navigate = useNavigate();
-
-  // This function runs when you click the logout button in the Dashboard sidebar
-  const handleLogout = () => {
-    toast.info("Logged out successfully");
-    navigate("/login");
-  };
-
-  return <AdminDashboard onLogout={handleLogout} />;
-};
+// Import Route Modules
+import AuthRoutes from "./routes/AuthRoutes";
+import AdminRoutes from "./routes/AdminRoutes";
+import StudentRoutes from "./routes/StudentRoutes";
+import TeacherRoutes from "./routes/TeacherRoutes";
+import CoordinatorRoutes from "./routes/CoordinatorRoutes";
+import RegistrarRoutes from "./routes/RegistrarRoutes";
+import PrincipalRoutes from "./routes/PrincipalRoutes";
+import ParentRoutes from "./routes/ParentRoutes";
+import FinanceRoutes from "./routes/FinanceRoutes";
+import ManagementRoutes from "./routes/ManagementRoutes";
+import LibrarianRoutes from "./routes/LibrarianRoutes";
+import SystemAdminRoutes from "./routes/SystemAdminRoutes";
+import CounselorRoutes from "./routes/CounselorRoutes";
 
 export default function App() {
   return (
     <>
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />
       <Routes>
-        {/* Redirect root URL to /login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        {/* Auth Routes (Root path handling included within AuthRoutes if needed, but usually handled at top level for / vs /login) */}
+        {/* Actually AuthRoutes handles /, /login, etc. So we can mount it at root or handle explicit paths. 
+            AuthRoutes has /login inside. So if we mount at /* it will match /login. 
+        */}
+        <Route path="/*" element={<AuthRoutes />} />
 
-        {/* The Login Page */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        <Route path="/welcome" element={<WelcomeLanding />} />
+        {/* Dashboard Routes - Nested Routing */}
+        <Route path="/dashboard/admin/*" element={<AdminRoutes />} />
+        <Route path="/dashboard/student/*" element={<StudentRoutes />} />
+        <Route path="/dashboard/teacher/*" element={<TeacherRoutes />} />
+        <Route path="/dashboard/coordinator/*" element={<CoordinatorRoutes />} />
+        <Route path="/dashboard/registrar/*" element={<RegistrarRoutes />} />
+        <Route path="/dashboard/principal/*" element={<PrincipalRoutes />} />
+        <Route path="/dashboard/parent/*" element={<ParentRoutes />} />
+        <Route path="/dashboard/finance/*" element={<FinanceRoutes />} />
+        <Route path="/dashboard/management/*" element={<ManagementRoutes />} />
+        <Route path="/dashboard/librarian/*" element={<LibrarianRoutes />} />
+        <Route path="/dashboard/it-admin/*" element={<SystemAdminRoutes />} />
+        <Route path="/dashboard/counselor/*" element={<CounselorRoutes />} />
 
-        {/* The Administrator Dashboard Route */}
-        <Route path="/dashboard/admin" element={<AdminDashboardWrapper />} />
-
-        {/* The Student Dashboard Route */}
-        <Route path="/dashboard/student" element={<StudentDashboard />} />
-
-        {/* The Teacher Dashboard Route */}
-        <Route path="/dashboard/teacherdashboard" element={<TeacherDashboard />} />
-
-        {/* The Global Overview Dashboard Route */}
-
-
-        {/* Fallback for other dashboard routes not yet built */}
+        {/* Fallback for unknown dashboard routes */}
         <Route
           path="/dashboard/*"
           element={

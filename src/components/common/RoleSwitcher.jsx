@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { ChevronDown, RefreshCw } from 'lucide-react';
 import { authService } from '../../services/authService';
-
+// import { useNavigate } from 'react-router-dom'; // keeping it simple with window.location for full refresh
+import { getDashboardPath } from '../../utils/roleNavigation';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
 const RoleSwitcher = ({ currentUser }) => {
-    // ... logic ...
+    // const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
     // If no roles array or only 1 role, don't show switcher
     if (!currentUser?.roles || currentUser.roles.length <= 1) {
-        return null;
+        return null; // Or render nothing
     }
 
 
@@ -21,13 +22,28 @@ const RoleSwitcher = ({ currentUser }) => {
         try {
             await authService.switchRole(role);
             toast.success(`Switched role to ${role}`);
-            window.location.reload(); // Reload to refresh context/dashboard
+            
+            // Smart Redirect Logic
+            const currentPath = window.location.pathname;
+            const isDashboard = currentPath.startsWith('/dashboard');
+
+            if (isDashboard) {
+                 // If we are already inside a specific dashboard, we must move to the new role's dashboard
+                 const targetPath = getDashboardPath(role);
+                 window.location.href = targetPath;
+            } else {
+                 // If we are on a neutral page (like Welcome), just reload to update the state in place
+                 window.location.reload(); 
+            }
+            
         } catch (error) {
             console.error("Failed to switch role:", error);
             toast.error(error.message || "Failed to switch role");
+            setLoading(false); 
         } finally {
-            setLoading(false);
-            setIsOpen(false);
+            if (!loading) { 
+                 setIsOpen(false);
+            }
         }
     };
 
@@ -79,7 +95,8 @@ const RoleSwitcher = ({ currentUser }) => {
 RoleSwitcher.propTypes = {
     currentUser: PropTypes.shape({
         role: PropTypes.string,
-        roles: PropTypes.arrayOf(PropTypes.string)
+        roles: PropTypes.arrayOf(PropTypes.string),
+        name: PropTypes.string // Add name to propTypes if used later, though not used here
     })
 };
 

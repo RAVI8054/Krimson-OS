@@ -82,3 +82,9 @@ export const api = {
     // Expose raw instance if needed
     axios: axiosInstance
 };
+
+// --- Registrar Dashboard Services ---
+export const fetchRegistrarStats = () => api.get('/registrar/stats');
+export const fetchStudents = () => api.get('/registrar/students');
+export const fetchComplianceStatus = () => api.get('/registrar/compliance');
+export const fetchTransportRoutes = () => api.get('/transport/routes');
