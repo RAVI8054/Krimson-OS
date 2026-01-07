@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Users, FileText, CheckCircle, Plus, Search, Filter, Eye, XCircle, UserCheck
 } from 'lucide-react';
@@ -55,7 +56,7 @@ const AdmissionsView = () => {
             {/* Content */}
             
             {/* Add Inquiry Modal */}
-            {showAddModal && (
+            {showAddModal && createPortal(
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200 lg:max-w-2xl">
                      <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
@@ -129,7 +130,8 @@ const AdmissionsView = () => {
                        </div>
                      </div>
                    </div>
-                </div>
+                </div>,
+                document.body
             )}
         
             {/* Funnel Widget */}

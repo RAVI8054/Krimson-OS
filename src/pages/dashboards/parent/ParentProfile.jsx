@@ -13,7 +13,9 @@ const ParentProfile = () => {
   return (
     <div className="max-w-4xl mx-auto bg-white rounded-3xl p-8 shadow-sm">
        <div className="flex items-center gap-6 mb-8 border-b border-slate-100 pb-8">
-         <img src={user.avatar} alt="Profile" className="w-24 h-24 rounded-full border-4 border-blue-50" />
+         <div className="p-1 rounded-full bg-gradient-to-br from-cyan-400 to-pink-400">
+           <img src={user.avatar} alt="Profile" className="w-24 h-24 rounded-full border-4 border-white" />
+         </div>
          <div>
            <h1 className="text-2xl font-bold text-slate-800">{user.name}</h1>
            <p className="text-slate-500">ID: {user.id} • Role: {user.role}</p>

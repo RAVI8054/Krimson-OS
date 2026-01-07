@@ -10,19 +10,19 @@ const HomeDashboard = () => {
     <div className="space-y-6">
       
       {/* 1. Welcome Banner - Visual Match to Screenshot */}
-      <div className="bg-white rounded-3xl p-8 shadow-sm relative overflow-hidden">
+      <div className="bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400 rounded-3xl p-8 shadow-sm relative overflow-hidden text-white">
         {/* Soft Background Gradient Blob */}
-        <div className="absolute top-0 right-0 w-[500px] h-full bg-gradient-to-l from-pink-50 to-transparent opacity-60"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-full bg-white opacity-10 blur-3xl rounded-full translate-x-1/2"></div>
         
         <div className="relative z-10 max-w-2xl">
-          <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+          <span className="bg-white/20 border border-white/30 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-md">
             Singapore Campus
           </span>
-          <h1 className="text-4xl font-extrabold text-slate-800 mt-4 mb-2">
+          <h1 className="text-4xl font-extrabold text-white mt-4 mb-2">
             Parent Dashboard
           </h1>
-          <p className="text-slate-500 text-lg">
-            Welcome, {user.name}. Here is your consolidated daily summary for <span className="font-semibold text-slate-700">{activeChild.name}</span>.
+          <p className="text-white/90 text-lg">
+            Welcome, {user.name}. Here is your consolidated daily summary for <span className="font-bold text-white">{activeChild.name}</span>.
           </p>
         </div>
       </div>
@@ -81,7 +81,7 @@ const HomeDashboard = () => {
               {widgets.fees.status}
             </span>
           </div>
-          <button className="mt-6 w-full py-2 bg-slate-800 text-white rounded-xl text-sm font-medium hover:bg-slate-900 transition-colors relative z-10">
+          <button className="mt-6 w-full py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 hover:from-cyan-600 hover:to-blue-600 transition-all relative z-10">
             Pay Now
           </button>
         </div>

@@ -25,7 +25,7 @@ const AttendanceSummary = () => {
 
          <div className="bg-white p-8 rounded-3xl shadow-sm">
             <h3 className="font-bold text-slate-800 mb-6 flex items-center gap-2">
-               <PieChart className="text-blue-500" /> Class Breakdown
+               <PieChart className="text-cyan-500" /> Class Breakdown
             </h3>
             <div className="space-y-6">
                {attendanceSummary.classBreakdown.map((item, i) => (
@@ -35,9 +35,9 @@ const AttendanceSummary = () => {
                         <span>{item.percentage}%</span>
                      </div>
                      <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-                        <div className="bg-blue-500 h-full rounded-full" style={{ width: `${item.percentage}%` }}></div>
+                        <div className="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full" style={{ width: `${item.percentage}%` }}></div>
                      </div>
-                     {item.percentage < 93 && <p className="text-[10px] text-red-500 font-bold mt-1">Below average warning</p>}
+                     {item.percentage < 93 && <p className="text-[10px] text-pink-500 font-bold mt-1">Below average warning</p>}
                   </div>
                ))}
             </div>

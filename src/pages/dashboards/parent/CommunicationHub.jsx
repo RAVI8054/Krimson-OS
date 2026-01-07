@@ -235,7 +235,7 @@ const CommunicationHub = () => {
             <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white/80 backdrop-blur-md sticky top-0 z-10">
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-md ${
-                  activeTab === 'counselor' ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'
+                  activeTab === 'counselor' ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-gradient-to-br from-cyan-400 via-blue-400 to-pink-400'
                 }`}>
                   <User size={24} />
                 </div>
@@ -302,7 +302,7 @@ const CommunicationHub = () => {
                       Replies are disabled here. Please use our dedicated chat application for seamless communication.
                     </p>
                   </div>
-                  <button className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20 hover:shadow-xl hover:scale-[1.02] transition-all">
+                  <button className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20 hover:from-cyan-600 hover:to-blue-600 hover:shadow-xl hover:scale-[1.02] transition-all">
                     Open Chat Application
                     <ExternalLink size={16} />
                   </button>

@@ -4,12 +4,13 @@ import { DollarSign, PieChart, Download, AlertOctagon } from 'lucide-react';
 const FinanceSnapshot = () => {
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">Fee & Finance Snapshot</h1>
-          <p className="text-slate-500">High-level view of financial health</p>
+      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
+        <div className="relative z-10">
+           <h1 className="text-2xl font-bold text-slate-800">Fee & Finance Snapshot</h1>
+           <p className="text-slate-500">High-level view of financial health</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 text-sm font-medium">
+        <div className="absolute right-0 top-0 h-full w-2 bg-gradient-to-b from-cyan-300 via-blue-300 to-pink-300"></div>
+        <button className="relative z-10 flex items-center gap-2 px-5 py-2.5 bg-slate-50 hover:bg-slate-100 rounded-xl text-slate-700 text-sm font-bold border border-slate-200 transition-colors">
             <Download size={16} /> Download Monthly PDF
         </button>
       </div>

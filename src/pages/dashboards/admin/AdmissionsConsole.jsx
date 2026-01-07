@@ -10,8 +10,8 @@ const AdmissionsConsole = () => {
     <div className="space-y-8">
       {/* Pipeline Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-         <div className="bg-blue-600 rounded-2xl p-6 text-white shadow-lg">
-            <p className="text-blue-200 text-xs font-bold uppercase">Inquiries</p>
+         <div className="bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400 rounded-2xl p-6 text-white shadow-lg">
+            <p className="text-white/80 text-xs font-bold uppercase">Inquiries</p>
             <h3 className="text-3xl font-bold mt-1">{overview.pipeline.inquiries}</h3>
          </div>
          <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
@@ -31,7 +31,7 @@ const AdmissionsConsole = () => {
             <div className="flex gap-3">
                <button className="p-2 text-slate-400 hover:text-blue-600"><Filter size={20}/></button>
                <button className="p-2 text-slate-400 hover:text-blue-600"><Download size={20}/></button>
-               <button className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg flex items-center gap-2">
+               <button className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-bold rounded-lg flex items-center gap-2 hover:from-cyan-600 hover:to-blue-600 transition-all shadow-md shadow-blue-500/20">
                   <UserPlus size={16}/> New Entry
                </button>
             </div>

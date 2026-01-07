@@ -5,13 +5,14 @@ import { FINANCE_DATA } from '../../../data/financeData';
 const AuditComplianceCenter = () => {
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-teal-500 to-green-500 rounded-3xl p-8 text-white shadow-lg">
-        <div className="flex justify-between items-start">
+      <div className="bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
+        <div className="flex justify-between items-start relative z-10">
            <div>
              <h2 className="text-2xl font-bold mb-2 flex items-center gap-2"><ShieldCheck /> SSG Audit Readiness</h2>
-             <p className="opacity-90">Current Status: <span className="font-bold bg-white/20 px-2 py-0.5 rounded">Compliant</span></p>
+             <p className="opacity-90">Current Status: <span className="font-bold bg-white/20 px-2 py-0.5 rounded backdrop-blur-md">Compliant</span></p>
            </div>
-           <button className="bg-white text-teal-600 px-6 py-2 rounded-xl font-bold text-sm">Generate Certificate</button>
+           <button className="bg-white text-blue-600 px-6 py-2 rounded-xl font-bold text-sm shadow-sm hover:bg-white/90 transition-colors">Generate Certificate</button>
         </div>
       </div>
 

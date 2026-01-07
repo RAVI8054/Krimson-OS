@@ -11,8 +11,8 @@ const Card = ({ children, className = "" }) => (
 
 const TimetableConsole = () => {
     const stats = [
-        { label: 'Total Classes', value: '42', icon: BookOpen, color: 'text-blue-600', bg: 'bg-blue-50' }, 
-        { label: 'Conflicts', value: '0', icon: AlertTriangle, color: 'text-emerald-600', bg: 'bg-emerald-50' }
+        { label: 'Total Classes', value: '42', icon: BookOpen, color: 'text-cyan-600', bg: 'bg-cyan-50' }, 
+        { label: 'Conflicts', value: '0', icon: AlertTriangle, color: 'text-pink-500', bg: 'bg-pink-50' }
     ];
 
     const rows = [

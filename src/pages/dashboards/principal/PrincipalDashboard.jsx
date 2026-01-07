@@ -19,9 +19,12 @@ const StatCard = ({ title, value, subtext, icon, color }) => (
 const PrincipalDashboard = () => {
   return (
     <div className="space-y-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-slate-800">Overview</h1>
-        <p className="text-slate-500">Real-time school operations snapshot</p>
+      <div className="bg-gradient-to-r from-cyan-300 via-blue-300 to-pink-300 rounded-[2.5rem] p-8 text-slate-900 relative overflow-hidden shadow-xl shadow-blue-900/5 mb-8 border border-white/50">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/30 rounded-full blur-3xl -mr-16 -mt-16"></div>
+        <div className="relative z-10">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">School Overview</h1>
+          <p className="text-slate-800 font-medium opacity-90">Real-time school operations snapshot</p>
+        </div>
       </div>
 
       {/* Top Stats Row */}

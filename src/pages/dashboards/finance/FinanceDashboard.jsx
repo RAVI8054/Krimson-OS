@@ -87,19 +87,20 @@ const FinanceDashboard = () => {
 
         {/* 3. Quick Actions */}
         <div className="col-span-4 space-y-6">
-           <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 text-white shadow-lg">
-             <h3 className="font-bold text-lg mb-4">Quick Actions</h3>
-             <div className="space-y-3">
-               <button className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-between px-4 transition-colors">
-                 <span className="text-sm font-semibold">Generate Invoice</span>
+           <div className="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+             <h3 className="font-bold text-lg mb-4 relative z-10">Quick Actions</h3>
+             <div className="space-y-3 relative z-10">
+               <button className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-between px-4 transition-colors backdrop-blur-sm border border-white/10">
+                 <span className="text-sm font-bold">Generate Invoice</span>
                  <ArrowRight size={16} />
                </button>
-               <button className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-between px-4 transition-colors">
-                 <span className="text-sm font-semibold">Record Offline Payment</span>
+               <button className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-between px-4 transition-colors backdrop-blur-sm border border-white/10">
+                 <span className="text-sm font-bold">Record Offline Payment</span>
                  <ArrowRight size={16} />
                </button>
-               <button className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-between px-4 transition-colors">
-                 <span className="text-sm font-semibold">Download Ledger</span>
+               <button className="w-full py-3 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-between px-4 transition-colors backdrop-blur-sm border border-white/10">
+                 <span className="text-sm font-bold">Download Ledger</span>
                  <ArrowRight size={16} />
                </button>
              </div>

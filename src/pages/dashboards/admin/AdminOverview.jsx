@@ -64,15 +64,16 @@ const AdminOverview = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* Header Banner */}
-      <div className="bg-slate-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+      {/* Header Banner */}
+      <div className="bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
          <div className="relative z-10">
-            <span className="bg-blue-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3 inline-block">System Status: Nominal</span>
+            <span className="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3 inline-block">System Status: Nominal</span>
             <h1 className="text-3xl font-bold">Admin Control Center</h1>
-            <p className="text-slate-400 mt-2 max-w-lg">Welcome back. You have {stats.alerts.length} pending alerts requiring your attention today.</p>
+            <p className="white/90 mt-2 max-w-lg">Welcome back. You have {stats.alerts.length} pending alerts requiring your attention today.</p>
          </div>
          <div className="flex gap-3 relative z-10">
-            <button className="px-6 py-3 bg-white text-slate-900 font-bold rounded-xl text-sm hover:bg-slate-100 transition-colors">View Reports</button>
-            <button className="px-6 py-3 bg-slate-800 text-white font-bold rounded-xl text-sm hover:bg-slate-700 transition-colors border border-slate-700">System Logs</button>
+            <button className="px-6 py-3 bg-white text-blue-600 font-bold rounded-xl text-sm hover:bg-white/90 transition-colors shadow-sm">View Reports</button>
+            <button className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl text-sm hover:bg-blue-700 transition-colors border border-white/20 shadow-sm">System Logs</button>
          </div>
       </div>
 

@@ -18,7 +18,7 @@ const PerformanceAnalytics = () => {
             <h3 className="text-3xl font-extrabold text-slate-800">{analytics.percentile}</h3>
             <p className="text-xs text-slate-400 font-bold uppercase mt-1">Percentile</p>
          </div>
-         <div className="col-span-2 bg-indigo-600 rounded-3xl p-8 text-white flex items-center justify-between relative overflow-hidden">
+         <div className="col-span-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl p-8 text-white flex items-center justify-between relative overflow-hidden">
             <div className="relative z-10">
                <h3 className="text-xl font-bold mb-2">Keep Pushing, {user.name.split(' ')[0]}!</h3>
                <p className="opacity-80 text-sm max-w-xs">Your Math scores have improved by 12% since last term. Consistent practice unlocks greatness.</p>
@@ -48,13 +48,13 @@ const PerformanceAnalytics = () => {
 
          {/* AI Tips */}
          <div>
-            <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-3xl p-6 text-white shadow-lg mb-6">
+            <div className="bg-gradient-to-br from-pink-500 to-rose-500 rounded-3xl p-6 text-white shadow-lg mb-6">
                <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 bg-white/20 rounded-lg"><Lightbulb size={20}/></div>
                   <h3 className="font-bold">AI Study Companion</h3>
                </div>
                <p className="text-sm opacity-90 mb-4">"Based on your recent tests, focusing on <strong>Organic Chemistry</strong> and <strong>Calculus Limits</strong> will boost your Science grade significantly."</p>
-               <button className="w-full py-3 bg-white text-indigo-600 font-bold rounded-xl text-xs hover:bg-slate-100">Get Daily Study Plan</button>
+               <button className="w-full py-3 bg-white text-pink-600 font-bold rounded-xl text-xs hover:bg-slate-100">Get Daily Study Plan</button>
             </div>
 
             <div className="bg-white p-6 rounded-3xl shadow-sm">

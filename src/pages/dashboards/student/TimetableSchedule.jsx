@@ -35,7 +35,7 @@ const TimetableSchedule = () => {
                <div className="space-y-4">
                   {timetable[day.toLowerCase()] ? timetable[day.toLowerCase()].map((slot, idx) => (
                      <div key={idx} className="flex gap-4 p-4 border border-slate-100 rounded-2xl hover:border-blue-200 transition-colors group cursor-pointer relative overflow-hidden">
-                        <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${slot.type === 'Lab' ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
+                        <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${slot.type === 'Lab' ? 'bg-pink-500' : 'bg-cyan-500'}`}></div>
                         
                         <div className="flex flex-col items-center justify-center min-w-[80px] bg-slate-50 rounded-xl p-2">
                            <span className="text-xs font-bold text-slate-500">Period {slot.period}</span>
@@ -45,7 +45,7 @@ const TimetableSchedule = () => {
                         <div className="flex-1">
                            <div className="flex justify-between items-start">
                               <h4 className="text-lg font-bold text-slate-800">{slot.subject}</h4>
-                              <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${slot.type === 'Lab' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+                              <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${slot.type === 'Lab' ? 'bg-pink-100 text-pink-700' : 'bg-cyan-100 text-cyan-700'}`}>
                                  {slot.type}
                               </span>
                            </div>

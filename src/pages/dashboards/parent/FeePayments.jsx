@@ -5,13 +5,14 @@ const FeePayments = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-3 gap-6">
-        <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl p-6 text-white shadow-lg col-span-2 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400 rounded-3xl p-6 text-white shadow-lg col-span-2 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full blur-3xl -mr-10 -mt-10"></div>
           <div className="relative z-10">
-            <p className="text-slate-400 text-sm mb-1">Total Outstanding</p>
+            <p className="text-white/80 text-sm mb-1 font-medium">Total Outstanding</p>
             <h1 className="text-4xl font-bold mb-6">SGD 450.00</h1>
-            <button className="bg-white text-slate-900 px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-100 transition-colors">Pay Now via Stripe</button>
+            <button className="bg-white text-blue-600 px-6 py-2.5 rounded-xl font-bold text-sm shadow-md hover:bg-white/90 transition-colors">Pay Now via Stripe</button>
           </div>
-           <CreditCard className="absolute right-6 bottom-6 text-white opacity-10 w-32 h-32" />
+           <CreditCard className="absolute right-6 bottom-6 text-white/20 w-32 h-32 rotate-12" />
         </div>
 
         <div className="bg-white rounded-3xl p-6 shadow-sm border border-red-100">

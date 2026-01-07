@@ -10,7 +10,8 @@ const PrincipalProfile = () => {
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-          <div className="h-32 bg-slate-800 relative">
+          <div className="h-32 bg-gradient-to-r from-cyan-300 via-blue-300 to-pink-300 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full blur-3xl -mr-10 -mt-20"></div>
               <div className="absolute -bottom-12 left-8">
                   <div className="w-24 h-24 rounded-full bg-white p-1 shadow-lg">
                       <div className="w-full h-full rounded-full bg-slate-200 flex items-center justify-center text-slate-400">
@@ -25,7 +26,7 @@ const PrincipalProfile = () => {
                       <h2 className="text-2xl font-bold text-slate-800">Dr. Robert Principal</h2>
                       <p className="text-slate-500">Head of Institution • Since 2018</p>
                   </div>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">Edit Profile</button>
+                  <button className="px-5 py-2.5 bg-gradient-to-r from-cyan-400 to-blue-400 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:shadow-xl transition-all">Edit Profile</button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">

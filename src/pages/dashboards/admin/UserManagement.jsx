@@ -164,7 +164,7 @@ const UserManagement = () => {
           </div>
           <button
             onClick={handleAddUser}
-            className="p-2.5 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20"
+            className="p-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-bold text-sm hover:from-cyan-600 hover:to-blue-600 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
           >
             <UserPlus className="h-4 w-4" /> Add User
           </button>

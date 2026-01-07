@@ -16,7 +16,7 @@ const RefundsLedgerControl = () => {
                <option>Double Payment</option>
              </select>
              <input type="text" placeholder="Amount (SGD)" className="w-full p-3 bg-slate-50 rounded-xl text-sm outline-none" />
-             <button className="w-full bg-slate-800 text-white py-3 rounded-xl font-bold text-sm">Submit for Approval</button>
+             <button className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20 hover:from-cyan-600 hover:to-blue-600 transition-all">Submit for Approval</button>
            </form>
         </div>
 

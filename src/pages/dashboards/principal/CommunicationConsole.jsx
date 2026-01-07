@@ -6,15 +6,21 @@ const CommunicationConsole = () => {
 
   return (
     <div className="space-y-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">Communication Console</h1>
-        <p className="text-slate-500">Broadcast messages and manage school-wide announcements</p>
+      <div className="mb-6 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between overflow-hidden relative">
+        <div className="relative z-10">
+            <h1 className="text-2xl font-bold text-slate-800">Communication Console</h1>
+            <p className="text-slate-500 mt-1">Broadcast messages and manage school-wide announcements</p>
+        </div>
+        <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-pink-50 to-transparent"></div>
+        <div className="w-12 h-12 bg-gradient-to-br from-cyan-300 to-blue-300 rounded-2xl flex items-center justify-center text-white shadow-inner">
+            <Send size={24} />
+        </div>
       </div>
 
       <div className="flex gap-4 border-b border-slate-200 pb-2">
-         <button className={`pb-2 px-4 font-medium ${activeTab === 'compose' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500'}`} onClick={() => setActiveTab('compose')}>Compose New</button>
-         <button className={`pb-2 px-4 font-medium ${activeTab === 'approvals' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500'}`} onClick={() => setActiveTab('approvals')}>Approvals (3)</button>
-         <button className={`pb-2 px-4 font-medium ${activeTab === 'history' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500'}`} onClick={() => setActiveTab('history')}>History</button>
+         <button className={`pb-2 px-4 font-medium transition-colors ${activeTab === 'compose' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-700'}`} onClick={() => setActiveTab('compose')}>Compose New</button>
+         <button className={`pb-2 px-4 font-medium transition-colors ${activeTab === 'approvals' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-700'}`} onClick={() => setActiveTab('approvals')}>Approvals (3)</button>
+         <button className={`pb-2 px-4 font-medium transition-colors ${activeTab === 'history' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-700'}`} onClick={() => setActiveTab('history')}>History</button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -34,16 +40,16 @@ const CommunicationConsole = () => {
                          </div>
                          <div>
                              <label className="block text-sm font-medium mb-1 text-slate-700">Subject</label>
-                             <input type="text" className="w-full border rounded-lg p-2" placeholder="e.g. School Holiday Notification" />
+                             <input type="text" className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-100 outline-none" placeholder="e.g. School Holiday Notification" />
                          </div>
                          <div>
                              <label className="block text-sm font-medium mb-1 text-slate-700">Message</label>
-                             <textarea className="w-full border rounded-lg p-2 h-32" placeholder="Type your message here..."></textarea>
+                             <textarea className="w-full border rounded-lg p-2 h-32 focus:ring-2 focus:ring-blue-100 outline-none" placeholder="Type your message here..."></textarea>
                          </div>
                          <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg text-xs text-slate-500">
                              <span>PDPA Compliance: Message will be digitally signed and archived.</span>
                          </div>
-                         <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                         <button className="bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-6 py-2.5 rounded-xl hover:shadow-lg transition-all flex items-center gap-2 font-bold shadow-md">
                              <Send size={18} /> Broadcast Now
                          </button>
                      </div>

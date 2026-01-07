@@ -17,7 +17,7 @@ const AttendanceLog = () => {
            <button className="flex-1 md:flex-none px-6 py-3 bg-green-50 text-green-600 font-bold rounded-xl hover:bg-green-100 text-sm">
              Mark All Present
            </button>
-           <button className="flex-1 md:flex-none px-6 py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 text-sm flex items-center gap-2 justify-center">
+           <button className="flex-1 md:flex-none px-6 py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 text-sm flex items-center gap-2 justify-center shadow-sm">
              <Save size={16}/> Submit Log
            </button>
         </div>
@@ -39,13 +39,13 @@ const AttendanceLog = () => {
               
               <div className="flex items-center gap-2">
                   {student.status === 'Absent' && (
-                     <input type="text" placeholder="Reason (e.g. Sick)" className="hidden md:block border border-slate-200 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-red-300" defaultValue={student.reason} />
+                     <input type="text" placeholder="Reason (e.g. Sick)" className="hidden md:block border border-slate-200 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-pink-300 focus:ring-1 focus:ring-pink-100" defaultValue={student.reason} />
                   )}
                   <div className="flex bg-slate-100 p-1 rounded-xl">
                      <button className={`p-2 rounded-lg transition-colors ${student.status === 'Present' ? 'bg-green-500 text-white shadow-sm' : 'text-slate-400 hover:text-green-600'}`}>
                         <Check size={20} />
                      </button>
-                     <button className={`p-2 rounded-lg transition-colors ${student.status === 'Absent' ? 'bg-red-500 text-white shadow-sm' : 'text-slate-400 hover:text-red-600'}`}>
+                     <button className={`p-2 rounded-lg transition-colors ${student.status === 'Absent' ? 'bg-pink-500 text-white shadow-sm' : 'text-slate-400 hover:text-pink-600'}`}>
                         <X size={20} />
                      </button>
                   </div>

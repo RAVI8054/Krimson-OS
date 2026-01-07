@@ -12,7 +12,7 @@ const LessonPlanning = () => {
            <h2 className="text-2xl font-bold text-slate-800">Lesson Planner</h2>
            <p className="text-slate-500 text-sm">Weekly Academic Schedule</p>
         </div>
-        <button className="bg-rose-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:bg-rose-700 flex items-center gap-2">
+        <button className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:bg-blue-700 flex items-center gap-2 transition-transform active:scale-95">
            <Plus size={18} /> New Lesson Plan
         </button>
       </div>
@@ -48,7 +48,7 @@ const LessonPlanning = () => {
       </div>
       
       {/* AI Suggestion */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl p-6 text-white flex justify-between items-center shadow-lg">
+      <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-3xl p-6 text-white flex justify-between items-center shadow-lg">
          <div className="flex items-center gap-4">
              <div className="p-3 bg-white/20 rounded-full"><Clock size={24} /></div>
              <div>
@@ -56,7 +56,7 @@ const LessonPlanning = () => {
                 <p className="text-xs opacity-80">Based on "Newton's Laws", we suggest attaching "Video: Inertia Experiments".</p>
              </div>
          </div>
-         <button className="px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl text-xs hover:bg-indigo-50">View Suggestion</button>
+         <button className="px-4 py-2 bg-white text-blue-600 font-bold rounded-xl text-xs hover:bg-blue-50 transition-colors">View Suggestion</button>
       </div>
     </div>
   );

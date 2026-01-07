@@ -9,12 +9,13 @@ const MeetingHub = () => {
 
   return (
     <div className="space-y-6">
-      <div className="mb-6 flex justify-between items-center">
-        <div>
+      <div className="mb-6 flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
+        <div className="relative z-10">
            <h1 className="text-2xl font-bold text-slate-800">Meeting & Feedback Hub</h1>
            <p className="text-slate-500">Track meetings and departmental feedback</p>
         </div>
-        <button className="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium">Schedule Meeting</button>
+        <div className="absolute right-0 top-0 h-full w-2 bg-gradient-to-b from-cyan-300 via-blue-300 to-pink-300"></div>
+        <button className="relative z-10 bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-200 hover:shadow-xl hover:translate-y-px transition-all">Schedule Meeting</button>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-200px)]">

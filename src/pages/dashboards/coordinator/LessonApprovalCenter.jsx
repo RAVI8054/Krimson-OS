@@ -51,7 +51,7 @@ const LessonApprovalCenter = () => {
                         </div>
                         <div className="text-right">
                             <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full mb-1 ${item.statusColor}`}>{item.status}</span>
-                            <button className="text-xs text-blue-700 font-semibold hover:underline flex items-center justify-end gap-1 w-full">View in App <ExternalLink className="h-3 w-3" /></button>
+                            <button className="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-500 hover:opacity-80 flex items-center justify-end gap-1 w-full">View in App <ExternalLink className="h-3 w-3 text-slate-400" /></button>
                         </div>
                     </div>
                 ))}

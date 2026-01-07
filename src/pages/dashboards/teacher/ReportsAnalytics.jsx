@@ -17,9 +17,9 @@ const ReportsAnalytics = () => {
             </h3>
             <div className="h-40 flex items-end gap-3 px-2">
                {[65, 78, 82, 75].map((h, i) => (
-                  <div key={i} className="flex-1 bg-blue-100 rounded-t-lg relative group">
-                     <div className="absolute bottom-0 w-full bg-blue-500 rounded-t-lg transition-all duration-500 group-hover:bg-blue-600" style={{ height: `${h}%` }}></div>
-                     <div className="absolute -top-6 w-full text-center text-xs font-bold text-slate-400">{h}%</div>
+                  <div key={i} className="flex-1 bg-blue-50 rounded-t-lg relative group">
+                     <div className="absolute bottom-0 w-full bg-gradient-to-t from-blue-600 to-cyan-400 rounded-t-lg transition-all duration-500 group-hover:to-cyan-300 shadow-sm" style={{ height: `${h}%` }}></div>
+                     <div className="absolute -top-6 w-full text-center text-xs font-bold text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">{h}%</div>
                   </div>
                ))}
             </div>
@@ -30,12 +30,12 @@ const ReportsAnalytics = () => {
 
          <div className="bg-white p-6 rounded-3xl shadow-sm">
             <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2">
-               <TrendingUp className="text-green-500" size={20}/> Assignment Completion
+               <TrendingUp className="text-cyan-500" size={20}/> Assignment Completion
             </h3>
             <div className="h-40 flex items-center justify-center relative">
                <svg viewBox="0 0 36 36" className="w-32 h-32 transform -rotate-90">
                   <path className="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.8" />
-                  <path className="text-green-500" strokeDasharray="85, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.8" />
+                  <path className="text-cyan-500" strokeDasharray="85, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.8" />
                </svg>
                <div className="absolute text-center">
                   <span className="text-2xl font-bold text-slate-800">85%</span>
@@ -46,7 +46,7 @@ const ReportsAnalytics = () => {
 
          <div className="bg-white p-6 rounded-3xl shadow-sm">
             <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2">
-               <PieIcon className="text-purple-500" size={20}/> Performance Mix
+               <PieIcon className="text-pink-500" size={20}/> Performance Mix
             </h3>
             <div className="space-y-4">
                {['High Achievers (>90%)', 'Average (60-89%)', 'Needs Support (<60%)'].map((label, i) => (
@@ -56,7 +56,7 @@ const ReportsAnalytics = () => {
                         <span>{i === 0 ? '15%' : i === 1 ? '65%' : '20%'}</span>
                      </div>
                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${i===0?'bg-emerald-500':i===1?'bg-blue-500':'bg-red-500'}`} style={{ width: i === 0 ? '15%' : i === 1 ? '65%' : '20%' }}></div>
+                        <div className={`h-full rounded-full ${i===0?'bg-cyan-500':i===1?'bg-blue-500':'bg-pink-500'}`} style={{ width: i === 0 ? '15%' : i === 1 ? '65%' : '20%' }}></div>
                      </div>
                   </div>
                ))}

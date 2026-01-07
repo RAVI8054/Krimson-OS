@@ -7,7 +7,7 @@ const FeeStructureSetup = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-slate-800">Fee Structure Configuration</h2>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg shadow-blue-200 hover:bg-blue-700">
+        <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg shadow-blue-500/20 hover:from-cyan-600 hover:to-blue-600 transition-all">
           <Plus size={16} /> Add Fee Head
         </button>
       </div>
@@ -18,8 +18,8 @@ const FeeStructureSetup = () => {
             <div key={fee.id} className="border border-slate-100 rounded-2xl p-4 flex items-center justify-between hover:shadow-md transition-all">
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg
-                  ${fee.type === 'Academic' ? 'bg-blue-50 text-blue-600' : 
-                    fee.type === 'Facility' ? 'bg-orange-50 text-orange-600' : 'bg-purple-50 text-purple-600'}`}>
+                  ${fee.type === 'Academic' ? 'bg-cyan-50 text-cyan-600' : 
+                    fee.type === 'Facility' ? 'bg-pink-50 text-pink-600' : 'bg-blue-50 text-blue-600'}`}>
                   {fee.name.charAt(0)}
                 </div>
                 <div>

@@ -4,9 +4,15 @@ import { Eye, CheckCircle, FileText, AlertTriangle } from 'lucide-react';
 const ExamOversight = () => {
   return (
     <div className="space-y-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">Examination Oversight</h1>
-        <p className="text-slate-500">Supervise exam schedules, question banks, and results</p>
+      <div className="mb-6 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between overflow-hidden relative">
+        <div className="relative z-10">
+            <h1 className="text-2xl font-bold text-slate-800">Examination Oversight</h1>
+            <p className="text-slate-500 mt-1">Supervise exam schedules, question banks, and results</p>
+        </div>
+        <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-pink-50 to-transparent"></div>
+        <div className="w-12 h-12 bg-gradient-to-br from-cyan-300 to-blue-300 rounded-2xl flex items-center justify-center text-white shadow-inner">
+            <Eye size={24} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

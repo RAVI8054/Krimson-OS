@@ -24,19 +24,19 @@ const CurriculumPlanner = () => {
                         <div>
                              <div className="flex justify-between items-center mb-1">
                                 <span className="text-sm font-medium text-slate-700">Grade 10 Mathematics</span>
-                                <span className="text-xs font-bold text-blue-600">65%</span>
+                                <span className="text-xs font-bold text-cyan-600">65%</span>
                             </div>
                             <div className="w-full bg-slate-100 rounded-full h-2">
-                                <div className="bg-blue-500 h-2 rounded-full" style={{width: '65%'}}></div>
+                                <div className="bg-cyan-400 h-2 rounded-full" style={{width: '65%'}}></div>
                             </div>
                         </div>
                          <div>
                              <div className="flex justify-between items-center mb-1">
                                 <span className="text-sm font-medium text-slate-700">Grade 9 Physics</span>
-                                <span className="text-xs font-bold text-emerald-600">42%</span>
+                                <span className="text-xs font-bold text-pink-500">42%</span>
                             </div>
                             <div className="w-full bg-slate-100 rounded-full h-2">
-                                <div className="bg-emerald-500 h-2 rounded-full" style={{width: '42%'}}></div>
+                                <div className="bg-pink-400 h-2 rounded-full" style={{width: '42%'}}></div>
                             </div>
                         </div>
                     </div>
@@ -58,7 +58,7 @@ const CurriculumPlanner = () => {
                     {[1, 2, 3].map((i) => (
                         <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
                             <span className="text-sm font-medium text-slate-700">Unit {i}: Advanced Algebra</span>
-                             <button className="text-blue-600 text-xs font-bold hover:underline">Edit Plan</button>
+                             <button className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-pink-500 text-xs font-bold hover:opacity-80 transition-opacity">Edit Plan</button>
                         </div>
                     ))}
                 </div>

@@ -12,6 +12,18 @@ import AcademicWidget from "../../components/dashboard/global/AcademicWidget";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
+/**
+ * Common Screen 3: Global Dashboard Overview
+ * Roles: Admin, Principal, Management, Finance, System Admin
+ * 
+ * Used in:
+ * - src/pages/dashboards/GlobalDashboard.jsx (Original location, now moved here)
+ * - src/routes/AdminRoutes.jsx (Route /dashboard/global or similar)
+ * 
+ * Logic:
+ * - Central visual summary with role-filtered widgets.
+ * - Draggable and Resizable layout.
+ */
 const GlobalDashboard = () => {
   // Default Layouts
   const defaultLayouts = {

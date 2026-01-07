@@ -10,12 +10,13 @@ const StaffManagement = () => {
 
   return (
     <div className="space-y-6">
-      <div className="mb-6 flex justify-between">
-        <div>
+      <div className="mb-6 flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
+        <div className="relative z-10">
            <h1 className="text-2xl font-bold text-slate-800">Staff & Department Management</h1>
            <p className="text-slate-500">Oversight of staff allocation and efficiency</p>
         </div>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
+        <div className="absolute right-0 top-0 h-full w-2 bg-gradient-to-b from-cyan-300 via-blue-300 to-pink-300"></div>
+        <button className="relative z-10 bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg shadow-blue-200 hover:shadow-xl hover:translate-y-px transition-all">
             <Mail size={16} /> Send Circular
         </button>
       </div>

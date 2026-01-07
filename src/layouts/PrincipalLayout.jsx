@@ -25,7 +25,7 @@ const PrincipalLayout = () => {
           </h2>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-slate-500">Welcome, {displayName}</span>
-            <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-300 via-blue-300 to-pink-300 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white">
               {initial}
             </div>
           </div>

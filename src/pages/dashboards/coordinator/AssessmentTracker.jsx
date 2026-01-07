@@ -24,13 +24,13 @@ const AssessmentTracker = () => {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card className="flex flex-col justify-between">
                     <div className="flex justify-between items-start">
-                         <div className="p-3 rounded-2xl bg-purple-50 text-purple-600"><Activity className="h-6 w-6" /></div>
+                         <div className="p-3 rounded-2xl bg-cyan-50 text-cyan-600"><Activity className="h-6 w-6" /></div>
                     </div>
                     <div className="mt-4"><h3 className="text-3xl font-bold text-slate-800">76%</h3><p className="text-slate-500 font-medium">Avg Performance</p></div>
                 </Card>
                  <Card className="flex flex-col justify-between">
                     <div className="flex justify-between items-start">
-                         <div className="p-3 rounded-2xl bg-rose-50 text-rose-600"><FileText className="h-6 w-6" /></div>
+                         <div className="p-3 rounded-2xl bg-pink-50 text-pink-600"><FileText className="h-6 w-6" /></div>
                     </div>
                     <div className="mt-4"><h3 className="text-3xl font-bold text-slate-800">3</h3><p className="text-slate-500 font-medium">Grading Due</p></div>
                 </Card>

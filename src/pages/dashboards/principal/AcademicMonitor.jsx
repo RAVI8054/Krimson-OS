@@ -4,13 +4,14 @@ import { BarChart2, Book, AlertTriangle, Search } from 'lucide-react';
 const AcademicMonitor = () => {
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
+      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
+        <div className="relative z-10">
           <h1 className="text-2xl font-bold text-slate-800">Academic Performance Monitor</h1>
           <p className="text-slate-500">Analyze academic outcomes across grades and subjects</p>
         </div>
-        <div className="flex gap-2">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Export Report</button>
+        <div className="absolute right-0 top-0 h-full w-2 bg-gradient-to-b from-cyan-300 via-blue-300 to-pink-300"></div>
+        <div className="flex gap-2 relative z-10">
+            <button className="px-5 py-2.5 bg-gradient-to-r from-cyan-400 to-blue-400 text-white rounded-xl font-bold shadow-lg shadow-blue-200 hover:shadow-xl hover:translate-y-px transition-all">Export Report</button>
         </div>
       </div>
 

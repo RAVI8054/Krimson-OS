@@ -33,16 +33,16 @@ const Sidebar = () => {
 
   return (
     <div className="h-screen w-72 p-4 flex flex-col fixed left-0 top-0 z-50">
-      {/* Gradient Container - Blue Tone for Student */}
-      <div className="h-full w-full rounded-3xl bg-gradient-to-b from-blue-500 via-indigo-500 to-purple-500 p-4 flex flex-col text-white shadow-2xl relative overflow-hidden">
+      {/* Gradient Container - Updated to Cyan-Blue-Pink to match previous sidebars */}
+      <div className="h-full w-full rounded-3xl bg-gradient-to-b from-cyan-400 via-blue-400 to-pink-400 p-4 flex flex-col text-white shadow-2xl relative overflow-hidden">
         
         {/* Decorative Elements */}
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-10 -left-10 w-40 h-40 bg-teal-400 opacity-20 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-10 -left-10 w-40 h-40 bg-pink-500 opacity-20 rounded-full blur-2xl"></div>
 
         {/* Logo */}
         <div className="flex items-center gap-3 mb-6 pl-2 relative z-10">
-          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shadow-sm">
              <Trophy size={24} className="text-white" />
           </div>
           <div>
@@ -76,13 +76,13 @@ const Sidebar = () => {
         <div className="mt-4 pt-4 border-t border-white/20 relative z-10">
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors">
             <NavLink to="/dashboard/student/profile" className="flex items-center gap-3 flex-1">
-                <div className="w-8 h-8 rounded-full bg-white text-blue-500 flex items-center justify-center font-bold text-xs">S</div>
+                <div className="w-8 h-8 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold text-xs shadow-sm">S</div>
                 <div className="flex-1">
                 <p className="text-sm font-semibold">Student</p>
                 <p className="text-[10px] opacity-80">:: Scholar</p>
                 </div>
             </NavLink>
-            <button onClick={handleLogout} className="text-white hover:text-blue-100 p-1">
+            <button onClick={handleLogout} className="text-white hover:text-blue-100 p-1 transition-colors">
                 <LogOut size={16} />
             </button>
           </div>

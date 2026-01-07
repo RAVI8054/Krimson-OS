@@ -8,7 +8,7 @@ const FinancialReports = () => {
       <div className="bg-white p-8 rounded-3xl shadow-sm">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-xl font-bold text-slate-800">Collection Trends (Term 1)</h2>
-          <button className="flex items-center gap-2 text-sm font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-xl">
+          <button className="flex items-center gap-2 text-sm font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 rounded-xl shadow-lg shadow-blue-500/20 hover:from-cyan-600 hover:to-blue-600 transition-all">
             <Download size={16} /> Export CSV
           </button>
         </div>

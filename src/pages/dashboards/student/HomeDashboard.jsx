@@ -8,15 +8,16 @@ const HomeDashboard = () => {
   return (
     <div className="space-y-8">
       {/* Motivational Banner */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-500 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden">
+      {/* Motivational Banner */}
+      <div className="bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden">
          <div className="absolute right-0 top-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl -mr-16 -mt-16"></div>
          <div className="relative z-10 max-w-2xl">
             <span className="bg-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 inline-block">Welcome Back</span>
             <h1 className="text-4xl font-bold mb-2">Hello, {user.name.split(' ')[0]}!</h1>
             <p className="opacity-90 text-lg">You have <span className="font-bold underline">{dashboard.assignmentsDue} assignments</span> due today. Let's get started!</p>
             <div className="mt-6 flex gap-3">
-               <button className="px-6 py-2.5 bg-white text-blue-600 font-bold rounded-xl text-sm hover:bg-blue-50">View Assignments</button>
-               <button className="px-6 py-2.5 bg-blue-700 text-white font-bold rounded-xl text-sm hover:bg-blue-800">Check Grades</button>
+               <button className="px-6 py-2.5 bg-white text-blue-500 font-bold rounded-xl text-sm hover:bg-blue-50">View Assignments</button>
+               <button className="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-xl text-sm hover:bg-blue-700 shadow-sm border border-white/20">Check Grades</button>
             </div>
          </div>
       </div>

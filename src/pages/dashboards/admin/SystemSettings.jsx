@@ -54,7 +54,7 @@ const SystemSettings = () => {
       
       <div className="flex justify-end gap-3">
          <button className="px-6 py-3 text-slate-500 font-bold hover:bg-slate-100 rounded-xl">Cancel</button>
-         <button className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700">Save Changes</button>
+         <button className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-xl shadow-lg hover:from-cyan-600 hover:to-blue-600 transition-all">Save Changes</button>
       </div>
     </div>
   );

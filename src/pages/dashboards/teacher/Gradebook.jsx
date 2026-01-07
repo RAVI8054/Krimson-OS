@@ -39,7 +39,7 @@ const Gradebook = () => {
                        <td className="p-4 text-sm text-slate-600">A</td>
                        <td className="p-4">
                           {i % 2 === 0 ? 
-                             <span className="flex items-center gap-1 text-xs text-red-500 font-bold"><TrendingDown size={14}/> -2%</span> : 
+                             <span className="flex items-center gap-1 text-xs text-pink-500 font-bold"><TrendingDown size={14}/> -2%</span> : 
                              <span className="flex items-center gap-1 text-xs text-green-500 font-bold"><TrendingUp size={14}/> +5%</span>
                           }
                        </td>
