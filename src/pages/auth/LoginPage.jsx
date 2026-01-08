@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Shield, Lock, Globe, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../../services/authService";
-import { toast } from 'react-toastify';
+import { useAppDispatch } from "../../store/hooks";
+import { addNotification } from "../../store/slices/uiSlice";
 
 // Role definitions
 const ROLES = {
@@ -28,6 +29,7 @@ const LoginPage = () => {
 
   // Initialize the navigation hook
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleRealLogin = async (e) => {
     e.preventDefault();
@@ -42,13 +44,13 @@ const LoginPage = () => {
       await authService.login(authEmail, authPassword);
 
       // Redirect to Welcome Landing
-      toast.success("Welcome back! Login successful.");
+      dispatch(addNotification({ type: 'success', message: 'Welcome back! Login successful.' }));
       setTimeout(() => navigate("/welcome"), 500); // Small delay for toast visibility
     } catch (err) {
       console.error(err);
       const msg = err.message || "Login failed";
       setError(msg);
-      toast.error(msg);
+      dispatch(addNotification({ type: 'error', message: msg }));
     } finally {
       setLoading(false);
     }
@@ -61,7 +63,7 @@ const LoginPage = () => {
     if (role === ROLES.ADMIN) {
       // For simulation purposes, simpler bypass, but ideally we force real login
       // navigate("/dashboard/admin");
-      toast.info("Please use the login form with valid credentials for API access.");
+      dispatch(addNotification({ type: 'info', message: 'Please use the login form with valid credentials for API access.' }));
     } else if (role === ROLES.STUDENT) {
       navigate("/dashboard/student");
     } else if (role === ROLES.TEACHER) {
@@ -69,9 +71,10 @@ const LoginPage = () => {
     } else {
 
       // Placeholder for other roles
-      toast.warning(
-        `The ${role} dashboard is coming soon! Please select 'Administrator' to see the demo.`
-      );
+      dispatch(addNotification({
+        type: 'warning',
+        message: `The ${role} dashboard is coming soon! Please select 'Administrator' to see the demo.`
+      }));
     }
   };
 

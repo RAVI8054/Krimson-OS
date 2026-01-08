@@ -3,10 +3,14 @@ import {
   UserPlus,
   RefreshCw,
   AlertCircle,
-  CheckSquare
+  CheckSquare,
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal 
 } from "lucide-react";
 import { userService } from "../../../services/userService"; 
-import { toast } from 'react-toastify';
+import { useAppDispatch } from "../../../store/hooks";
+import { addNotification } from "../../../store/slices/uiSlice";
 
 const Card = ({ children, className = "" }) => (
   <div
@@ -16,11 +20,78 @@ const Card = ({ children, className = "" }) => (
   </div>
 );
 
+// Helper component for dynamic real-time updates
+const LiveTimestamp = ({ dateString }) => {
+  const calculateTimeAgo = (date) => {
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+    
+    if (diffInSeconds < 60) return "Just now";
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    return null; // Return null if older than a week to fall back to static date
+  };
+
+  const [timeAgo, setTimeAgo] = useState(() => {
+    if (!dateString) return "N/A";
+    return calculateTimeAgo(new Date(dateString));
+  });
+
+  useEffect(() => {
+    if (!dateString) return;
+    
+    // Update every minute
+    const interval = setInterval(() => {
+      const relative = calculateTimeAgo(new Date(dateString));
+      if (relative !== timeAgo) {
+        setTimeAgo(relative);
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [dateString, timeAgo]);
+
+  if (!dateString) return <span className="text-slate-400">N/A</span>;
+
+  const date = new Date(dateString);
+  const relative = calculateTimeAgo(date); // Recalculate for render resilience
+
+  // Format exact date: "Jan 08, 12:30 PM"
+  const exactDate = date.toLocaleDateString('en-SG', { 
+    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+  });
+
+  return (
+    <div className="flex flex-col">
+      <span className="text-slate-700 font-medium text-xs">
+        {exactDate}
+      </span>
+      {relative && (
+        <span className="text-[10px] text-slate-400 font-medium">
+          {relative}
+        </span>
+      )}
+    </div>
+  );
+};
+
 const UserManagement = () => {
+  const dispatch = useAppDispatch();
+  
   // State for Database Data
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Pagination State
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalUsers: 0
+  });
+
+  const ITEMS_PER_PAGE = 10;
 
   // Form State (Matches Backend Schema: full_name, email, role)
   const [newUser, setNewUser] = useState({
@@ -29,14 +100,50 @@ const UserManagement = () => {
     email: "",
   });
 
+  // Helper function to expand users with multiple roles into separate entries
+  const expandUsersByRole = (users) => {
+    const expanded = [];
+    
+    users.forEach(user => {
+      // If user has roles array populated, create entry for each role
+      if (user.roles && user.roles.length > 0) {
+        // Reverse roles to show the most recently added role (end of array) first
+        [...user.roles].reverse().forEach(role => {
+          expanded.push({
+            ...user,
+            role: role, // Override with specific role
+            _isExpanded: true // Flag to identify expanded entries
+          });
+        });
+      } else {
+        // If no roles array, just use the primary role
+        expanded.push({
+          ...user,
+          _isExpanded: false
+        });
+      }
+    });
+    
+    return expanded;
+  };
+
   // --- API FUNCTION: GET USERS ---
-  const fetchUsers = async () => {
+  const fetchUsers = async (page = 1) => {
     setLoading(true);
     try {
-      const result = await userService.getAllUsers();
+      const result = await userService.getAllUsers(page, ITEMS_PER_PAGE);
 
       if (result.success) {
         setUsers(result.data); // Update state with real DB data
+        
+        // Update pagination state
+        if (result.pagination) {
+          setPagination({
+            currentPage: result.pagination.page,
+            totalPages: result.pagination.totalPages,
+            totalUsers: result.pagination.total
+          });
+        }
         setError(null);
       } else {
         // Fallback or empty if fail, but log it
@@ -55,30 +162,52 @@ const UserManagement = () => {
 
   // Load users on component mount
   useEffect(() => {
-    fetchUsers();
+    fetchUsers(1);
   }, []);
 
   // --- API FUNCTION: ADD USER ---
   const handleAddUser = async () => {
     // Validation
     if (!newUser.full_name || !newUser.email) {
-      toast.warning("Please enter Name and Email");
+      dispatch(addNotification({ type: 'warning', message: 'Please enter Name and Email' }));
       return;
     }
 
     try {
+      // ⚡ OPTIMIZATION: Frontend Check (Best Method for UX)
+      // Check if user exists locally to give instant feedback without server call
+      const existingUserStr = newUser.email.toLowerCase();
+      const localDuplicate = users.find(u => 
+        u.email.toLowerCase() === existingUserStr && 
+        (u.roles?.includes(newUser.role) || u.role === newUser.role)
+      );
+
+      if (localDuplicate) {
+        dispatch(addNotification({ 
+          type: 'error', 
+          message: `User already has the role ${newUser.role}` 
+        }));
+        return; 
+      }
+
       const result = await userService.createUser(newUser);
 
       if (result.success) {
-        toast.success("User created successfully!");
-        setNewUser({ full_name: "", role: "Student", email: "" }); // Reset Form
-        fetchUsers(); // Refresh Table
+        if (result.data.role_already_existed) {
+             dispatch(addNotification({ type: 'error', message: `User already has the role ${newUser.role}` }));
+        } else {
+             dispatch(addNotification({ type: 'success', message: 'User created/updated successfully!' }));
+             
+             // If creating new user, refresh page 1 to show latest
+             setNewUser({ full_name: "", role: "Student", email: "" }); // Reset Form
+             fetchUsers(1); 
+        }
       } else {
-        toast.error(result.message || "Failed to create user");
+        dispatch(addNotification({ type: 'error', message: result.message || 'Failed to create user' }));
       }
     } catch (err) {
       console.error(err);
-      toast.error(err.message || "Error connecting to server");
+      dispatch(addNotification({ type: 'error', message: err.message || 'Error connecting to server' }));
     }
   };
 
@@ -93,7 +222,7 @@ const UserManagement = () => {
         </div>
         {/* Refresh Button */}
         <button
-          onClick={fetchUsers}
+          onClick={() => fetchUsers(pagination.currentPage)}
           className="p-2 text-blue-600 hover:bg-blue-50 rounded-full"
           title="Refresh Data"
         >
@@ -174,15 +303,25 @@ const UserManagement = () => {
       {/* --- USERS TABLE (Dynamic) --- */}
       <Card className="overflow-hidden p-0">
         <div className="p-6 border-b border-slate-100">
-          <h3 className="font-bold text-lg text-slate-800">
-            Existing Users ({users.length})
-          </h3>
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="font-bold text-lg text-slate-800">
+                Existing Users ({pagination.totalUsers} total)
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Showing page {pagination.currentPage} of {pagination.totalPages}
+              </p>
+            </div>
+            <span className="text-xs text-slate-500 italic">
+              Sorted by newest first
+            </span>
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead className="bg-slate-50">
               <tr>
-                {["Name", "Role", "Email", "App Access", "Status"].map(
+                {["Name", "Role", "Email", "Created", "App Access", "Status"].map(
                   (h, i) => (
                     <th
                       key={i}
@@ -198,7 +337,7 @@ const UserManagement = () => {
               {/* Loading State */}
               {loading && users.length === 0 && (
                 <tr>
-                  <td colSpan="5" className="p-8 text-center text-slate-500">
+                  <td colSpan="6" className="p-8 text-center text-slate-500">
                     Loading data...
                   </td>
                 </tr>
@@ -208,7 +347,7 @@ const UserManagement = () => {
               {error && (
                 <tr>
                   <td
-                    colSpan="5"
+                    colSpan="6"
                     className="p-8 text-center text-rose-500 flex justify-center items-center gap-2"
                   >
                     <AlertCircle className="h-4 w-4" /> {error}
@@ -219,13 +358,20 @@ const UserManagement = () => {
               {/* Data State */}
               {!loading &&
                 !error &&
-                users.map((user, i) => (
+                expandUsersByRole(users).map((user, i) => (
                   <tr
-                    key={user.user_id || i}
+                    key={`${user.user_id}-${user.role}-${i}`}
                     className="hover:bg-slate-50/50 transition-colors border-b border-slate-50 last:border-0"
                   >
                     <td className="p-4 text-sm font-bold text-slate-700">
-                      {user.full_name}
+                      <div className="flex items-center gap-2">
+                        {user.full_name}
+                        {user.roles && user.roles.length > 1 && (
+                          <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs rounded-full font-bold">
+                            {user.roles.length} roles
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="p-4 text-sm text-slate-600">
                       <span
@@ -242,7 +388,16 @@ const UserManagement = () => {
                         {user.role}
                       </span>
                     </td>
-                    <td className="p-4 text-sm text-slate-600">{user.email}</td>
+                    <td className="p-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className={user.roles && user.roles.length > 1 ? "text-indigo-600 font-semibold" : "text-slate-600"}>
+                          {user.email}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="p-4 text-sm text-slate-600">
+                      <LiveTimestamp dateString={user.created_at} />
+                    </td>
                     <td className="p-4 text-sm">
                       <span className="text-emerald-600 font-bold text-xs flex items-center gap-1">
                          <CheckSquare className="h-3 w-3" /> Granted
@@ -257,6 +412,69 @@ const UserManagement = () => {
                 ))}
             </tbody>
           </table>
+        </div>
+        
+        {/* Pagination Controls */}
+        <div className="p-4 border-t border-slate-100 flex items-center justify-between">
+          <div className="text-xs text-slate-500">
+             Showing {users.length} users on this page
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => fetchUsers(pagination.currentPage - 1)}
+              disabled={pagination.currentPage === 1 || loading}
+              className="p-2 rounded-lg hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4 text-slate-600" />
+            </button>
+            
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                // Logic to show generic page numbers around current page could be complex, 
+                // for simplicity showing first 5 or simpler logic.
+                // Let's implement a simple "Current of Total" logic for robustness
+                // or just simple numbers if pages are few.
+                // For "Best Production Level", let's keep it clean:
+                
+                let pageNum;
+                if (pagination.totalPages <= 5) {
+                   pageNum = i + 1;
+                } else if (pagination.currentPage <= 3) {
+                   pageNum = i + 1;
+                } else if (pagination.currentPage >= pagination.totalPages - 2) {
+                   pageNum = pagination.totalPages - 4 + i;
+                } else {
+                   pageNum = pagination.currentPage - 2 + i;
+                }
+                
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => fetchUsers(pageNum)}
+                    className={`h-8 w-8 rounded-lg text-xs font-bold transition-all ${
+                      pagination.currentPage === pageNum
+                        ? "bg-slate-900 text-white"
+                        : "bg-slate-50 text-slate-600 hover:bg-slate-100"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+              
+              {pagination.totalPages > 5 && pagination.currentPage < pagination.totalPages - 2 && (
+                 <span className="text-slate-400 px-1"><MoreHorizontal className="h-4 w-4" /></span>
+              )}
+            </div>
+
+            <button
+              onClick={() => fetchUsers(pagination.currentPage + 1)}
+              disabled={pagination.currentPage === pagination.totalPages || loading}
+              className="p-2 rounded-lg hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronRight className="h-4 w-4 text-slate-600" />
+            </button>
+          </div>
         </div>
       </Card>
     </div>

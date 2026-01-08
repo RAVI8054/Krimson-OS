@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Users, UserPlus, Settings, Briefcase, 
   DollarSign, CheckSquare, Bell, FileText, Activity, 
   Server, BarChart, LifeBuoy, Shield, Database, LogOut,
-  Building 
+  Building, X 
 } from 'lucide-react';
 
 export const ADMIN_MENU_ITEMS = [
@@ -49,6 +49,14 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen, onLogout }) => {
             {/* Glass Effects */}
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
             <div className="absolute bottom-10 -left-10 w-40 h-40 bg-pink-500 opacity-20 rounded-full blur-2xl"></div>
+
+            {/* Close Button for Mobile */}
+            <button 
+               onClick={() => setIsMobileMenuOpen && setIsMobileMenuOpen(false)}
+               className="absolute top-4 right-4 p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors z-50 md:hidden"
+            >
+               <X size={20} />
+            </button>
 
             {/* Header */}
             <div className="flex items-center gap-3 mb-8 pl-2 relative z-10">

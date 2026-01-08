@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { store } from '../store';
+import { addNotification } from '../store/slices/uiSlice';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
@@ -36,7 +37,7 @@ axiosInstance.interceptors.response.use(
         if (!error.response) {
             console.error('Network Error:', error);
             const netErr = 'Network error - please check your internet connection and try again.';
-            toast.error(netErr);
+            store.dispatch(addNotification({ type: 'error', message: netErr }));
             throw new Error(netErr);
         }
 
@@ -47,7 +48,7 @@ axiosInstance.interceptors.response.use(
             if (currentPath !== '/login') {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
-                toast.error("Session expired. Please login again.");
+                store.dispatch(addNotification({ type: 'error', message: 'Session expired. Please login again.' }));
                 // Redirect to login
                 setTimeout(() => {
                     window.location.href = '/login?expired=true';
@@ -66,7 +67,7 @@ axiosInstance.interceptors.response.use(
         // A common pattern is to toast 500s or generic errors, but let 400s be handled by the form.
         // However, given the request, let's toast if it's not 401 (already handled)
         if (error.response.status >= 500) {
-            toast.error(message);
+            store.dispatch(addNotification({ type: 'error', message }));
         }
 
         throw new Error(message);

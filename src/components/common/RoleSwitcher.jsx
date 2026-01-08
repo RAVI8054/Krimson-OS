@@ -4,7 +4,8 @@ import { authService } from '../../services/authService';
 // import { useNavigate } from 'react-router-dom'; // keeping it simple with window.location for full refresh
 import { getDashboardPath } from '../../utils/roleNavigation';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
+import { store } from '../../store';
+import { addNotification } from '../../store/slices/uiSlice';
 
 const RoleSwitcher = ({ currentUser }) => {
     // const navigate = useNavigate();
@@ -21,7 +22,7 @@ const RoleSwitcher = ({ currentUser }) => {
         setLoading(true);
         try {
             await authService.switchRole(role);
-            toast.success(`Switched role to ${role}`);
+            store.dispatch(addNotification({ type: 'success', message: `Switched role to ${role}` }));
             
             // Smart Redirect Logic
             const currentPath = window.location.pathname;
@@ -38,7 +39,7 @@ const RoleSwitcher = ({ currentUser }) => {
             
         } catch (error) {
             console.error("Failed to switch role:", error);
-            toast.error(error.message || "Failed to switch role");
+            store.dispatch(addNotification({ type: 'error', message: error.message || 'Failed to switch role' }));
             setLoading(false); 
         } finally {
             if (!loading) { 

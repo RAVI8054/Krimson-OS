@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/navigation/management/Sidebar';
 import { Search, Bell, Menu } from 'lucide-react';
 import { MANAGEMENT_DATA } from '../data/managementData';
 
 const ManagementLayout = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#f3f5f9] flex font-sans">
-      <Sidebar />
-      <div className="flex-1 ml-72 p-8 overflow-x-hidden">
+      <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+      <div className="flex-1 md:ml-72 p-8 overflow-x-hidden">
         {/* Executive Header */}
         <header className="flex justify-between items-center mb-10">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="md:hidden p-2 bg-white/50 backdrop-blur border border-white/50 rounded-xl shadow-sm hover:shadow-md transition-all text-slate-600"
+            >
+              <Menu size={20} />
+            </button>
           <div>
             <h2 className="text-3xl font-bold text-slate-800 tracking-tight">Executive Overview</h2>
             <p className="text-slate-500 text-sm mt-1">High-level institutional governance & analytics</p>
+          </div>
           </div>
           <div className="flex items-center gap-5">
             <div className="relative hidden md:block">

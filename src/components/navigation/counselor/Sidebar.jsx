@@ -2,10 +2,10 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   ClipboardList, HeartPulse, Users, MessageCircle, 
-  ShieldCheck, LogOut, BrainCircuit 
+  ShieldCheck, LogOut, BrainCircuit, X 
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -20,13 +20,33 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="h-screen w-72 p-4 flex flex-col fixed left-0 top-0 z-50">
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <div className={`h-screen w-72 p-4 flex flex-col fixed left-0 top-0 z-50 transition-transform duration-300 ${
+        isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      }`}>
       {/* Gradient Container - Matches Reference */}
       <div className="h-full w-full rounded-3xl bg-gradient-to-b from-cyan-400 via-blue-400 to-pink-400 p-4 flex flex-col text-white shadow-2xl relative overflow-hidden">
         
         {/* Decorative Elements */}
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
         <div className="absolute bottom-10 -left-10 w-40 h-40 bg-pink-500 opacity-20 rounded-full blur-2xl"></div>
+
+        {/* Close Button for Mobile */}
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors z-50 md:hidden"
+        >
+          <X size={20} />
+        </button>
 
         {/* Logo */}
         <div className="flex items-center gap-3 mb-8 pl-2 relative z-10">
@@ -45,6 +65,7 @@ const Sidebar = () => {
             <NavLink
               key={index}
               to={item.path}
+              onClick={onClose}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                   isActive 
@@ -74,7 +95,8 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

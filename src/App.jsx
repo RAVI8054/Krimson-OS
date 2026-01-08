@@ -1,7 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import ToastContainer from './components/common/ToastContainer';
 
 // Import Route Modules
 import AuthRoutes from "./routes/AuthRoutes";
@@ -21,7 +20,8 @@ import CounselorRoutes from "./routes/CounselorRoutes";
 export default function App() {
   return (
     <>
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />
+      {/* Redux-based toast notifications */}
+      <ToastContainer />
       <Routes>
         {/* Auth Routes (Root path handling included within AuthRoutes if needed, but usually handled at top level for / vs /login) */}
         {/* Actually AuthRoutes handles /, /login, etc. So we can mount it at root or handle explicit paths. 

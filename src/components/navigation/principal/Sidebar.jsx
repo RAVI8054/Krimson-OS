@@ -17,10 +17,11 @@ import {
   Target,
   Shield,
   LogOut,
-  Scan
-} from "lucide-react";
+  Scan,
+  X
+} from 'lucide-react';
 
-const PrincipalSidebar = () => {
+const PrincipalSidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -53,11 +54,31 @@ const PrincipalSidebar = () => {
   };
 
   return (
-    <aside className="fixed inset-y-4 left-4 z-50 w-[280px] flex flex-col overflow-hidden rounded-[2.5rem] shadow-2xl shadow-blue-900/10 transition-all duration-300">
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <aside className={`fixed inset-y-4 left-4 z-50 w-[280px] flex flex-col overflow-hidden rounded-[2.5rem] shadow-2xl shadow-blue-900/10 transition-all duration-300 ${
+        isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      }`}>
       {/* Glossy Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-cyan-300 via-blue-300 to-pink-300 opacity-100"></div>
       
       <div className="relative z-10 flex-1 flex flex-col p-6 overflow-hidden">
+        {/* Close Button for Mobile */}
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 text-slate-700 hover:text-slate-900 hover:bg-white/20 rounded-full transition-colors z-50 md:hidden"
+        >
+          <X size={20} />
+        </button>
+
         {/* Top Logo Area */}
         <div className="flex items-center gap-4 mb-8 shrink-0">
           <div className="w-10 h-10 bg-white/40 backdrop-blur rounded-xl flex items-center justify-center shadow-sm">
@@ -79,6 +100,7 @@ const PrincipalSidebar = () => {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={onClose}
                 className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-200 group relative ${
                   active 
                     ? 'bg-white/40 backdrop-blur text-slate-900 font-bold shadow-sm' 
@@ -115,7 +137,8 @@ const PrincipalSidebar = () => {
             </div>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 

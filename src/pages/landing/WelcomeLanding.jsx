@@ -13,11 +13,13 @@ import {
 } from "lucide-react";
 import { authService } from "../../services/authService";
 import RoleSwitcher from "../../components/common/RoleSwitcher";
-import { toast } from 'react-toastify';
+import { useAppDispatch } from "../../store/hooks";
+import { addNotification } from "../../store/slices/uiSlice";
 import { getDashboardPath } from "../../utils/roleNavigation";
 
 const WelcomeLanding = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [user, setUser] = useState(null);
     const [time, setTime] = useState(DateTime.now().setZone("Asia/Singapore"));
 
@@ -39,7 +41,7 @@ const WelcomeLanding = () => {
 
     const handleLogout = () => {
         authService.logout();
-        toast.info("Logged out successfully");
+        dispatch(addNotification({ type: 'info', message: 'Logged out successfully' }));
         navigate("/login");
     };
 
