@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import PrincipalSidebar from "../components/navigation/principal/Sidebar";
 import { authService } from "../services/authService";
 import { Menu } from "lucide-react";
@@ -35,9 +35,9 @@ const PrincipalLayout = () => {
           </div>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-slate-500">Welcome, {displayName}</span>
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-300 via-blue-300 to-pink-300 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white">
+            <Link to="/dashboard/principal/profile" className="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-300 via-blue-300 to-pink-300 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white hover:ring-offset-2 hover:ring-cyan-200 transition-all cursor-pointer">
               {initial}
-            </div>
+            </Link>
           </div>
         </header>
         <main className="p-8">

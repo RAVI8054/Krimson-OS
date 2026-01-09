@@ -12,10 +12,10 @@ import CommunicationHub from "../pages/dashboards/student/CommunicationHub";
 import PerformanceAnalytics from "../pages/dashboards/student/PerformanceAnalytics";
 import FeeStatus from "../pages/dashboards/student/FeeStatus";
 import BehaviorLog from "../pages/dashboards/student/BehaviorLog";
-import ProfileAndGoals from "../pages/dashboards/student/ProfileAndGoals";
 import ParentLinkDashboard from "../pages/dashboards/student/ParentLinkDashboard";
 import CoCurricularActivities from "../pages/dashboards/student/CoCurricularActivities";
 import HelpAndSupport from "../pages/dashboards/student/HelpAndSupport";
+import ProfilePage from '../pages/common/ProfilePage';
 
 const StudentRoutes = () => {
   return (
@@ -32,7 +32,7 @@ const StudentRoutes = () => {
            <Route path="analytics" element={<PerformanceAnalytics />} />
            <Route path="fees" element={<FeeStatus />} />
            <Route path="behavior" element={<BehaviorLog />} />
-           <Route path="profile" element={<ProfileAndGoals />} />
+           <Route path="profile" element={<ProfilePage />} />
            <Route path="parentlink" element={<ParentLinkDashboard />} />
            <Route path="activities" element={<CoCurricularActivities />} />
            <Route path="support" element={<HelpAndSupport />} />

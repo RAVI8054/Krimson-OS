@@ -8,6 +8,7 @@ import FeeCollectionTracker from '../pages/dashboards/finance/FeeCollectionTrack
 import RefundsLedgerControl from '../pages/dashboards/finance/RefundsLedgerControl';
 import FinancialReports from '../pages/dashboards/finance/FinancialReports';
 import AuditComplianceCenter from '../pages/dashboards/finance/AuditComplianceCenter';
+import ProfilePage from '../pages/common/ProfilePage';
 
 const FinanceRoutes = () => {
   return (
@@ -20,6 +21,7 @@ const FinanceRoutes = () => {
         <Route path="refunds" element={<RefundsLedgerControl />} />
         <Route path="reports" element={<FinancialReports />} />
         <Route path="audit" element={<AuditComplianceCenter />} />
+        <Route path="profile" element={<ProfilePage />} />
         <Route index element={<Navigate to="dashboard" replace />} />
       </Route>
     </Routes>

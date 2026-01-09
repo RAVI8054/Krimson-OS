@@ -15,8 +15,9 @@ import ReportsAnalytics from "../pages/dashboards/teacher/ReportsAnalytics";
 import ResourceLibrary from "../pages/dashboards/teacher/ResourceLibrary";
 import ReflectionJournal from "../pages/dashboards/teacher/ReflectionJournal";
 import AttendanceSummary from "../pages/dashboards/teacher/AttendanceSummary";
-import TeacherProfile from "../pages/dashboards/teacher/TeacherProfile";
+
 import Support from "../pages/dashboards/teacher/Support";
+import ProfilePage from '../pages/common/ProfilePage';
 
 const TeacherRoutes = () => {
   return (
@@ -37,7 +38,7 @@ const TeacherRoutes = () => {
            <Route path="resources" element={<ResourceLibrary />} />
            <Route path="reflection" element={<ReflectionJournal />} />
            <Route path="attendance-summary" element={<AttendanceSummary />} />
-           <Route path="profile" element={<TeacherProfile />} />
+           <Route path="profile" element={<ProfilePage />} />
            <Route path="support" element={<Support />} />
            
            {/* Fallback */}

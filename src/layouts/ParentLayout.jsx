@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import Sidebar from '../components/navigation/parent/Sidebar';
 import { Search, Bell, Menu } from 'lucide-react';
 
@@ -46,12 +46,13 @@ const ParentLayout = () => {
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
             </button>
             
-            {/* Profile Avatar */}
-            <img 
-              src="https://i.pravatar.cc/150?img=32" 
-              alt="Profile" 
-              className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-            />
+            <Link to="/dashboard/parent/profile">
+              <img 
+                src="https://i.pravatar.cc/150?img=32" 
+                alt="Profile" 
+                className="w-10 h-10 rounded-full border-2 border-white shadow-sm hover:ring-2 hover:ring-blue-100 transition-all"
+              />
+            </Link>
           </div>
         </header>
 

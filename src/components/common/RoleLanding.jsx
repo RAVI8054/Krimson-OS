@@ -42,8 +42,9 @@ const RoleLanding = ({ user, role, onContinue }) => {
        <div className="w-full max-w-4xl bg-white rounded-[40px] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[500px]">
           
           {/* Left Side: Welcome & Time */}
-          <div className="flex-1 bg-gradient-to-br from-indigo-600 to-blue-700 text-white p-12 flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -mr-16 -mt-16"></div>
+          <div className="flex-1 bg-gradient-to-br from-cyan-400 via-blue-400 to-pink-400 text-white p-12 flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl -mr-16 -mt-16"></div>
+              <div className="absolute bottom-10 left-0 w-48 h-48 bg-pink-500 opacity-20 rounded-full blur-2xl -ml-16"></div>
               
               <div>
                   <h1 className="text-4xl font-bold mb-2">Good Morning,</h1>
@@ -69,22 +70,22 @@ const RoleLanding = ({ user, role, onContinue }) => {
                       <button 
                         key={link.id}
                         onClick={() => onContinue && onContinue(link.path)}
-                        className="w-full bg-slate-50 hover:bg-indigo-50 border border-slate-100 hover:border-indigo-100 p-6 rounded-2xl flex items-center justify-between group transition-all"
+                        className="w-full bg-slate-50 hover:bg-cyan-50 border border-slate-100 hover:border-cyan-200 p-6 rounded-2xl flex items-center justify-between group transition-all"
                       >
                           <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-slate-700 group-hover:text-indigo-600 group-hover:scale-110 transition-transform">
+                              <div className="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-slate-700 group-hover:text-blue-600 group-hover:scale-110 transition-transform">
                                   {link.icon}
                               </div>
-                              <span className="font-bold text-slate-700 group-hover:text-indigo-700">{link.title}</span>
+                              <span className="font-bold text-slate-700 group-hover:text-blue-600">{link.title}</span>
                           </div>
-                          <ArrowRight className="text-slate-300 group-hover:text-indigo-500 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                          <ArrowRight className="text-slate-300 group-hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                       </button>
                   ))}
               </div>
 
               <div className="mt-12 pt-8 border-t border-slate-100">
                   <h4 className="text-xs font-bold text-slate-400 uppercase mb-3">Current Announcements</h4>
-                  <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
+                  <div className="bg-cyan-50 p-4 rounded-xl border border-cyan-100">
                       <p className="text-xs font-bold text-slate-700 line-clamp-2">
                           Reminder: Staff meeting scheduled for tomorrow at 10 AM in the Conference Hall.
                       </p>

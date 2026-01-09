@@ -7,7 +7,7 @@
  * @returns {JSX.Element} Admin layout with sidebar and content area
  */
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import Sidebar from '../components/navigation/admin/Sidebar';
 import { Search, Bell, Menu } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -97,6 +97,18 @@ const AdminLayout = () => {
                 <Bell size={20} className="text-slate-500 group-hover:text-cyan-600 transition-colors"/>
                 <span className="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
              </button>
+             {/* Profile Icon */}
+             <Link 
+               to="/dashboard/admin/profile"
+               className="relative w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 hover:shadow-md transition-all hover:bg-slate-50 group overflow-hidden"
+               aria-label="View profile"
+             >
+                <img 
+                  src="https://i.pravatar.cc/150?img=11" 
+                  alt="Admin Profile" 
+                  className="w-full h-full object-cover"
+                />
+             </Link>
           </div>
         </header>
 

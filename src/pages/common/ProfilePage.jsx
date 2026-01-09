@@ -1,0 +1,416 @@
+
+import React, { useState } from 'react';
+import { 
+  User, Lock, Bell, Layout, Shield, FileText, 
+  Save, Download, CheckCircle, AlertCircle, Camera 
+} from 'lucide-react';
+
+import { authService } from '../../services/authService';
+
+const ROLE_PERMISSIONS = {
+  'Administrator': ['Manage Users', 'System Config', 'Audit Logs', 'Financial Access', 'Database Backup', 'Security settings'],
+  'Principal': ['View All Students', 'Staff Management', 'Approve Leaves', 'View Financial Reports', 'Academic Oversight'],
+  'Teacher': ['View Assigned Classes', 'Grade Students', 'Take Attendance', 'View Class Schedule', 'Upload Resources'],
+  'Student': ['View Grades', 'View Timetable', 'Submit Assignments', 'View Attendance', 'Access Library'],
+  'Parent': ['View Child Progress', 'View Attendance', 'Pay Fees', 'Contact Teachers', 'View Events'],
+  'Registrar': ['Manage Admissions', 'Update Student Records', 'Issue Certificates', 'View Class Lists'],
+  'Finance': ['Manage Invoices', 'Track Payments', 'Generate Fee Reports', 'Process Refunds'],
+  'Librarian': ['Manage Books', 'Issue/Return Books', 'Track Overdue Books', 'Order New Books'],
+  'Academic Coordinator': ['Curriculum Planning', 'Approve Lesson Plans', 'Schedule Exams', 'Teacher Evaluation'],
+  'System Admin': ['Server Maintenance', 'Network Config', 'User Access Control', 'System Updates'],
+  'Counselor': ['Student Counseling', 'View Behavior Reports', 'Schedule Sessions', 'Private Notes'],
+  'Management': ['View Analytics', 'Financial Overview', 'Strategic Reports', 'Staff Performance'],
+  'IT/System Admin': ['Server Maintenance', 'Network Config', 'User Access Control', 'System Updates'],
+  'Default': ['View Profile', 'Update Settings']
+};
+
+const ROLE_THEMES = {
+  'Administrator': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Principal': { gradient: 'from-cyan-300 via-blue-300 to-pink-300', text: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Teacher': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Student': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Parent': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Management': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Director': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Registrar': { gradient: 'from-cyan-400 via-blue-500 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Finance': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'IT/System Admin': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Librarian': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Academic Coordinator': { gradient: 'from-cyan-300 via-blue-300 to-pink-300', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Coordinator': { gradient: 'from-cyan-300 via-blue-300 to-pink-300', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Counselor': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'School Counselor': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Default': { gradient: 'from-slate-700 to-slate-900', text: 'text-slate-600', bg: 'bg-slate-50', border: 'border-slate-100' }
+};
+
+const ProfilePage = () => {
+  const [activeTab, setActiveTab] = useState('profile');
+  
+  // Initialize with default values, will be populated by effect
+  const [user, setUser] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    role: '',
+    avatar: '',
+    bio: ''
+  });
+
+  const theme = ROLE_THEMES[user.role] || ROLE_THEMES['Default'];
+
+  React.useEffect(() => {
+    const fetchUserData = () => {
+        const currentUser = authService.getCurrentUser();
+        const currentRole = localStorage.getItem('currentRole'); // Or get from authService if added
+
+        if (currentUser) {
+            setUser(prev => ({
+                ...prev,
+                name: currentUser.name || 'User',
+                email: currentUser.email || '',
+                phone: currentUser.phone || '', // Might not be in initial auth data
+                role: currentRole || currentUser.role || 'User',
+                avatar: currentUser.avatar || '',
+                bio: currentUser.bio || `Principal / ${currentRole || 'User'}` // Default bio based on role
+            }));
+        }
+    };
+    
+    fetchUserData();
+  }, []);
+
+  const [preferences, setPreferences] = useState({
+    emailNotifications: true,
+    smsNotifications: false,
+    dashboardLayout: 'grid', // 'grid' | 'list'
+    theme: 'light'
+  });
+
+  const [activityLog] = useState([
+    { id: 1, action: 'Login', time: 'Today, 09:00 AM', ip: '192.168.1.1' },
+    { id: 2, action: 'Updated User Role', time: 'Yesterday, 04:30 PM', ip: '192.168.1.1' },
+    { id: 3, action: 'Exported Reports', time: 'Jan 05, 10:15 AM', ip: '192.168.1.1' },
+  ]);
+
+  const handleSaveProfile = () => {
+    alert('Profile updated successfully! (Mock Action)');
+  };
+
+  const handleExportLog = () => {
+    alert('Exporting Activity Log... (Mock Action: CSV Download)');
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto space-y-6 animate-fade-in-up">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+           <h1 className="text-2xl font-bold text-slate-800">Account Settings</h1>
+           <p className="text-slate-500 text-sm">Manage your personal information, security, and preferences.</p>
+        </div>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Left Sidebar Navigation */}
+        <div className="w-full lg:w-64 flex-shrink-0">
+           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden sticky top-8">
+              {/* Dynamic Gradient Header in Card */}
+              <div className={`h-24 bg-gradient-to-r ${theme.gradient}`}></div>
+              <div className="px-6 pb-6 -mt-12 flex flex-col items-center text-center relative z-10">
+                 <div className="relative group cursor-pointer mb-3">
+                    <div className="w-24 h-24 rounded-full bg-white p-1 shadow-md">
+                        <div className="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-slate-400 overflow-hidden border border-slate-100">
+                           {user.avatar ? (
+                             <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+                           ) : (
+                             <User size={32} />
+                           )}
+                        </div>
+                    </div>
+                    <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                       <Camera size={20} className="text-white" />
+                    </div>
+                 </div>
+                 <h3 className="font-bold text-slate-800 text-lg">{user.name}</h3>
+                 <span className={`text-xs font-bold px-3 py-1 rounded-full mt-1 ${theme.bg} ${theme.text} uppercase tracking-wider`}>{user.role}</span>
+              </div>
+              <nav className="p-3 space-y-1">
+                 {[
+                   { id: 'profile', label: 'Personal Info', icon: <User size={18} /> },
+                   { id: 'security', label: 'Security & Login', icon: <Lock size={18} /> },
+                   { id: 'preferences', label: 'Preferences', icon: <Bell size={18} /> },
+                   { id: 'permissions', label: 'Permissions', icon: <Shield size={18} /> },
+                   { id: 'activity', label: 'Activity Log', icon: <FileText size={18} /> },
+                 ].map(tab => (
+                   <button
+                     key={tab.id}
+                     onClick={() => setActiveTab(tab.id)}
+                     className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all ${
+                       activeTab === tab.id 
+                         ? `${theme.bg} ${theme.text} shadow-sm ring-1 ring-inset ${theme.border}` 
+                         : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                     }`}
+                   >
+                     {tab.icon}
+                     {tab.label}
+                   </button>
+                 ))}
+              </nav>
+           </div>
+        </div>
+
+        {/* Right Content Area */}
+        <div className="flex-1 space-y-6">
+           
+           {/* PERSONAL INFO TAB */}
+           {activeTab === 'profile' && (
+             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 animate-fade-in relative overflow-hidden">
+                <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${theme.gradient}`}></div>
+                <div className="flex justify-between items-center mb-6">
+                   <h2 className="text-lg font-bold text-slate-800">Personal Information</h2>
+                   <button 
+                     onClick={handleSaveProfile}
+                     className={`px-4 py-2 text-white rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-md active:scale-95 bg-gradient-to-r ${theme.gradient}`}
+                   >
+                      <Save size={16} /> Save Changes
+                   </button>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="space-y-2">
+                      <label className={`text-xs font-bold uppercase ${theme.text}`}>Full Name</label>
+                      <input 
+                        type="text" 
+                        value={user.name} 
+                        onChange={(e) => setUser({...user, name: e.target.value})}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-blue-500 outline-none transition-colors"
+                      />
+                   </div>
+                   <div className="space-y-2">
+                      <label className={`text-xs font-bold uppercase ${theme.text}`}>Email Address</label>
+                      <input 
+                        type="email" 
+                        value={user.email} 
+                        readOnly
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl opacity-70 cursor-not-allowed"
+                      />
+                      <p className="text-[10px] text-slate-400">Email managed by Organization Admin</p>
+                   </div>
+                   <div className="space-y-2">
+                      <label className={`text-xs font-bold uppercase ${theme.text}`}>Phone Number</label>
+                      <input 
+                        type="tel" 
+                        value={user.phone} 
+                        onChange={(e) => setUser({...user, phone: e.target.value})}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-blue-500 outline-none transition-colors"
+                      />
+                   </div>
+                   <div className="col-span-1 md:col-span-2 space-y-2">
+                      <label className={`text-xs font-bold uppercase ${theme.text}`}>Bio / About</label>
+                      <textarea 
+                        rows="3"
+                        value={user.bio} 
+                        onChange={(e) => setUser({...user, bio: e.target.value})}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-blue-500 outline-none transition-colors resize-none"
+                      />
+                   </div>
+                </div>
+             </div>
+           )}
+
+           {/* SECURITY TAB */}
+           {activeTab === 'security' && (
+             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 animate-fade-in relative overflow-hidden">
+                <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${theme.gradient}`}></div>
+                <h2 className="text-lg font-bold text-slate-800 mb-6">Security & Password</h2>
+                
+                <div className="max-w-md space-y-4">
+                   <div className="space-y-2">
+                      <label className={`text-xs font-bold uppercase ${theme.text}`}>Current Password</label>
+                      <input type="password" placeholder="••••••••" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                   </div>
+                   <div className="space-y-2">
+                      <label className={`text-xs font-bold uppercase ${theme.text}`}>New Password</label>
+                      <input type="password" placeholder="Enter new password" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                   </div>
+                   <div className="space-y-2">
+                      <label className={`text-xs font-bold uppercase ${theme.text}`}>Confirm Password</label>
+                      <input type="password" placeholder="Confirm new password" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                   </div>
+                   <button className={`px-6 py-2.5 text-white rounded-xl font-bold text-sm shadow-lg transition-all bg-gradient-to-r ${theme.gradient}`}>
+                      Update Password
+                   </button>
+                   
+                   <div className="mt-8 pt-6 border-t border-slate-100">
+                      <h3 className="text-sm font-bold text-slate-700 mb-2">Two-Factor Authentication</h3>
+                      <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                         <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${theme.bg} ${theme.text}`}>
+                               <Shield size={20} />
+                            </div>
+                            <div>
+                               <p className="font-bold text-sm text-slate-700">2FA is currently Active</p>
+                               <p className="text-xs text-slate-500">Protecting account via SMS (+65...)</p>
+                            </div>
+                         </div>
+                         <button className="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-3 py-1.5 rounded-lg hover:text-slate-800">
+                            Configure
+                         </button>
+                      </div>
+                   </div>
+                </div>
+             </div>
+           )}
+           
+           {/* PREFERENCES TAB */}
+           {activeTab === 'preferences' && (
+             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 animate-fade-in relative overflow-hidden">
+                <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${theme.gradient}`}></div>
+                <h2 className="text-lg font-bold text-slate-800 mb-6">System Preferences</h2>
+                
+                <div className="space-y-6">
+                   <div className="flex items-center justify-between">
+                      <div>
+                         <p className="font-bold text-slate-700">Email Notifications</p>
+                         <p className="text-sm text-slate-500">Receive weekly digests and critical alerts</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked={preferences.emailNotifications} onChange={() => setPreferences(p => ({...p, emailNotifications: !p.emailNotifications}))} className="sr-only peer" />
+                        <div className={`w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r ${theme.gradient}`}></div>
+                      </label>
+                   </div>
+                   
+                   <div className="flex items-center justify-between">
+                      <div>
+                         <p className="font-bold text-slate-700">SMS Alerts</p>
+                         <p className="text-sm text-slate-500">Receive urgent security notifications</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked={preferences.smsNotifications} onChange={() => setPreferences(p => ({...p, smsNotifications: !p.smsNotifications}))} className="sr-only peer" />
+                        <div className={`w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r ${theme.gradient}`}></div>
+                      </label>
+                   </div>
+
+                   <hr className="border-slate-100" />
+                   
+                   <div>
+                       <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2"><Layout size={18} /> Dashboard Layout</h3>
+                       <div className="grid grid-cols-2 gap-4 max-w-md">
+                          <button 
+                            onClick={() => setPreferences({...preferences, dashboardLayout: 'grid'})}
+                            className={`p-4 border rounded-xl flex flex-col items-center gap-2 transition-all ${preferences.dashboardLayout === 'grid' ? `${theme.border} ${theme.bg} ${theme.text} ring-1 ring-inset ${theme.border}` : 'border-slate-200 hover:border-slate-300'}`}
+                          >
+                             <div className="grid grid-cols-2 gap-1 w-12 h-12 opacity-50">
+                                <div className="bg-current rounded"></div>
+                                <div className="bg-current rounded"></div>
+                                <div className="bg-current rounded"></div>
+                                <div className="bg-current rounded"></div>
+                             </div>
+                             <span className="text-sm font-bold">Grid View</span>
+                          </button>
+                          
+                          <button 
+                            onClick={() => setPreferences({...preferences, dashboardLayout: 'list'})}
+                            className={`p-4 border rounded-xl flex flex-col items-center gap-2 transition-all ${preferences.dashboardLayout === 'list' ? `${theme.border} ${theme.bg} ${theme.text} ring-1 ring-inset ${theme.border}` : 'border-slate-200 hover:border-slate-300'}`}
+                          >
+                             <div className="flex flex-col gap-1 w-12 h-12 opacity-50">
+                                <div className="bg-current h-2 rounded w-full"></div>
+                                <div className="bg-current h-2 rounded w-full"></div>
+                                <div className="bg-current h-2 rounded w-full"></div>
+                             </div>
+                             <span className="text-sm font-bold">List View</span>
+                          </button>
+                       </div>
+                   </div>
+                </div>
+             </div>
+           )}
+
+           {/* PERMISSIONS TAB */}
+           {activeTab === 'permissions' && (
+             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 animate-fade-in relative overflow-hidden">
+                <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${theme.gradient}`}></div>
+                <div className="flex items-center gap-4 mb-6">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${theme.bg} ${theme.text}`}>
+                        <Shield size={24} />
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-bold text-slate-800">Role & Permissions</h2>
+                        <p className="text-slate-500 text-sm">You are logged in as <span className="font-bold text-slate-700">{user.role}</span></p>
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                     <p className={`text-sm font-bold uppercase ${theme.text}`}>Granted Capabilities</p>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {(ROLE_PERMISSIONS[user.role] || ROLE_PERMISSIONS['Default']).map((perm, i) => (
+                           <div key={i} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl text-sm font-medium text-slate-700">
+                               <CheckCircle size={16} className={`flex-shrink-0 ${theme.text}`} />
+                               {perm}
+                           </div>
+                        ))}
+                     </div>
+                </div>
+             </div>
+           )}
+
+           {/* ACTIVITY LOG TAB */}
+           {activeTab === 'activity' && (
+             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 animate-fade-in relative overflow-hidden">
+                 <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${theme.gradient}`}></div>
+                <div className="flex justify-between items-center mb-6">
+                   <h2 className="text-lg font-bold text-slate-800">Activity History</h2>
+                   <button 
+                     onClick={handleExportLog}
+                     className="px-4 py-2 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-2"
+                   >
+                     <Download size={16} /> Export CSV
+                   </button>
+                </div>
+
+                <div className="overflow-hidden bg-slate-50 rounded-xl border border-slate-100">
+                    <table className="w-full text-sm text-left">
+                       <thead className="bg-slate-100 text-slate-500 font-bold uppercase text-xs">
+                          <tr>
+                             <th className="px-6 py-4">Action</th>
+                             <th className="px-6 py-4">Date & Time</th>
+                             <th className="px-6 py-4">IP Address</th>
+                             <th className="px-6 py-4">Status</th>
+                          </tr>
+                       </thead>
+                       <tbody className="divide-y divide-slate-100">
+                          {activityLog.map(log => (
+                             <tr key={log.id} className="hover:bg-white transition-colors">
+                                <td className="px-6 py-4 font-medium text-slate-800">{log.action}</td>
+                                <td className="px-6 py-4 text-slate-500">{log.time}</td>
+                                <td className="px-6 py-4 text-slate-500 font-mono text-xs">{log.ip}</td>
+                                <td className="px-6 py-4">
+                                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> Success
+                                   </span>
+                                </td>
+                             </tr>
+                          ))}
+                       </tbody>
+                    </table>
+                    <div className="p-4 text-center border-t border-slate-200">
+                       <button className="text-xs font-bold text-blue-600 hover:text-blue-700">View All Activity</button>
+                    </div>
+                </div>
+
+                <div className="mt-4 flex items-start gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                   <AlertCircle size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
+                   <div>
+                       <p className="text-sm font-bold text-blue-800">PDPA Compliance</p>
+                       <p className="text-xs text-blue-600 mt-1">This log is maintained for security and compliance purposes. Records are retained for 365 days.</p>
+                   </div>
+                </div>
+             </div>
+           )}
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProfilePage;

@@ -4,57 +4,60 @@
  * @returns {string} The path to the dashboard.
  */
 export const getDashboardPath = (role) => {
-    if (!role) return '/login';
-    
-    // Normalize role string to handle different casing if necessary
-    const normalizedRole = role.toLowerCase(); // or keep it case-sensitive if backend is strict
+  if (!role) return "/login";
 
-    switch (role) { // Using the exact strings from ROLES constant usually
-        case 'Administrator':
-        case 'Admin': // Handling potential variations
-            return '/dashboard/admin';
-            
-        case 'Teacher':
-            return '/dashboard/teacher';
-            
-        case 'Student':
-            return '/dashboard/student';
-            
-        case 'Principal':
-            return '/dashboard/principal';
-            
-        case 'Academic Coordinator':
-        case 'Coordinator':
-            return '/dashboard/coordinator';
-            
-        case 'Registrar':
-            return '/dashboard/registrar';
+  // Normalize role string to handle different casing if necessary
+  // Normalize role string to handle different casing
+  const normalizedRole = role.toUpperCase();
 
-        case 'Finance':
-        case 'Accountant':
-            return '/dashboard/finance';
+  switch (normalizedRole) {
+    case "ADMINISTRATOR":
+    case "ADMIN":
+      return "/dashboard/admin";
 
-        case 'Parent':
-        case 'Guardian':
-            return '/dashboard/parent';
+    case "TEACHER":
+      return "/dashboard/teacher";
 
-        case 'Management':
-        case 'Director': // Potential aliases
-            return '/dashboard/management';
+    case "STUDENT":
+      return "/dashboard/student";
 
-        case 'Librarian':
-            return '/dashboard/librarian';
+    case "PRINCIPAL":
+      return "/dashboard/principal";
 
-        case 'System Administrator':
-        case 'IT Admin':
-            return '/dashboard/it-admin';
+    case "ACADEMIC COORDINATOR":
+    case "COORDINATOR":
+      return "/dashboard/coordinator";
 
-        case 'School Counselor':
-        case 'Counselor':
-            return '/dashboard/counselor';
-            
-        default:
-            console.warn(`Unknown role: ${role}, defaulting to welcome page or student dashboard`);
-            return '/welcome'; // Safer fallback than student dashboard
-    }
+    case "REGISTRAR":
+      return "/dashboard/registrar";
+
+    case "FINANCE":
+    case "ACCOUNTANT":
+      return "/dashboard/finance";
+
+    case "PARENT":
+    case "GUARDIAN":
+      return "/dashboard/parent";
+
+    case "MANAGEMENT":
+    case "DIRECTOR":
+      return "/dashboard/management";
+
+    case "LIBRARIAN":
+      return "/dashboard/librarian";
+
+    case "SYSTEM ADMINISTRATOR":
+    case "SYSTEMADMIN":
+    case "IT ADMIN":
+    case "IT/SYSTEM ADMIN":
+      return "/dashboard/it-admin";
+
+    case "SCHOOL COUNSELOR":
+    case "COUNSELOR":
+      return "/dashboard/counselor";
+
+    default:
+      console.warn(`Unknown role: ${role}, defaulting to welcome page`);
+      return "/welcome";
+  }
 };

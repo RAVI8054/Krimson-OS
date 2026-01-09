@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, Link } from 'react-router-dom';
 import Sidebar from '../components/navigation/finance/Sidebar';
 import { Search, Bell, Menu } from 'lucide-react';
 import { FINANCE_DATA } from '../data/financeData';
@@ -45,7 +45,9 @@ const FinanceLayout = () => {
               <Bell size={20} />
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
             </button>
-            <img src={FINANCE_DATA.user.avatar} alt="Profile" className="w-10 h-10 rounded-full border-2 border-white shadow-sm" />
+            <Link to="/dashboard/finance/profile">
+              <img src={FINANCE_DATA.user.avatar} alt="Profile" className="w-10 h-10 rounded-full border-2 border-white shadow-sm hover:ring-2 hover:ring-blue-100 transition-all" />
+            </Link>
           </div>
         </header>
 

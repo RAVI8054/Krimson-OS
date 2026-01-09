@@ -5,6 +5,7 @@ import StudentBehaviorLog from '../pages/dashboards/counselor/StudentBehaviorLog
 import InterventionCaseDashboard from '../pages/dashboards/counselor/InterventionCaseDashboard';
 import WellbeingTrends from '../pages/dashboards/counselor/WellbeingTrends';
 import CollaborationHub from '../pages/dashboards/counselor/CollaborationHub';
+import ProfilePage from '../pages/common/ProfilePage';
 
 const CounselorRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const CounselorRoutes = () => {
         <Route path="cases" element={<InterventionCaseDashboard />} />
         <Route path="wellbeing" element={<WellbeingTrends />} />
         <Route path="collaboration" element={<CollaborationHub />} />
+        <Route path="profile" element={<ProfilePage />} />
         
         {/* Fallback for unknown sub-routes */}
         <Route path="*" element={<Navigate to="behavior" replace />} />

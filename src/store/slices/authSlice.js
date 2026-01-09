@@ -2,7 +2,7 @@
  * @file store/slices/authSlice.js
  * @description Authentication state slice using Redux Toolkit.
  * Manages user authentication, roles, and session data.
- * 
+ *
  * State Shape:
  * {
  *   user: { id, name, email, avatar } | null,
@@ -15,7 +15,7 @@
  * }
  */
 
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // ---------------------------------------------------
 // TODO: API INTEGRATION POINT - Authentication
@@ -32,17 +32,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
  */
 const initialState = {
   user: null,
-  token: localStorage.getItem('token') || null,
-  currentRole: localStorage.getItem('currentRole') || null,
-  availableRoles: JSON.parse(localStorage.getItem('availableRoles') || '[]'),
-  isAuthenticated: !!localStorage.getItem('token'),
+  token: localStorage.getItem("token") || null,
+  currentRole: localStorage.getItem("currentRole") || null,
+  availableRoles: JSON.parse(localStorage.getItem("availableRoles") || "[]"),
+  isAuthenticated: !!localStorage.getItem("token"),
   loading: false,
-  error: null
+  error: null,
 };
 
 /**
  * Async thunk for user login
- * 
+ *
  * @async
  * @param {Object} credentials - Login credentials
  * @param {string} credentials.email - User email
@@ -50,32 +50,28 @@ const initialState = {
  * @returns {Promise<Object>} User data and token
  */
 export const loginUser = createAsyncThunk(
-  'auth/login',
+  "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
       // ---------------------------------------------------
-      // TODO: Replace with real API call
+      // API call
       // ---------------------------------------------------
-      // const response = await fetch('/api/auth/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(credentials)
-      // });
-      // const data = await response.json();
-      // return data;
-      // ---------------------------------------------------
-      
-      // Mock response for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await fetch("http://localhost:5000/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials),
+      });
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || "Login failed");
+      }
+
       return {
-        user: {
-          id: '1',
-          name: 'Admin User',
-          email: credentials.email,
-          avatar: 'https://i.pravatar.cc/150?img=1'
-        },
-        token: 'mock-jwt-token-' + Date.now(),
-        roles: ['admin', 'teacher']
+        user: data.data.user,
+        token: data.data.token,
+        roles: data.data.user.roles,
+        currentRole: data.data.user.active_role || data.data.user.role, // Use active_role if available
       };
     } catch (error) {
       return rejectWithValue(error.message);
@@ -87,7 +83,7 @@ export const loginUser = createAsyncThunk(
  * Async thunk for user logout
  */
 export const logoutUser = createAsyncThunk(
-  'auth/logout',
+  "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
       // ---------------------------------------------------
@@ -98,7 +94,7 @@ export const logoutUser = createAsyncThunk(
       //   headers: { 'Authorization': `Bearer ${token}` }
       // });
       // ---------------------------------------------------
-      
+
       return true;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -110,7 +106,7 @@ export const logoutUser = createAsyncThunk(
  * Authentication slice
  */
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     /**
@@ -120,31 +116,33 @@ const authSlice = createSlice({
      */
     setCurrentRole: (state, action) => {
       state.currentRole = action.payload;
-      localStorage.setItem('currentRole', action.payload);
+      localStorage.setItem("currentRole", action.payload);
     },
-    
+
     /**
      * Clear authentication error
      */
     clearError: (state) => {
       state.error = null;
     },
-    
+
     /**
      * Restore session from localStorage
      */
     restoreSession: (state) => {
-      const token = localStorage.getItem('token');
-      const currentRole = localStorage.getItem('currentRole');
-      const availableRoles = JSON.parse(localStorage.getItem('availableRoles') || '[]');
-      
+      const token = localStorage.getItem("token");
+      const currentRole = localStorage.getItem("currentRole");
+      const availableRoles = JSON.parse(
+        localStorage.getItem("availableRoles") || "[]"
+      );
+
       if (token) {
         state.token = token;
         state.currentRole = currentRole;
         state.availableRoles = availableRoles;
         state.isAuthenticated = true;
       }
-    }
+    },
   },
   extraReducers: (builder) => {
     // Login
@@ -157,21 +155,26 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.availableRoles = action.payload.roles;
-      state.currentRole = action.payload.roles[0]; // Default to first role
+      // Use active_role from payload if explicit, otherwise first role
+      state.currentRole = action.payload.currentRole || action.payload.roles[0];
       state.isAuthenticated = true;
       state.error = null;
-      
+
       // Persist to localStorage
-      localStorage.setItem('token', action.payload.token);
-      localStorage.setItem('currentRole', action.payload.roles[0]);
-      localStorage.setItem('availableRoles', JSON.stringify(action.payload.roles));
+      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("currentRole", state.currentRole);
+      localStorage.setItem(
+        "availableRoles",
+        JSON.stringify(action.payload.roles)
+      );
+      localStorage.setItem("user", JSON.stringify(action.payload.user)); // Also persist user object for WelcomeLanding
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.payload || 'Login failed';
+      state.error = action.payload || "Login failed";
       state.isAuthenticated = false;
     });
-    
+
     // Logout
     builder.addCase(logoutUser.fulfilled, (state) => {
       state.user = null;
@@ -179,13 +182,13 @@ const authSlice = createSlice({
       state.currentRole = null;
       state.availableRoles = [];
       state.isAuthenticated = false;
-      
+
       // Clear localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('currentRole');
-      localStorage.removeItem('availableRoles');
+      localStorage.removeItem("token");
+      localStorage.removeItem("currentRole");
+      localStorage.removeItem("availableRoles");
     });
-  }
+  },
 });
 
 export const { setCurrentRole, clearError, restoreSession } = authSlice.actions;

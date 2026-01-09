@@ -5,6 +5,7 @@ import LibraryDashboard from '../pages/dashboards/librarian/LibraryDashboard';
 import IssueReturnManager from '../pages/dashboards/librarian/IssueReturnManager';
 import ReservationRequestCenter from '../pages/dashboards/librarian/ReservationRequestCenter';
 import LibraryReports from '../pages/dashboards/librarian/LibraryReports';
+import ProfilePage from '../pages/common/ProfilePage';
 
 const LibrarianRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const LibrarianRoutes = () => {
         <Route path="issue-return" element={<IssueReturnManager />} />
         <Route path="reservations" element={<ReservationRequestCenter />} />
         <Route path="reports" element={<LibraryReports />} />
+        <Route path="profile" element={<ProfilePage />} />
         
         {/* Default redirect */}
         <Route path="*" element={<Navigate to="dashboard" replace />} />

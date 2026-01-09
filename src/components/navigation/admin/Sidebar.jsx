@@ -93,16 +93,21 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen, onLogout }) => {
 
             {/* Footer Profile */}
             <div className="mt-4 pt-4 border-t border-white/20 relative z-10">
-               <div 
-                onClick={onLogout}
-                className="flex items-center gap-3 p-3 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors cursor-pointer"
-               >
-                  <div className="w-8 h-8 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold text-xs shadow-sm">A</div>
-                  <div className="flex-1">
-                     <p className="text-sm font-semibold">Administrator</p>
-                     <p className="text-[10px] opacity-80">:: Verified</p>
-                  </div>
-                  <LogOut size={16} className="text-white hover:text-red-200" />
+               <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors">
+                  <NavLink to="/dashboard/admin/profile" className="flex items-center gap-3 flex-1 group cursor-pointer">
+                     <div className="w-8 h-8 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold text-xs shadow-sm group-hover:scale-110 transition-transform">A</div>
+                     <div className="flex-1">
+                        <p className="text-sm font-semibold text-white group-hover:text-blue-100 transition-colors">Administrator</p>
+                        <p className="text-[10px] text-white/80">:: Verified</p>
+                     </div>
+                  </NavLink>
+                  <button 
+                     onClick={onLogout}
+                     className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                     title="Logout"
+                  >
+                     <LogOut size={18} />
+                  </button>
                </div>
             </div>
          </div>

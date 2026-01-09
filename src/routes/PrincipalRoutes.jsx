@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import PrincipalLayout from "../layouts/PrincipalLayout";
 import PrincipalDashboard from "../pages/dashboards/principal/PrincipalDashboard";
 import AcademicMonitor from "../pages/dashboards/principal/AcademicMonitor";
@@ -17,6 +17,8 @@ import MeetingHub from "../pages/dashboards/principal/MeetingHub";
 import StrategicPlanning from "../pages/dashboards/principal/StrategicPlanning";
 import PrincipalProfile from "../pages/dashboards/principal/PrincipalProfile";
 
+import ProfilePage from '../pages/common/ProfilePage';
+
 const PrincipalRoutes = () => {
   return (
     <Routes>
@@ -29,13 +31,14 @@ const PrincipalRoutes = () => {
           <Route path="exams" element={<ExamOversight />} />
           <Route path="finance" element={<FinanceSnapshot />} />
           <Route path="staff" element={<StaffManagement />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="*" element={<Navigate to="/dashboard/principal" replace />} />
           <Route path="welfare" element={<WelfareDashboard />} />
           <Route path="events" element={<EventControl />} />
           <Route path="reports" element={<ReportsGenerator />} />
           <Route path="compliance" element={<ComplianceCenter />} />
           <Route path="meetings" element={<MeetingHub />} />
           <Route path="strategy" element={<StrategicPlanning />} />
-          <Route path="profile" element={<PrincipalProfile />} />
         </Route>
     </Routes>
   );

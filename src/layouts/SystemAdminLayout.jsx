@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import Sidebar from '../components/navigation/systemAdmin/Sidebar';
 import { Search, Bell, Menu } from 'lucide-react';
 import { SYSTEM_ADMIN_DATA } from '../data/systemAdminData';
@@ -38,13 +38,13 @@ const SystemAdminLayout = () => {
               <Bell size={20} />
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
             </button>
-            <div className="flex items-center gap-3 bg-white p-1.5 pr-4 rounded-full shadow-sm cursor-pointer hover:shadow-md transition-shadow">
+            <Link to="/dashboard/it-admin/profile" className="flex items-center gap-3 bg-white p-1.5 pr-4 rounded-full shadow-sm cursor-pointer hover:shadow-md transition-shadow">
                <img src={SYSTEM_ADMIN_DATA.user.avatar} alt="Profile" className="w-9 h-9 rounded-full object-cover" />
                <div className="hidden md:block text-left">
                   <p className="text-xs font-bold text-slate-700">{SYSTEM_ADMIN_DATA.user.name}</p>
                   <p className="text-[10px] text-slate-400 uppercase tracking-wider">{SYSTEM_ADMIN_DATA.user.role}</p>
                </div>
-            </div>
+            </Link>
           </div>
         </header>
 

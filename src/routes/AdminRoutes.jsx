@@ -17,6 +17,8 @@ import AnalyticsCenter from "../pages/dashboards/admin/AnalyticsCenter";
 import SystemSettings from "../pages/dashboards/admin/SystemSettings";
 import Helpdesk from "../pages/dashboards/admin/Helpdesk";
 
+import ProfilePage from '../pages/common/ProfilePage';
+
 const AdminRoutes = () => {
   return (
     <Routes>
@@ -25,6 +27,7 @@ const AdminRoutes = () => {
         <Route path="admissions" element={<AdmissionsConsole />} />
         <Route path="users" element={<UserManagement />} />
         <Route path="classes" element={<ClassConfig />} />
+        <Route path="profile" element={<ProfilePage />} /> {/* Added route for profile page */}
         <Route path="hr" element={<HRAdmin />} />
         <Route path="finance" element={<FinanceControl />} />
         <Route path="attendance" element={<AttendanceOversight />} />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import CoordinatorSidebar from "../components/navigation/coordinator/Sidebar";
 import { authService } from "../services/authService";
 import { Menu } from "lucide-react";
@@ -35,9 +35,9 @@ const AcademicCoordinatorLayout = () => {
           </div>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-slate-500">Welcome, {displayName}</span>
-            <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-lg">
+            <Link to="/dashboard/coordinator/profile" className="h-10 w-10 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-lg hover:ring-2 hover:ring-offset-2 hover:ring-purple-300 transition-all">
               {initial}
-            </div>
+            </Link>
           </div>
         </header>
         <main className="p-8">

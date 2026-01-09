@@ -1,37 +1,28 @@
 import React, { useState } from "react";
-import { Shield, Lock, Globe, AlertCircle } from "lucide-react";
+import { Shield, Lock, Globe, AlertCircle, ArrowRight, Key } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../../services/authService";
 import { useAppDispatch } from "../../store/hooks";
 import { addNotification } from "../../store/slices/uiSlice";
 
-// Role definitions
-const ROLES = {
-  STUDENT: "Student",
-  TEACHER: "Teacher",
-  PARENT: "Parent",
-  PRINCIPAL: "Principal",
-  ADMIN: "Administrator",
-  FINANCE: "Finance",
-  MANAGEMENT: "Management",
-  REGISTRAR: "Registrar",
-  COORDINATOR: "Academic Coordinator",
-  COUNSELOR: "Counselor",
-  LIBRARIAN: "Librarian",
-  IT_ADMIN: "IT/System Admin",
-};
-
+/**
+ * UNIFIED LOGIN PORTAL
+ * Centralizes access for all roles with SSO-style authentication and 2FA simulation.
+ */
 const LoginPage = () => {
+  const [step, setStep] = useState(1); // 1 = Credentials, 2 = OTP/2FA
   const [authEmail, setAuthEmail] = useState("admin@krimson.com");
   const [authPassword, setAuthPassword] = useState("admin");
+  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [userRole, setUserRole] = useState(null); // Store role for redirection after OTP
 
-  // Initialize the navigation hook
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const handleRealLogin = async (e) => {
+  // STEP 1: VALIDATE CREDENTIALS
+  const handleCredentialSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -41,14 +32,17 @@ const LoginPage = () => {
         throw new Error("Please enter both email and password");
       }
 
-      await authService.login(authEmail, authPassword);
-
-      // Redirect to Welcome Landing
-      dispatch(addNotification({ type: 'success', message: 'Welcome back! Login successful.' }));
-      setTimeout(() => navigate("/welcome"), 500); // Small delay for toast visibility
+      // Call API to verify credentials
+      const response = await authService.login(authEmail, authPassword);
+      
+      // On success, prepare for Step 2
+      setUserRole(response.user.role);
+      setStep(2); // Move to OTP
+      dispatch(addNotification({ type: 'info', message: 'Credentials verified. Please enter OTP.' }));
+      
     } catch (err) {
       console.error(err);
-      const msg = err.message || "Login failed";
+      const msg = err.message || "Login failed. Invalid credentials.";
       setError(msg);
       dispatch(addNotification({ type: 'error', message: msg }));
     } finally {
@@ -56,38 +50,42 @@ const LoginPage = () => {
     }
   };
 
-  const handleLogin = (role) => {
-    console.log(`Attempting login as: ${role}`);
+  // STEP 2: VERIFY OTP (SIMULATION)
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    // Check if the selected role is Administrator
-    if (role === ROLES.ADMIN) {
-      // For simulation purposes, simpler bypass, but ideally we force real login
-      // navigate("/dashboard/admin");
-      dispatch(addNotification({ type: 'info', message: 'Please use the login form with valid credentials for API access.' }));
-    } else if (role === ROLES.STUDENT) {
-      navigate("/dashboard/student");
-    } else if (role === ROLES.TEACHER) {
-      navigate("/dashboard/teacherdashboard");
-    } else {
+    // Simulate OTP verification delay for "PDPA Compliance" feel
+    setTimeout(() => {
+      // In a real app, we would verify OTP with backend here
+      if (otp !== "1234") {
+        setError("Invalid OTP. Please enter '1234'");
+        setLoading(false);
+        return;
+      }
 
-      // Placeholder for other roles
-      dispatch(addNotification({
-        type: 'warning',
-        message: `The ${role} dashboard is coming soon! Please select 'Administrator' to see the demo.`
-      }));
-    }
+      setLoading(false);
+      dispatch(addNotification({ type: 'success', message: 'Identity Verified. Redirecting...' }));
+      
+      // REDIRECT TO WELCOME LANDING
+      navigate("/welcome");
+
+    }, 1500);
+  };
+
+  const handleForgotPassword = () => {
+    navigate("/forgot-password");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-300 via-blue-300 to-pink-300 flex items-center justify-center p-2 sm:p-4 font-sans selection:bg-blue-100">
       {/* Main Glass Card Container */}
       <div className="max-w-6xl w-full bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-[3rem] shadow-2xl shadow-purple-900/10 overflow-hidden flex flex-col lg:flex-row min-h-[500px] sm:min-h-[600px] border border-white/50">
-        {/* LEFT SIDEBAR: Branding & Info */}
+        
+        {/* LEFT SIDEBAR: Branding - Unchanged */}
         <div className="lg:w-5/12 flex flex-col justify-between relative overflow-hidden">
-          {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-cyan-300 via-blue-300 to-pink-300"></div>
-
-          {/* Top Branding */}
           <div className="relative z-10 p-6 sm:p-8 lg:p-12 text-slate-800">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/40 backdrop-blur rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-sm">
               <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-slate-800" />
@@ -99,8 +97,6 @@ const LoginPage = () => {
               Centralized School Ecosystem
             </p>
           </div>
-
-          {/* Bottom Info */}
           <div className="relative z-10 p-6 sm:p-8 lg:p-12 space-y-3 sm:space-y-4">
             <div className="flex items-center gap-2 sm:gap-3 text-slate-700">
               <div className="p-1.5 sm:p-2 bg-white/40 rounded-lg shadow-sm">
@@ -124,74 +120,145 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* RIGHT SIDE: Login Form */}
-        <div className="lg:w-7/12 p-6 sm:p-8 lg:p-12 xl:p-16 flex flex-col justify-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
-            Authorized Login
-          </h2>
-          <p className="text-slate-500 mb-6 sm:mb-8 text-sm sm:text-base">
-            Access the Singapore Campus Portal. Authentication via SSO.
-          </p>
+        {/* RIGHT SIDE: UNIFIED LOGIN FORM */}
+        <div className="lg:w-7/12 p-6 sm:p-8 lg:p-12 xl:p-16 flex flex-col justify-center relative">
+          
+          <div className="max-w-md w-full mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+              {step === 1 ? "Authorized Login" : "Two-Factor Auth"}
+            </h2>
+            <p className="text-slate-500 mb-6 sm:mb-8 text-sm sm:text-base">
+              {step === 1 
+                ? "Access the Singapore Campus Portal via SSO."
+                : "Please enter the OTP sent to your device."
+              }
+            </p>
 
-          {/* Real Login Form */}
-          <form onSubmit={handleRealLogin} className="space-y-4 mb-6 sm:mb-8">
             {error && (
-              <div className="p-3 bg-rose-100 text-rose-700 rounded-xl text-sm flex items-center gap-2">
-                <AlertCircle className="h-4 w-4" />
+              <div className="mb-6 p-4 bg-rose-50 border border-rose-100 text-rose-600 rounded-xl text-sm flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+                <AlertCircle className="h-4 w-4 shrink-0" />
                 {error}
               </div>
             )}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Email / User ID
-              </label>
-              <input
-                type="text"
-                value={authEmail}
-                onChange={(e) => setAuthEmail(e.target.value)}
-                className="w-full p-3 border border-slate-200 bg-white/50 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm sm:text-base"
-                placeholder="e.g. admin@krimson.edu"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                value={authPassword}
-                onChange={(e) => setAuthPassword(e.target.value)}
-                className="w-full p-3 border border-slate-200 bg-white/50 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm sm:text-base"
-                placeholder="••••••••"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all disabled:opacity-50"
-            >
-              {loading ? "Authenticating..." : "Secure Login"}
-            </button>
-          </form>
 
-          {/* Role Selection Grid */}
-          <p className="text-xs text-slate-400 mb-3 sm:mb-4 uppercase font-bold tracking-wider">
-            Simulate Access (Demo Mode):
-          </p>
+            {/* STEP 1: EMAIL & PASSWORD */}
+            {step === 1 && (
+              <form onSubmit={handleCredentialSubmit} className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
+                    Email / User ID
+                  </label>
+                  <input
+                    type="text"
+                    value={authEmail}
+                    onChange={(e) => setAuthEmail(e.target.value)}
+                    className="w-full p-3.5 border border-slate-200 bg-slate-50 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
+                    placeholder="e.g. admin@krimson.edu"
+                    autoFocus
+                  />
+                </div>
+                <div>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <label className="block text-sm font-bold text-slate-700">
+                      Password
+                    </label>
+                  </div>
+                  <input
+                    type="password"
+                    value={authPassword}
+                    onChange={(e) => setAuthPassword(e.target.value)}
+                    className="w-full p-3.5 border border-slate-200 bg-slate-50 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all font-sans"
+                    placeholder="••••••••"
+                  />
+                </div>
+                
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
+                >
+                  {loading ? (
+                    "Authenticating..."
+                  ) : (
+                    <>
+                      Continue <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
+                
+                <button 
+                  type="button" 
+                  onClick={handleForgotPassword}
+                  className="w-full text-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors mt-2"
+                >
+                  Forgot Password?
+                </button>
+              </form>
+            )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 max-h-[250px] sm:max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-            {Object.values(ROLES).map((role) => (
-              <button
-                key={role}
-                onClick={() => handleLogin(role)}
-                className="p-2.5 sm:p-3 rounded-xl border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200 hover:shadow-sm transition-all text-left text-xs sm:text-sm font-semibold text-slate-600 hover:text-blue-700 flex justify-between items-center group"
-              >
-                <span className="truncate">{role}</span>
-                <span className="text-slate-300 group-hover:text-blue-500 transition-colors flex-shrink-0 ml-2">
-                  &rarr;
-                </span>
-              </button>
-            ))}
+            {/* STEP 2: OTP / 2FA */}
+            {step === 2 && (
+              <form onSubmit={handleOtpSubmit} className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3 items-start">
+                   <div className="p-2 bg-white rounded-lg shadow-sm text-blue-600">
+                     <Shield className="h-5 w-5" />
+                   </div>
+                   <div>
+                     <p className="text-sm font-bold text-slate-800">PDPA Compliance Verify</p>
+                     <p className="text-xs text-slate-500">
+                       We've sent a 6-digit code to your registered device.
+                     </p>
+                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
+                    One-Time Password
+                  </label>
+                  <div className="relative">
+                    <Key className="absolute left-3.5 top-3.5 h-5 w-5 text-slate-400" />
+                    <input
+                      type="text"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      className="w-full p-3.5 pl-11 border border-slate-200 bg-slate-50 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all tracking-widest font-mono text-lg"
+                      placeholder="XXXXXX"
+                      autoFocus
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl font-bold shadow-lg shadow-emerald-500/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
+                >
+                  {loading ? (
+                    "Verifying..."
+                  ) : (
+                    <>
+                      Verify Identity <Shield className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
+                
+                <button 
+                  type="button"
+                  onClick={() => { setStep(1); setError(""); }}
+                  className="w-full text-center text-sm text-slate-500 hover:text-slate-800 font-medium py-2"
+                >
+                  Back to Login
+                </button>
+              </form>
+            )}
+            
+            {/* Version / Info Footer */}
+            <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+              <p className="text-xs text-slate-400">
+                Authorized Use Only. System Activity Monitored.
+              </p>
+            </div>
+
           </div>
         </div>
       </div>

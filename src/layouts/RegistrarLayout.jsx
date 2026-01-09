@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import Sidebar from "../components/navigation/registrar/Sidebar";
 import { authService } from "../services/authService";
 import { Menu } from "lucide-react";
@@ -38,9 +38,9 @@ const RegistrarLayout = () => {
           </div>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-slate-500">Welcome, {displayName}</span>
-            <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white font-bold shadow-lg">
+            <Link to="/dashboard/registrar/profile" className="h-10 w-10 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white font-bold shadow-lg hover:ring-2 hover:ring-offset-2 hover:ring-cyan-200 transition-all">
               {initial}
-            </div>
+            </Link>
           </div>
         </header>
 

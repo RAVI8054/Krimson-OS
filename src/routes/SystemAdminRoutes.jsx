@@ -5,6 +5,7 @@ import SystemHealthMonitoring from '../pages/dashboards/systemAdmin/SystemHealth
 import SecurityAccessControl from '../pages/dashboards/systemAdmin/SecurityAccessControl';
 import BackupRecoveryCenter from '../pages/dashboards/systemAdmin/BackupRecoveryCenter';
 import AuditMaintenanceLog from '../pages/dashboards/systemAdmin/AuditMaintenanceLog';
+import ProfilePage from '../pages/common/ProfilePage';
 
 const SystemAdminRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const SystemAdminRoutes = () => {
         <Route path="security" element={<SecurityAccessControl />} />
         <Route path="backup" element={<BackupRecoveryCenter />} />
         <Route path="audit" element={<AuditMaintenanceLog />} />
+        <Route path="profile" element={<ProfilePage />} />
         
         {/* Default redirect */}
         <Route path="*" element={<Navigate to="health" replace />} />
