@@ -16,6 +16,7 @@ import RoleSwitcher from "../../components/common/RoleSwitcher";
 import { useAppDispatch } from "../../store/hooks";
 import { addNotification } from "../../store/slices/uiSlice";
 import { getDashboardPath } from "../../utils/roleNavigation";
+import { getUserActiveRole, formatRoleForDisplay } from "../../utils/roleUtils";
 
 const WelcomeLanding = () => {
     const navigate = useNavigate();
@@ -47,8 +48,9 @@ const WelcomeLanding = () => {
 
     if (!user) return null;
 
-    // Use shared utility for dashboard link
-    const dashboardPath = getDashboardPath(user.active_role || user.role);
+    // Use utility function to safely get user's active role
+    const activeRole = getUserActiveRole(user);
+    const dashboardPath = getDashboardPath(activeRole);
 
     // Mock Announcements
     const announcements = [
@@ -104,7 +106,7 @@ const WelcomeLanding = () => {
                             </div>
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur border border-white/10 text-sm font-medium">
                                 <User className="h-4 w-4" />
-                                Logged in as {user.active_role || user.role}
+                                Logged in as {formatRoleForDisplay(activeRole)}
                             </div>
                         </div>
 

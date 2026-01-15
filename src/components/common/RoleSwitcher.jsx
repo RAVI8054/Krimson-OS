@@ -6,23 +6,32 @@ import { getDashboardPath } from '../../utils/roleNavigation';
 import PropTypes from 'prop-types';
 import { store } from '../../store';
 import { addNotification } from '../../store/slices/uiSlice';
+import { getUserRoles, hasMultipleRoles, formatRoleForDisplay, normalizeRole } from '../../utils/roleUtils';
 
 const RoleSwitcher = ({ currentUser }) => {
     // const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
+    // Use utility function to check if user has multiple roles
     // If no roles array or only 1 role, don't show switcher
-    if (!currentUser?.roles || currentUser.roles.length <= 1) {
-        return null; // Or render nothing
+    if (!hasMultipleRoles(currentUser)) {
+        return null;
     }
 
+    // Get user's assigned roles using utility function
+    const userRoles = getUserRoles(currentUser);
 
     const handleSwitchRole = async (role) => {
         setLoading(true);
         try {
-            await authService.switchRole(role);
-            store.dispatch(addNotification({ type: 'success', message: `Switched role to ${role}` }));
+            // Ensure role is always uppercase before sending to backend
+            const normalizedRole = normalizeRole(role);
+            await authService.switchRole(normalizedRole);
+            store.dispatch(addNotification({ 
+                type: 'success', 
+                message: `Switched role to ${formatRoleForDisplay(normalizedRole)}` 
+            }));
             
             // Smart Redirect Logic
             const currentPath = window.location.pathname;
@@ -30,7 +39,7 @@ const RoleSwitcher = ({ currentUser }) => {
 
             if (isDashboard) {
                  // If we are already inside a specific dashboard, we must move to the new role's dashboard
-                 const targetPath = getDashboardPath(role);
+                 const targetPath = getDashboardPath(normalizedRole);
                  window.location.href = targetPath;
             } else {
                  // If we are on a neutral page (like Welcome), just reload to update the state in place
@@ -66,7 +75,7 @@ const RoleSwitcher = ({ currentUser }) => {
                         <p className="px-2 py-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                             Available Roles
                         </p>
-                        {currentUser.roles.map((role) => (
+                        {userRoles.map((role) => (
                             <button
                                 key={role}
                                 onClick={() => handleSwitchRole(role)}
@@ -77,7 +86,7 @@ const RoleSwitcher = ({ currentUser }) => {
                                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                     }`}
                             >
-                                {role}
+                                {formatRoleForDisplay(role)}
                                 {role === currentUser.role && <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>}
                             </button>
                         ))}

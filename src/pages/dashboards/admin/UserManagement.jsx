@@ -1,16 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   UserPlus,
   RefreshCw,
-  AlertCircle,
   CheckSquare,
-  ChevronLeft,
-  ChevronRight,
-  MoreHorizontal 
+  Edit3,
+  UserX,
+  AlertCircle
 } from "lucide-react";
-import { userService } from "../../../services/userService"; 
+import { userService } from "../../../services/userService";
 import { useAppDispatch } from "../../../store/hooks";
 import { addNotification } from "../../../store/slices/uiSlice";
+
+// Components
+import ActionDropdown from "./components/ActionDropdown";
+import RoleMultiSelector from "./components/RoleMultiSelector";
+import UserSearchPanel from "./components/UserSearchPanel";
+import UserListTable from "./components/UserListTable";
 
 const Card = ({ children, className = "" }) => (
   <div
@@ -20,137 +25,319 @@ const Card = ({ children, className = "" }) => (
   </div>
 );
 
-// Helper component for dynamic real-time updates
-const LiveTimestamp = ({ dateString }) => {
-  const calculateTimeAgo = (date) => {
-    const now = new Date();
-    const diffInSeconds = Math.floor((now - date) / 1000);
-    
-    if (diffInSeconds < 60) return "Just now";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
-    return null; // Return null if older than a week to fall back to static date
-  };
-
-  const [timeAgo, setTimeAgo] = useState(() => {
-    if (!dateString) return "N/A";
-    return calculateTimeAgo(new Date(dateString));
-  });
-
-  useEffect(() => {
-    if (!dateString) return;
-    
-    // Update every minute
-    const interval = setInterval(() => {
-      const relative = calculateTimeAgo(new Date(dateString));
-      if (relative !== timeAgo) {
-        setTimeAgo(relative);
-      }
-    }, 60000);
-
-    return () => clearInterval(interval);
-  }, [dateString, timeAgo]);
-
-  if (!dateString) return <span className="text-slate-400">N/A</span>;
-
-  const date = new Date(dateString);
-  const relative = calculateTimeAgo(date); // Recalculate for render resilience
-
-  // Format exact date: "Jan 08, 12:30 PM"
-  const exactDate = date.toLocaleDateString('en-SG', { 
-    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
-  });
-
-  return (
-    <div className="flex flex-col">
-      <span className="text-slate-700 font-medium text-xs">
-        {exactDate}
-      </span>
-      {relative && (
-        <span className="text-[10px] text-slate-400 font-medium">
-          {relative}
-        </span>
-      )}
-    </div>
-  );
-};
-
 const UserManagement = () => {
   const dispatch = useAppDispatch();
-  
+
   // State for Database Data
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [roles, setRoles] = useState([]); // State for roles
 
   // Pagination State
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
-    totalUsers: 0
+    totalUsers: 0,
   });
 
-  const ITEMS_PER_PAGE = 10;
+  // Constants
+  const VALID_ROLES = [
+    { label: "Student", value: "STUDENT" },
+    { label: "Teacher", value: "TEACHER" },
+    { label: "Parent", value: "PARENT" },
+    { label: "Administrator", value: "ADMINISTRATOR" },
+    { label: "Principal", value: "PRINCIPAL" },
+    { label: "Finance Officer", value: "FINANCE_OFFICER" },
+    { label: "Registrar", value: "REGISTRAR" },
+    { label: "Academic Coordinator", value: "ACADEMIC_COORDINATOR" },
+    { label: "Counselor", value: "COUNSELOR" },
+    { label: "Librarian", value: "LIBRARIAN" },
+    { label: "Management", value: "MANAGEMENT" },
+    { label: "IT/System Admin", value: "IT_ADMIN" },
+  ];
 
-  // Form State (Matches Backend Schema: full_name, email, role)
+  const LEGACY_ROLE_MAP = {
+    "FINANCE": "FINANCE_OFFICER",
+    "FINANCE OFFICER": "FINANCE_OFFICER",
+    "ACADEMIC COORDINATOR": "ACADEMIC_COORDINATOR",
+    "IT": "IT_ADMIN",
+    "IT/SYSTEM ADMIN": "IT_ADMIN",
+    "IT ADMIN": "IT_ADMIN",
+    // Code mappings for robustness
+    "R01": "STUDENT",
+    "R02": "TEACHER",
+    "R03": "PARENT",
+    "R04": "PRINCIPAL",
+    "R05": "ADMINISTRATOR",
+    "R06": "FINANCE_OFFICER",
+    "R07": "REGISTRAR",
+    "R08": "MANAGEMENT",
+    "R09": "ACADEMIC_COORDINATOR",
+    "R10": "COUNSELOR",
+    "R11": "LIBRARIAN",
+    "R12": "IT_ADMIN",
+  };
+
+  const FETCH_LIMIT = 100; // Fetch more users to have enough data for local pagination
+  const ROWS_PER_PAGE = 10; // Show exactly 10 rows per page
+
+  // Local Pagination State
+  const [localPage, setLocalPage] = useState(1);
+
+  // Action Mode State - Controls which form to display
+  const [actionMode, setActionMode] = useState("add"); // "add" | "edit" | "suspend"
+  // Note: isDropdownOpen logic moved to ActionDropdown component
+
+  // Form State for Add User
   const [newUser, setNewUser] = useState({
     full_name: "",
     role: "Student",
     email: "",
   });
 
-  // Helper function to expand users with multiple roles into separate entries
-  const expandUsersByRole = (users) => {
-    const expanded = [];
-    
-    users.forEach(user => {
-      // If user has roles array populated, create entry for each role
-      if (user.roles && user.roles.length > 0) {
-        // Reverse roles to show the most recently added role (end of array) first
-        [...user.roles].reverse().forEach(role => {
-          expanded.push({
-            ...user,
-            role: role, // Override with specific role
-            _isExpanded: true // Flag to identify expanded entries
-          });
+  // Search State for Edit/Suspend
+  const [searchEmail, setSearchEmail] = useState("");
+  const [searchedUser, setSearchedUser] = useState(null);
+  const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState("");
+
+  // Edit Form State
+  const [editForm, setEditForm] = useState({
+    full_name: "",
+    roles: [], // Array of selected roles
+    email: "",
+  });
+
+  // Switch action mode
+  const switchActionMode = (mode) => {
+    setActionMode(mode);
+    // Reset all forms when switching
+    setSearchEmail("");
+    setSearchedUser(null);
+    setSearchError("");
+    setNewUser({ full_name: "", role: "Student", email: "" });
+    setEditForm({ full_name: "", roles: [], email: "" });
+  };
+
+  // Search user by email (for Edit/Suspend)
+  const handleSearchUser = async () => {
+    if (!searchEmail.trim()) {
+      setSearchError("Please enter an email address");
+      return;
+    }
+
+    setSearching(true);
+    setSearchError("");
+    setSearchedUser(null);
+
+    try {
+      const result = await userService.getUserByIdentifier(searchEmail);
+
+      if (result.success && result.data) {
+        setSearchedUser(result.data);
+        // Only populate edit form if in edit mode (or just do it anyway, harmless)
+        // Aggressive Role Cleaning: Deduplicate & Filter only valid roles
+        const rawRoles = result.data.roles || [result.data.active_role || result.data.role];
+        const validRoleValues = VALID_ROLES.map(r => r.value);
+        
+        const cleanedRoles = [...new Set(
+          rawRoles
+            .filter(Boolean)
+            .map(r => {
+                if (!r) return r;
+                const upper = r.toUpperCase();
+                return LEGACY_ROLE_MAP[upper] || upper;
+            })
+            .filter(r => validRoleValues.includes(r))
+        )];
+
+        setEditForm({
+          full_name: result.data.full_name,
+          roles: cleanedRoles,
+          email: result.data.email,
         });
       } else {
-        // If no roles array, just use the primary role
-        expanded.push({
-          ...user,
-          _isExpanded: false
-        });
+        setSearchError("User not found with this email address");
       }
-    });
-    
-    return expanded;
+    } catch (err) {
+      console.error(err);
+      if (err.response?.status === 404) {
+        setSearchError("User not found with this email address");
+      } else {
+        setSearchError(err.message || "Error searching user");
+      }
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  // Handle Edit User
+  const handleEditUser = async () => {
+    if (!searchedUser) {
+      dispatch(
+        addNotification({
+          type: "warning",
+          message: "Please search for a user first",
+        })
+      );
+      return;
+    }
+
+    try {
+      const result = await userService.updateUser(searchedUser.email, {
+        full_name: editForm.full_name,
+        roles: editForm.roles,
+      });
+
+      if (result.success) {
+        dispatch(
+          addNotification({
+            type: "success",
+            message: "User roles updated successfully!",
+          })
+        );
+
+        // Reset form and switch back to add mode
+        switchActionMode("add");
+
+        // Refresh users list
+        fetchUsers(pagination.currentPage);
+      } else {
+        dispatch(
+          addNotification({
+            type: "error",
+            message: result.message || "Error updating user",
+          })
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      dispatch(
+        addNotification({
+          type: "error",
+          message: err.message || "Error updating user",
+        })
+      );
+    }
+  };
+
+  // Handle Suspend User
+  const handleSuspendUser = async () => {
+    if (!searchedUser) {
+      dispatch(
+        addNotification({
+          type: "warning",
+          message: "Please search for a user first",
+        })
+      );
+      return;
+    }
+
+    try {
+      const result = await userService.suspendUser(searchedUser.email);
+
+      if (result.success) {
+        dispatch(
+          addNotification({
+            type: "success",
+            message: `User ${searchedUser.email} suspended successfully!`,
+          })
+        );
+
+        // Reset form and switch back to add mode
+        switchActionMode("add");
+
+        // Refresh users list
+        fetchUsers(pagination.currentPage);
+      } else {
+        dispatch(
+          addNotification({
+            type: "error",
+            message: result.message || "Error suspending user",
+          })
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      dispatch(
+        addNotification({
+          type: "error",
+          message: err.message || "Error suspending user",
+        })
+      );
+    }
+  };
+
+  // Handle Unsuspend User
+  const handleUnsuspendUser = async () => {
+    if (!searchedUser) {
+      dispatch(
+        addNotification({
+          type: "warning",
+          message: "Please search for a user first",
+        })
+      );
+      return;
+    }
+
+    try {
+      const result = await userService.unsuspendUser(searchedUser.email);
+
+      if (result.success) {
+        dispatch(
+          addNotification({
+            type: "success",
+            message: `User ${searchedUser.email} unsuspended successfully!`,
+          })
+        );
+
+        // Reset form and switch back to add mode
+        switchActionMode("add");
+
+        // Refresh users list
+        fetchUsers(pagination.currentPage);
+      } else {
+        dispatch(
+          addNotification({
+            type: "error",
+            message: result.message || "Error unsuspending user",
+          })
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      dispatch(
+        addNotification({
+          type: "error",
+          message: err.message || "Error unsuspending user",
+        })
+      );
+    }
   };
 
   // --- API FUNCTION: GET USERS ---
   const fetchUsers = async (page = 1) => {
     setLoading(true);
+    const pageNum = parseInt(page, 10);
     try {
-      const result = await userService.getAllUsers(page, ITEMS_PER_PAGE);
+      const result = await userService.getAllUsers(pageNum, FETCH_LIMIT);
 
       if (result.success) {
         setUsers(result.data); // Update state with real DB data
-        
+
         // Update pagination state
         if (result.pagination) {
           setPagination({
-            currentPage: result.pagination.page,
-            totalPages: result.pagination.totalPages,
-            totalUsers: result.pagination.total
+            currentPage: parseInt(result.pagination.page, 10),
+            totalPages: parseInt(result.pagination.totalPages, 10),
+            totalUsers: parseInt(result.pagination.total, 10),
           });
         }
         setError(null);
       } else {
-        // Fallback or empty if fail, but log it
         console.error("Failed to load users:", result.message);
         setError("Failed to load users");
-        // For demo purposes if backend fails, we might want to show empty or mock, 
-        // but user requested DYNAMIC implementation, so we show error state.
       }
     } catch (err) {
       console.error(err);
@@ -160,54 +347,113 @@ const UserManagement = () => {
     }
   };
 
-  // Load users on component mount
+  // --- API FUNCTION: GET ROLES ---
+  const fetchRoles = async () => {
+    try {
+      const result = await userService.getRoles();
+      if (result.success) {
+        const formattedRoles = result.data.map((role) => {
+          const rawName = role.name || role;
+          const upperName = typeof rawName === 'string' ? rawName.toUpperCase() : ''; 
+          // Normalize value using legacy map
+          const normalizedValue = LEGACY_ROLE_MAP[upperName] || rawName;
+          
+          return {
+            label: role.name || role,
+            value: normalizedValue, 
+          };
+        });
+        setRoles(formattedRoles);
+      } else {
+        console.error("Failed to load roles:", result.message);
+        dispatch(
+          addNotification({ type: "error", message: "Failed to load roles" })
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      dispatch(
+        addNotification({ type: "error", message: "Error fetching roles" })
+      );
+    }
+  };
+
+  // Load users and roles on component mount
   useEffect(() => {
     fetchUsers(1);
+    fetchRoles();
   }, []);
 
   // --- API FUNCTION: ADD USER ---
   const handleAddUser = async () => {
     // Validation
     if (!newUser.full_name || !newUser.email) {
-      dispatch(addNotification({ type: 'warning', message: 'Please enter Name and Email' }));
+      dispatch(
+        addNotification({
+          type: "warning",
+          message: "Please enter Name and Email",
+        })
+      );
       return;
     }
 
     try {
-      // ⚡ OPTIMIZATION: Frontend Check (Best Method for UX)
-      // Check if user exists locally to give instant feedback without server call
+      // ⚡ OPTIMIZATION: Frontend Check
       const existingUserStr = newUser.email.toLowerCase();
-      const localDuplicate = users.find(u => 
-        u.email.toLowerCase() === existingUserStr && 
-        (u.roles?.includes(newUser.role) || u.role === newUser.role)
+      const localDuplicate = users.find(
+        (u) =>
+          u.email.toLowerCase() === existingUserStr &&
+          (u.roles?.includes(newUser.role) || u.role === newUser.role)
       );
 
       if (localDuplicate) {
-        dispatch(addNotification({ 
-          type: 'error', 
-          message: `User already has the role ${newUser.role}` 
-        }));
-        return; 
+        dispatch(
+          addNotification({
+            type: "error",
+            message: `User already has the role ${newUser.role}`,
+          })
+        );
+        return;
       }
 
       const result = await userService.createUser(newUser);
 
       if (result.success) {
         if (result.data.role_already_existed) {
-             dispatch(addNotification({ type: 'error', message: `User already has the role ${newUser.role}` }));
+          dispatch(
+            addNotification({
+              type: "error",
+              message: `User already has the role ${newUser.role}`,
+            })
+          );
         } else {
-             dispatch(addNotification({ type: 'success', message: 'User created/updated successfully!' }));
-             
-             // If creating new user, refresh page 1 to show latest
-             setNewUser({ full_name: "", role: "Student", email: "" }); // Reset Form
-             fetchUsers(1); 
+          dispatch(
+            addNotification({
+              type: "success",
+              message: "User created/updated successfully!",
+            })
+          );
+
+          // If creating new user, refresh page 1 to show latest
+          setNewUser({ full_name: "", role: "Student", email: "" }); // Reset Form
+          fetchUsers(1);
         }
       } else {
-        dispatch(addNotification({ type: 'error', message: result.message || 'Failed to create user' }));
+        dispatch(
+          addNotification({
+            type: "error",
+            message: result.message || "Failed to create user",
+          })
+        );
       }
     } catch (err) {
       console.error(err);
-      dispatch(addNotification({ type: 'error', message: err.message || 'Error connecting to server' }));
+      dispatch(
+        addNotification({
+          type: "error",
+          message: err.message || "Error connecting to server",
+        })
+      );
     }
   };
 
@@ -230,253 +476,327 @@ const UserManagement = () => {
         </button>
       </div>
 
-      {/* --- ADD USER FORM --- */}
+      {/* --- DYNAMIC USER MANAGEMENT FORM --- */}
       <Card className="mb-6">
-        <h3 className="font-bold text-lg text-slate-800 mb-4">Add New User</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-          <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1">
-              Full Name
-            </label>
-            <input
-              type="text"
-              className="w-full p-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
-              placeholder="e.g. John Tan"
-              value={newUser.full_name} 
-              onChange={(e) =>
-                setNewUser({ ...newUser, full_name: e.target.value })
-              }
+        <h3 className="font-bold text-lg text-slate-800 mb-4">
+          {actionMode === "add" && "Add New User"}
+          {actionMode === "edit" && "Edit User"}
+          {actionMode === "suspend" && "Suspend User"}
+        </h3>
+
+        {/* ADD USER FORM */}
+        {actionMode === "add" && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div>
+              <label className="block text-xs font-semibold text-slate-500 mb-1">
+                Full Name
+              </label>
+              <input
+                type="text"
+                className="w-full p-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                placeholder="e.g. John Tan"
+                value={newUser.full_name}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, full_name: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-500 mb-1">
+                Email (SSO ID)
+              </label>
+              <input
+                type="email"
+                className="w-full p-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                placeholder="user@krimson.edu"
+                value={newUser.email}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, email: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-500 mb-1">
+                Role
+              </label>
+              <select
+                className="w-full p-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                value={newUser.role}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, role: e.target.value })
+                }
+              >
+                {[
+                  { label: "Select Role", value: "" },
+                  ...(roles.length > 0
+                    ? roles
+                    : VALID_ROLES),
+                ].map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Split Button - Action + Dropdown */}
+            <ActionDropdown
+              mainLabel="Add User"
+              MainIcon={UserPlus}
+              onMainAction={handleAddUser}
+              actionMode={actionMode}
+              onSwitchMode={switchActionMode}
+              mainBtnClass="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 shadow-blue-500/20"
             />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1">
-              Email (SSO ID)
-            </label>
-            <input
-              type="email"
-              className="w-full p-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
-              placeholder="user@krimson.edu"
-              value={newUser.email}
-              onChange={(e) =>
-                setNewUser({ ...newUser, email: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1">
-              Role
-            </label>
-            <select
-              className="w-full p-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
-              value={newUser.role}
-              onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+        )}
+
+        {/* EDIT USER FORM */}
+        {actionMode === "edit" && (
+          <div className="space-y-4">
+            {/* Search Section */}
+            <UserSearchPanel
+              searchEmail={searchEmail}
+              setSearchEmail={setSearchEmail}
+              handleSearchUser={handleSearchUser}
+              searching={searching}
+              searchError={searchError}
+              theme="blue"
             >
-              {[
-                { label: "Student", value: "Student" },
-                { label: "Teacher", value: "Teacher" },
-                { label: "Parent", value: "Parent" },
-                { label: "Administrator", value: "Administrator" },
-                { label: "Principal", value: "Principal" },
-                { label: "Finance Officer", value: "Finance" },
-                { label: "Registrar", value: "Registrar" },
-                { label: "Academic Coordinator", value: "Academic Coordinator" },
-                { label: "Counselor", value: "Counselor" },
-                { label: "Librarian", value: "Librarian" },
-                { label: "Management", value: "Management" },
-                { label: "IT/System Admin", value: "IT/System Admin" },
-              ].map((r) => (
-                <option key={r.value} value={r.value}>
-                  {r.label}
-                </option>
-              ))}
-            </select>
+              <ActionDropdown
+                mainLabel="Edit"
+                MainIcon={Edit3}
+                onMainAction={handleEditUser}
+                actionMode={actionMode}
+                onSwitchMode={switchActionMode}
+                disabled={!searchedUser}
+                mainBtnClass="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-blue-500/20"
+              />
+            </UserSearchPanel>
+
+            {/* User Found - Edit Form */}
+            {searchedUser && (
+              <div className="space-y-4 p-4 bg-green-50 border border-green-200 rounded-xl animate-in slide-in-from-top-2 duration-200">
+                <div className="flex items-center gap-2 text-green-700 font-bold mb-4">
+                  <CheckSquare className="h-5 w-5" />
+                  User Found!
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full p-3 border border-slate-300 rounded-xl text-sm bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                      value={editForm.full_name}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, full_name: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      className="w-full p-3 border border-slate-300 rounded-xl text-sm bg-slate-100 focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                      value={editForm.email}
+                      disabled
+                      title="Email cannot be changed"
+                    />
+                  </div>
+
+                  <RoleMultiSelector
+                    selectedRoles={editForm.roles}
+                    onChange={(newRoles) =>
+                      setEditForm({ ...editForm, roles: newRoles })
+                    }
+                    roles={
+                      roles.length > 0
+                        ? roles.map((r) => ({ ...r, value: r.value }))
+                        : undefined
+                    }
+                  />
+                </div>
+
+                {/* Update Button */}
+                <button
+                  onClick={handleEditUser}
+                  className="w-full p-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold text-sm hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg flex items-center justify-center gap-2"
+                >
+                  <CheckSquare className="h-4 w-4" />
+                  Update User
+                </button>
+              </div>
+            )}
           </div>
-          <button
-            onClick={handleAddUser}
-            className="p-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-bold text-sm hover:from-cyan-600 hover:to-blue-600 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
-          >
-            <UserPlus className="h-4 w-4" /> Add User
-          </button>
-        </div>
+        )}
+
+        {/* SUSPEND USER FORM */}
+        {actionMode === "suspend" && (
+          <div className="space-y-4">
+            {/* Search Section */}
+            <UserSearchPanel
+              searchEmail={searchEmail}
+              setSearchEmail={setSearchEmail}
+              handleSearchUser={handleSearchUser}
+              searching={searching}
+              searchError={searchError}
+              theme="red"
+              placeholder="user@example.com or user_id"
+            >
+                {/* 
+                  Note: The suspend form in original code also had the dropdown to switch back to add/edit.
+                  But the original code (lines 852-885) for suspend search DID NOT have the dropdown next to the search button.
+                  It only showed the dropdown in Add and Edit modes.
+                  Wait, let's check lines 868-884 (Suspend Search Button). It ends at 885.
+                  Then line 886 is Error.
+                  There is NO ActionDropdown in the Suspend Search bar in the ORIGINAL code.
+                  However, how does one switch AWAY from Suspend mode?
+                  In the original code (lines 511-600), "Add" mode shows dropdown.
+                  In "Edit" mode (lines 641-729), the search bar shows dropdown.
+                  In "Suspend" mode... I don't see a way to switch back!
+                  Ah, I see lines 576 in Add mode switch to "Suspend".
+                  But once in "Suspend", where is the switcher?
+                  Original code lines 852-963 covers Suspend.
+                  There is NO switcher in Suspend mode in the original code!
+                  This seems like a bug or bad UX in source.
+                  I should probably ADD the switcher to Suspend mode too for consistency.
+                  I will add `ActionDropdown` here too, but what is the "Main Action"?
+                  The main action in Suspend mode is usually "Confirm Suspend" but that only appears AFTER search.
+                  In "Add", Main is Add. In "Edit", Main is Edit.
+                  In "Suspend" search bar, the main action is just Search (already there).
+                  I will add a `ActionDropdown` that acts purely as a switcher?
+                  Or I can pass a dummy main action or make `ActionDropdown` robust to missing main action?
+                  My `ActionDropdown` requires `mainLabel`.
+                  I will use "Suspend User" as label, but disable it or make it do nothing (since suspend happens after search)?
+                  Or I can make the main button switch to "Add" by default?
+                  Let's just show the switcher with "Suspend User" (dummy) or...
+                  Actually, I'll essentially replicate the "Edit" style but the main button might be disabled until user is found?
+                  No, in Edit mode, the main button triggers `handleEditUser`.
+                  In Suspend mode, `handleSuspendUser` is triggered by a big button at the bottom.
+                  So the top bar doesn't really have a "Suspend" action.
+                  I will just add the dropdown part?
+                  My `ActionDropdown` couples them.
+                  I'll use `UserX` icon and label "Suspend", and `disabled={true}` for the main button, just to provide the dropdown arrow.
+                 */}
+                 <ActionDropdown
+                    mainLabel="Suspend Mode"
+                    MainIcon={UserX}
+                    onMainAction={() => {}} // No top-level action
+                    actionMode={actionMode}
+                    onSwitchMode={switchActionMode}
+                    disabled={true} 
+                    mainBtnClass="bg-gradient-to-r from-red-500 to-orange-500 opacity-80 cursor-default"
+                    toggleBtnClass="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
+                 />
+            </UserSearchPanel>
+
+            {/* User Found - Show Details */}
+            {searchedUser && (
+              <div className="space-y-4 p-6 bg-gradient-to-br from-slate-50 to-slate-100 border-2 border-slate-200 rounded-2xl animate-in slide-in-from-top-2 duration-200">
+                {/* Header */}
+                <div className="flex items-center justify-between pb-4 border-b border-slate-300">
+                  <div className="flex items-center gap-3">
+                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-red-600 to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                      {searchedUser.full_name?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-800">
+                        {searchedUser.full_name || "N/A"}
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        {searchedUser.email}
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className={`px-4 py-2 rounded-lg font-bold text-sm ${
+                      searchedUser.status === "suspended"
+                        ? "bg-red-100 text-red-700 border-2 border-red-300"
+                        : searchedUser.status === "active"
+                        ? "bg-green-100 text-green-700 border-2 border-green-300"
+                        : "bg-gray-100 text-gray-700 border-2 border-gray-300"
+                    }`}
+                  >
+                    {searchedUser.status?.toUpperCase() || "UNKNOWN"}
+                  </div>
+                </div>
+
+                {/* Details Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-xl border border-slate-200">
+                    <p className="text-xs font-semibold text-slate-500 mb-1">
+                      User ID
+                    </p>
+                    <p className="text-sm font-mono text-slate-800 truncate">
+                      {searchedUser.user_id || "N/A"}
+                    </p>
+                  </div>
+                  <div className="bg-white p-4 rounded-xl border border-slate-200">
+                    <p className="text-xs font-semibold text-slate-500 mb-1">
+                      Active Role
+                    </p>
+                    <p className="text-sm font-bold text-slate-800">
+                      {searchedUser.active_role || searchedUser.role || "N/A"}
+                    </p>
+                  </div>
+                  {searchedUser.status === "suspended" &&
+                    searchedUser.updated_at && (
+                      <div className="col-span-2 bg-red-50 p-4 rounded-xl border-2 border-red-200">
+                        <p className="text-xs font-semibold text-red-600 mb-1">
+                          ⚠️ Suspended On
+                        </p>
+                        <p className="text-sm font-bold text-red-800">
+                          {new Date(searchedUser.updated_at).toLocaleString(
+                            "en-US",
+                            {
+                              dateStyle: "medium",
+                              timeStyle: "short",
+                            }
+                          )}
+                        </p>
+                      </div>
+                    )}
+                </div>
+
+                {/* Action Button */}
+                {searchedUser.status === "suspended" ? (
+                  <button
+                    onClick={handleUnsuspendUser}
+                    className="w-full p-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold text-sm hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <CheckSquare className="h-5 w-5" />
+                    Unsuspend User
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSuspendUser}
+                    className="w-full p-4 bg-gradient-to-r from-red-600 to-orange-600 text-white rounded-xl font-bold text-sm hover:from-red-700 hover:to-orange-700 transition-all shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <UserX className="h-5 w-5" />
+                    Confirm Suspend User
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </Card>
 
       {/* --- USERS TABLE (Dynamic) --- */}
-      <Card className="overflow-hidden p-0">
-        <div className="p-6 border-b border-slate-100">
-          <div className="flex justify-between items-center">
-            <div>
-              <h3 className="font-bold text-lg text-slate-800">
-                Existing Users ({pagination.totalUsers} total)
-              </h3>
-              <p className="text-xs text-slate-500 mt-1">
-                Showing page {pagination.currentPage} of {pagination.totalPages}
-              </p>
-            </div>
-            <span className="text-xs text-slate-500 italic">
-              Sorted by newest first
-            </span>
-          </div>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-slate-50">
-              <tr>
-                {["Name", "Role", "Email", "Created", "App Access", "Status"].map(
-                  (h, i) => (
-                    <th
-                      key={i}
-                      className="p-4 text-xs font-bold uppercase text-slate-500"
-                    >
-                      {h}
-                    </th>
-                  )
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {/* Loading State */}
-              {loading && users.length === 0 && (
-                <tr>
-                  <td colSpan="6" className="p-8 text-center text-slate-500">
-                    Loading data...
-                  </td>
-                </tr>
-              )}
-
-              {/* Error State */}
-              {error && (
-                <tr>
-                  <td
-                    colSpan="6"
-                    className="p-8 text-center text-rose-500 flex justify-center items-center gap-2"
-                  >
-                    <AlertCircle className="h-4 w-4" /> {error}
-                  </td>
-                </tr>
-              )}
-
-              {/* Data State */}
-              {!loading &&
-                !error &&
-                expandUsersByRole(users).map((user, i) => (
-                  <tr
-                    key={`${user.user_id}-${user.role}-${i}`}
-                    className="hover:bg-slate-50/50 transition-colors border-b border-slate-50 last:border-0"
-                  >
-                    <td className="p-4 text-sm font-bold text-slate-700">
-                      <div className="flex items-center gap-2">
-                        {user.full_name}
-                        {user.roles && user.roles.length > 1 && (
-                          <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs rounded-full font-bold">
-                            {user.roles.length} roles
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-4 text-sm text-slate-600">
-                      <span
-                        className={`px-2 py-1 rounded text-xs font-bold ${
-                          user.role === "Administrator" ? "bg-purple-100 text-purple-700" :
-                          user.role === "Principal" ? "bg-rose-100 text-rose-700" :
-                          user.role === "Teacher" ? "bg-amber-100 text-amber-700" :
-                          user.role === "Student" ? "bg-blue-100 text-blue-700" :
-                          user.role === "Finance" ? "bg-emerald-100 text-emerald-700" :
-                          user.role === "IT/System Admin" ? "bg-slate-800 text-slate-200" :
-                          "bg-slate-100 text-slate-600"
-                        }`}
-                      >
-                        {user.role}
-                      </span>
-                    </td>
-                    <td className="p-4 text-sm">
-                      <div className="flex items-center gap-2">
-                        <span className={user.roles && user.roles.length > 1 ? "text-indigo-600 font-semibold" : "text-slate-600"}>
-                          {user.email}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="p-4 text-sm text-slate-600">
-                      <LiveTimestamp dateString={user.created_at} />
-                    </td>
-                    <td className="p-4 text-sm">
-                      <span className="text-emerald-600 font-bold text-xs flex items-center gap-1">
-                         <CheckSquare className="h-3 w-3" /> Granted
-                      </span>
-                    </td>
-                    <td className="p-4 text-sm">
-                      <span className="text-emerald-600 font-bold text-xs flex items-center gap-1">
-                         <CheckSquare className="h-3 w-3" /> Active
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-        
-        {/* Pagination Controls */}
-        <div className="p-4 border-t border-slate-100 flex items-center justify-between">
-          <div className="text-xs text-slate-500">
-             Showing {users.length} users on this page
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => fetchUsers(pagination.currentPage - 1)}
-              disabled={pagination.currentPage === 1 || loading}
-              className="p-2 rounded-lg hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft className="h-4 w-4 text-slate-600" />
-            </button>
-            
-            <div className="flex items-center gap-1">
-              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                // Logic to show generic page numbers around current page could be complex, 
-                // for simplicity showing first 5 or simpler logic.
-                // Let's implement a simple "Current of Total" logic for robustness
-                // or just simple numbers if pages are few.
-                // For "Best Production Level", let's keep it clean:
-                
-                let pageNum;
-                if (pagination.totalPages <= 5) {
-                   pageNum = i + 1;
-                } else if (pagination.currentPage <= 3) {
-                   pageNum = i + 1;
-                } else if (pagination.currentPage >= pagination.totalPages - 2) {
-                   pageNum = pagination.totalPages - 4 + i;
-                } else {
-                   pageNum = pagination.currentPage - 2 + i;
-                }
-                
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => fetchUsers(pageNum)}
-                    className={`h-8 w-8 rounded-lg text-xs font-bold transition-all ${
-                      pagination.currentPage === pageNum
-                        ? "bg-slate-900 text-white"
-                        : "bg-slate-50 text-slate-600 hover:bg-slate-100"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-              
-              {pagination.totalPages > 5 && pagination.currentPage < pagination.totalPages - 2 && (
-                 <span className="text-slate-400 px-1"><MoreHorizontal className="h-4 w-4" /></span>
-              )}
-            </div>
-
-            <button
-              onClick={() => fetchUsers(pagination.currentPage + 1)}
-              disabled={pagination.currentPage === pagination.totalPages || loading}
-              className="p-2 rounded-lg hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight className="h-4 w-4 text-slate-600" />
-            </button>
-          </div>
-        </div>
-      </Card>
+      <UserListTable
+        users={users}
+        loading={loading}
+        error={error}
+        localPage={localPage}
+        setLocalPage={setLocalPage}
+        rowsPerPage={ROWS_PER_PAGE}
+      />
     </div>
   );
 };
