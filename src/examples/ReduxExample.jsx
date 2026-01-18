@@ -6,7 +6,7 @@
  * THIS IS AN EXAMPLE FILE - Use as reference for implementing Redux in your components
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { loginUser, logoutUser, setCurrentRole } from '../store/slices/authSlice';
@@ -35,7 +35,8 @@ const ReduxExample = () => {
   );
   
   // Dashboard state
-  const { admin, loading: dashboardLoading } = useAppSelector(
+  // Dashboard state
+  const { loading: dashboardLoading } = useAppSelector(
     state => state.dashboard
   );
   
@@ -49,7 +50,7 @@ const ReduxExample = () => {
   const handleLogin = async () => {
     try {
       // Dispatch async thunk
-      const result = await dispatch(loginUser({
+      await dispatch(loginUser({
         email: 'admin@school.com',
         password: 'password123'
       })).unwrap(); // .unwrap() throws on rejection
@@ -100,7 +101,10 @@ const ReduxExample = () => {
   /**
    * Example: Fetch dashboard data
    */
-  const handleFetchDashboard = async () => {
+  /**
+   * Example: Fetch dashboard data
+   */
+  const handleFetchDashboard = useCallback(async () => {
     try {
       dispatch(setLoading({ feature: 'dashboard', isLoading: true }));
       
@@ -110,7 +114,7 @@ const ReduxExample = () => {
         type: 'success',
         message: 'Dashboard data loaded'
       }));
-    } catch (error) {
+    } catch {
       dispatch(addNotification({
         type: 'error',
         message: 'Failed to load dashboard'
@@ -118,7 +122,7 @@ const ReduxExample = () => {
     } finally {
       dispatch(setLoading({ feature: 'dashboard', isLoading: false }));
     }
-  };
+  }, [dispatch]);
   
   /**
    * Example: Fetch dashboard on component mount
@@ -127,7 +131,7 @@ const ReduxExample = () => {
     if (isAuthenticated && currentRole === 'admin') {
       handleFetchDashboard();
     }
-  }, [isAuthenticated, currentRole]);
+  }, [isAuthenticated, currentRole, handleFetchDashboard]);
   
   // ============================================
   // RENDER EXAMPLE UI

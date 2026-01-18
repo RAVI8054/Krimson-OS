@@ -123,8 +123,8 @@ const UnifiedCalendar = ({ events, role, onCreateEvent }) => {
             <div className="bg-white rounded-3xl p-6 shadow-sm flex-1">
                <h3 className="font-bold text-slate-800 mb-4">Upcoming Events</h3>
                <div className="space-y-4 max-h-[400px] overflow-y-auto">
-                  {events?.length > 0 ? events.map((evt) => (
-                     <div key={evt.id || Math.random()} className="flex gap-4 items-start p-2 hover:bg-slate-50 rounded-xl transition-colors">
+                  {events?.length > 0 ? events.map((evt, idx) => (
+                     <div key={evt.id || idx} className="flex gap-4 items-start p-2 hover:bg-slate-50 rounded-xl transition-colors">
                         <div className="flex flex-col items-center bg-slate-100 px-3 py-2 rounded-xl min-w-[60px]">
                            <span className="text-xs font-bold text-slate-400">{new Date(evt.date).toLocaleString('default', { month: 'short' })}</span>
                            <span className="text-lg font-bold text-slate-800">{new Date(evt.date).getDate()}</span>

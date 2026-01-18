@@ -1,25 +1,6 @@
 /**
  * @component AdminOverview
  * @description Admin Control Dashboard - Central operational hub for school system
- * 
- * Screen 1: Admin Control Dashboard
- * Purpose: Central operational hub providing a live overview of the entire school system
- * 
- * Key Widgets:
- * - Total Students / Staff / Classes / Courses
- * - Current-day Attendance (students vs staff)
- * - Admissions Pipeline (inquiry → enrolled)
- * - Fee Collection and Due Summary
- * - Compliance Alerts and System Notifications
- * - Quick Actions (Add Student, Create User, View Reports)
- * 
- * Integration: Core Aggregation API + Admission + Attendance + Finance Modules
- * Design: Dark header dashboard with quick stats, alert bar, and shortcut widgets
- * 
- * @returns {JSX.Element} Admin dashboard interface
- * 
- * @example
- * <AdminOverview />
  */
 import React from 'react';
 import { 
@@ -36,53 +17,28 @@ import {
   DollarSign,
   Calendar,
   Eye,
-  Settings
+  Settings,
+  MoreHorizontal,
+  ArrowUpRight
 } from 'lucide-react';
 import clsx from 'clsx';
 
 // ========================================
-// MOCK DATA - Replace with API calls in future
+// MOCK DATA
 // ========================================
 const mockData = {
-  // Top Summary Cards
   summary: {
     totalStudents: 1247,
     totalStaff: 89,
     totalClasses: 42,
     totalCourses: 156
   },
-  
-  // Today's Attendance
   attendance: {
-    students: {
-      present: 1189,
-      absent: 58,
-      total: 1247,
-      percentage: 95.3
-    },
-    staff: {
-      present: 84,
-      absent: 5,
-      total: 89,
-      percentage: 94.4
-    }
+    students: { present: 1189, absent: 58, total: 1247, percentage: 95.3 },
+    staff: { present: 84, absent: 5, total: 89, percentage: 94.4 }
   },
-  
-  // Admissions Funnel
-  admissions: {
-    inquiry: 234,
-    applied: 187,
-    verified: 142,
-    enrolled: 98
-  },
-  
-  // Finance Snapshot
-  finance: {
-    todayCollection: 45680,
-    totalDue: 234500
-  },
-  
-  // Alerts & Notifications
+  admissions: { inquiry: 234, applied: 187, verified: 142, enrolled: 98 },
+  finance: { todayCollection: 45680, totalDue: 234500 },
   alerts: [
     { id: 1, type: 'compliance', severity: 'high', message: 'Accreditation renewal due in 15 days', timestamp: '2 hours ago' },
     { id: 2, type: 'system', severity: 'medium', message: 'Server backup completed successfully', timestamp: '3 hours ago' },
@@ -90,466 +46,343 @@ const mockData = {
     { id: 4, type: 'system', severity: 'low', message: 'System maintenance scheduled for weekend', timestamp: '1 day ago' }
   ]
 };
-// ========================================
 
 const AdminOverview = () => {
-  // TODO: Replace with actual API calls
-  // const dispatch = useAppDispatch();
-  // const { admin, loading, error } = useAppSelector(state => state.dashboard);
-  
   // Calculate admission funnel percentages
   const totalInquiries = mockData.admissions.inquiry;
   const calculatePercentage = (value) => Math.round((value / totalInquiries) * 100);
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-8 animate-fadeIn pb-10">
+      
       {/* ========================================
-          DARK HEADER - Admin Control Dashboard
+          HEADER SECTION WITH SIDEBAR GRADIENT THEME
           ======================================== */}
-      <div className="bg-gradient-to-br from-slate-800 via-slate-900 to-blue-900 rounded-2xl p-8 text-white shadow-2xl relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
+      <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+        {/* Background Gradient matching Sidebar (Cyan -> Blue -> Pink) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400" />
         
-        <div className="relative z-10">
-          <div className="flex items-center justify-between mb-2">
+        {/* Decorative Glass/Blur Elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-500 opacity-20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+
+        <div className="relative z-10 p-8 md:p-10 text-white">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <span className="bg-blue-500/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-blue-400/30">
-                Live Dashboard
-              </span>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-xs font-bold uppercase tracking-wider shadow-sm">
+                  System Overview
+                </span>
+                <span className="flex items-center gap-1 text-xs font-medium text-white/90 bg-black/5 px-2 py-1 rounded-md">
+                   <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                   Live Updates
+                </span>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold mb-2 tracking-tight text-white drop-shadow-sm">
+                Admin Dashboard
+              </h1>
+              <p className="text-white/90 text-sm md:text-base max-w-2xl font-medium leading-relaxed">
+                Snapshot of school operations, attendance, admissions, and financial health.
+              </p>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <Calendar className="w-4 h-4" />
-              <span className="font-medium">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            
+            <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 shadow-lg">
+              <div className="p-3 bg-white/20 rounded-xl">
+                <Calendar className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-xs text-blue-50 font-medium uppercase tracking-wide">Today's Date</p>
+                <p className="text-lg font-bold text-white leading-none">
+                  {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                </p>
+              </div>
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-            Admin Control Dashboard
-          </h1>
-          <p className="text-blue-100 text-sm max-w-2xl">
-            Central operational hub providing real-time overview of the entire school system
-          </p>
         </div>
       </div>
 
       {/* ========================================
-          TOP SUMMARY CARDS
-          Total Students | Total Staff | Classes | Courses
+          STATS CARDS - PREMIUM & MODERN
           ======================================== */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Total Students */}
-        <div className="card-base bg-gradient-to-br from-blue-50 to-white border-blue-100 hover:shadow-lg transition-all group">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-slate-600 mb-1">Total Students</p>
-              <h3 className="text-3xl font-bold text-blue-600 mb-2">{mockData.summary.totalStudents.toLocaleString()}</h3>
-              <p className="text-xs text-slate-500">Active enrollment</p>
+        {[
+          { 
+            label: "Total Students", 
+            value: mockData.summary.totalStudents.toLocaleString(), 
+            sub: "Active enrollment",
+            icon: Users,
+            color: "text-blue-500",
+            bg: "bg-blue-50",
+            border: "group-hover:border-blue-200"
+          },
+          { 
+            label: "Total Staff", 
+            value: mockData.summary.totalStaff, 
+            sub: "Teaching & support",
+            icon: UserCheck,
+            color: "text-purple-500",
+            bg: "bg-purple-50",
+            border: "group-hover:border-purple-200"
+          },
+          { 
+            label: "Active Classes", 
+            value: mockData.summary.totalClasses, 
+            sub: "Current sections",
+            icon: BookOpen,
+            color: "text-cyan-500",
+            bg: "bg-cyan-50",
+            border: "group-hover:border-cyan-200"
+          },
+          { 
+            label: "Courses", 
+            value: mockData.summary.totalCourses, 
+            sub: "Programs offered",
+            icon: GraduationCap, 
+            color: "text-pink-500",
+            bg: "bg-pink-50",
+            border: "group-hover:border-pink-200"
+          }
+        ].map((stat, idx) => (
+          <div key={idx} className={`bg-white rounded-3xl p-6 shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 group ${stat.border}`}>
+            <div className="flex justify-between items-start mb-4">
+              <div className={`p-3 rounded-2xl ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform duration-300`}>
+                <stat.icon size={24} strokeWidth={2.5} />
+              </div>
+              <div className="px-2 py-1 bg-slate-50 rounded-lg border border-slate-100 group-hover:bg-white group-hover:shadow-sm transition-all">
+                <MoreHorizontal size={16} className="text-slate-400" />
+              </div>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div>
+              <h3 className="text-3xl font-bold text-slate-800 mb-1 tracking-tight">{stat.value}</h3>
+              <p className="text-sm font-semibold text-slate-500">{stat.label}</p>
+              <p className="text-xs text-slate-400 mt-1">{stat.sub}</p>
             </div>
           </div>
-        </div>
-
-        {/* Total Staff */}
-        <div className="card-base bg-gradient-to-br from-purple-50 to-white border-purple-100 hover:shadow-lg transition-all group">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-slate-600 mb-1">Total Staff</p>
-              <h3 className="text-3xl font-bold text-purple-600 mb-2">{mockData.summary.totalStaff}</h3>
-              <p className="text-xs text-slate-500">Teaching & support staff</p>
-            </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-              <UserCheck className="w-6 h-6 text-purple-600" />
-            </div>
-          </div>
-        </div>
-
-        {/* Total Classes */}
-        <div className="card-base bg-gradient-to-br from-green-50 to-white border-green-100 hover:shadow-lg transition-all group">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-slate-600 mb-1">Classes</p>
-              <h3 className="text-3xl font-bold text-green-600 mb-2">{mockData.summary.totalClasses}</h3>
-              <p className="text-xs text-slate-500">Active sections</p>
-            </div>
-            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-              <BookOpen className="w-6 h-6 text-green-600" />
-            </div>
-          </div>
-        </div>
-
-        {/* Total Courses */}
-        <div className="card-base bg-gradient-to-br from-orange-50 to-white border-orange-100 hover:shadow-lg transition-all group">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-slate-600 mb-1">Courses</p>
-              <h3 className="text-3xl font-bold text-orange-600 mb-2">{mockData.summary.totalCourses}</h3>
-              <p className="text-xs text-slate-500">Curriculum programs</p>
-            </div>
-            <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-              <GraduationCap className="w-6 h-6 text-orange-600" />
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* ========================================
-          TWO COLUMN LAYOUT
-          Left: Attendance + Admissions
-          Right: Finance + Quick Actions
+          MAIN CONTENT GRID
+          Left: Attendance & Admissions (2/3 width on large screens)
+          Right: Finance & Quick Actions (1/3 width)
           ======================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* LEFT COLUMN */}
-        <div className="space-y-6">
-          {/* ========================================
-              TODAY'S ATTENDANCE PANEL
-              Students Present/Absent | Staff Present/Absent
-              ======================================== */}
-          <div className="card-base">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-800">Today's Attendance</h2>
-              <span className="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                Live
-              </span>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        
+        {/* LEFT COLUMN (2 spans) */}
+        <div className="xl:col-span-2 space-y-6">
+          
+          {/* ATTENDANCE SECTION */}
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 relative overflow-hidden">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-xl font-bold text-slate-800">Today's Attendance</h2>
+                <p className="text-sm text-slate-500">Live tracking of students and staff</p>
+              </div>
+              <button className="flex items-center gap-1 text-sm font-semibold text-blue-600 bg-blue-50 px-4 py-2 rounded-xl hover:bg-blue-100 transition-colors">
+                View Report
+                <ArrowUpRight size={16} />
+              </button>
             </div>
 
-            {/* Students Attendance */}
-            <div className="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-slate-700">Students</h3>
-                <span className="text-2xl font-bold text-blue-600">
-                  {mockData.attendance.students.percentage}%
-                </span>
-              </div>
-              
-              <div className="flex items-center gap-4 mb-3">
-                <div className="flex items-center gap-2 flex-1">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <div>
-                    <p className="text-xs text-slate-600">Present</p>
-                    <p className="text-lg font-bold text-green-700">{mockData.attendance.students.present}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Student Attendance Card */}
+              <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-5 border border-slate-100">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                      <Users size={20} />
+                    </div>
+                    <span className="font-bold text-slate-700">Students</span>
                   </div>
+                  <span className="text-2xl font-bold text-blue-600">{mockData.attendance.students.percentage}%</span>
                 </div>
-                <div className="flex items-center gap-2 flex-1">
-                  <XCircle className="w-4 h-4 text-red-600" />
-                  <div>
-                    <p className="text-xs text-slate-600">Absent</p>
-                    <p className="text-lg font-bold text-red-700">{mockData.attendance.students.absent}</p>
+                
+                <div className="w-full bg-slate-200 rounded-full h-3 mb-4 overflow-hidden">
+                  <div 
+                    className="bg-gradient-to-r from-blue-400 to-cyan-400 h-full rounded-full animate-pulse" 
+                    style={{ width: `${mockData.attendance.students.percentage}%` }} 
+                  />
+                </div>
+
+                <div className="flex gap-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="font-semibold text-slate-600">{mockData.attendance.students.present} Present</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-400" />
+                    <span className="text-slate-400">{mockData.attendance.students.absent} Absent</span>
                   </div>
                 </div>
               </div>
 
-              {/* Progress bar */}
-              <div className="w-full bg-slate-200 rounded-full h-2.5">
-                <div 
-                  className="bg-gradient-to-r from-green-500 to-green-600 h-2.5 rounded-full transition-all duration-500"
-                  style={{ width: `${mockData.attendance.students.percentage}%` }}
-                />
-              </div>
-            </div>
+              {/* Staff Attendance Card */}
+              <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-5 border border-slate-100">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
+                      <UserCheck size={20} />
+                    </div>
+                    <span className="font-bold text-slate-700">Staff</span>
+                  </div>
+                  <span className="text-2xl font-bold text-purple-600">{mockData.attendance.staff.percentage}%</span>
+                </div>
+                
+                <div className="w-full bg-slate-200 rounded-full h-3 mb-4 overflow-hidden">
+                  <div 
+                    className="bg-gradient-to-r from-purple-400 to-pink-400 h-full rounded-full animate-pulse" 
+                    style={{ width: `${mockData.attendance.staff.percentage}%` }} 
+                  />
+                </div>
 
-            {/* Staff Attendance */}
-            <div className="p-4 bg-purple-50 rounded-xl border border-purple-100">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-slate-700">Staff</h3>
-                <span className="text-2xl font-bold text-purple-600">
-                  {mockData.attendance.staff.percentage}%
-                </span>
-              </div>
-              
-              <div className="flex items-center gap-4 mb-3">
-                <div className="flex items-center gap-2 flex-1">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <div>
-                    <p className="text-xs text-slate-600">Present</p>
-                    <p className="text-lg font-bold text-green-700">{mockData.attendance.staff.present}</p>
+                <div className="flex gap-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="font-semibold text-slate-600">{mockData.attendance.staff.present} Present</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-400" />
+                    <span className="text-slate-400">{mockData.attendance.staff.absent} Absent</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 flex-1">
-                  <XCircle className="w-4 h-4 text-red-600" />
-                  <div>
-                    <p className="text-xs text-slate-600">Absent</p>
-                    <p className="text-lg font-bold text-red-700">{mockData.attendance.staff.absent}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Progress bar */}
-              <div className="w-full bg-slate-200 rounded-full h-2.5">
-                <div 
-                  className="bg-gradient-to-r from-purple-500 to-purple-600 h-2.5 rounded-full transition-all duration-500"
-                  style={{ width: `${mockData.attendance.staff.percentage}%` }}
-                />
               </div>
             </div>
           </div>
 
-          {/* ========================================
-              ADMISSIONS FUNNEL WIDGET
-              Inquiry → Applied → Verified → Enrolled
-              ======================================== */}
-          <div className="card-base">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-800">Admissions Pipeline</h2>
-              <button className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
-                <Eye className="w-4 h-4" />
-                View All
-              </button>
+          {/* ADMISSIONS FUNNEL */}
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+            <div className="flex items-center justify-between mb-8">
+               <div>
+                  <h2 className="text-xl font-bold text-slate-800">Admissions Pipeline</h2>
+                  <p className="text-sm text-slate-500">Funnel conversion overview</p>
+               </div>
+               <div className="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded-lg text-sm font-bold border border-green-100">
+                  <TrendingUp size={16} />
+                  {Math.round((mockData.admissions.enrolled / mockData.admissions.inquiry) * 100)}% Conv.
+               </div>
             </div>
 
-            <div className="space-y-4">
-              {/* Inquiry Stage */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600 font-bold text-sm">1</span>
-                    </div>
-                    <span className="text-sm font-semibold text-slate-700">Inquiry</span>
-                  </div>
-                  <span className="text-lg font-bold text-blue-600">{mockData.admissions.inquiry}</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style={{ width: '100%' }} />
-                </div>
-                <p className="text-xs text-slate-500 mt-1">100% - Initial contact</p>
-              </div>
-
-              {/* Applied Stage */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                      <span className="text-indigo-600 font-bold text-sm">2</span>
-                    </div>
-                    <span className="text-sm font-semibold text-slate-700">Applied</span>
-                  </div>
-                  <span className="text-lg font-bold text-indigo-600">{mockData.admissions.applied}</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-2 rounded-full" style={{ width: `${calculatePercentage(mockData.admissions.applied)}%` }} />
-                </div>
-                <p className="text-xs text-slate-500 mt-1">{calculatePercentage(mockData.admissions.applied)}% - Application submitted</p>
-              </div>
-
-              {/* Verified Stage */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <span className="text-purple-600 font-bold text-sm">3</span>
-                    </div>
-                    <span className="text-sm font-semibold text-slate-700">Verified</span>
-                  </div>
-                  <span className="text-lg font-bold text-purple-600">{mockData.admissions.verified}</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full" style={{ width: `${calculatePercentage(mockData.admissions.verified)}%` }} />
-                </div>
-                <p className="text-xs text-slate-500 mt-1">{calculatePercentage(mockData.admissions.verified)}% - Documents verified</p>
-              </div>
-
-              {/* Enrolled Stage */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                    </div>
-                    <span className="text-sm font-semibold text-slate-700">Enrolled</span>
-                  </div>
-                  <span className="text-lg font-bold text-green-600">{mockData.admissions.enrolled}</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full" style={{ width: `${calculatePercentage(mockData.admissions.enrolled)}%` }} />
-                </div>
-                <p className="text-xs text-slate-500 mt-1">{calculatePercentage(mockData.admissions.enrolled)}% - Successfully enrolled</p>
-              </div>
-            </div>
-
-            {/* Conversion Summary */}
-            <div className="mt-6 pt-4 border-t border-slate-200">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-slate-700">Conversion Rate</span>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-green-600" />
-                  <span className="text-lg font-bold text-green-600">
-                    {Math.round((mockData.admissions.enrolled / mockData.admissions.inquiry) * 100)}%
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN */}
-        <div className="space-y-6">
-          {/* ========================================
-              FINANCE SNAPSHOT
-              Today's Collection | Total Due Amount
-              ======================================== */}
-          <div className="card-base">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-800">Finance Snapshot</h2>
-              <DollarSign className="w-5 h-5 text-green-600" />
-            </div>
-
-            {/* Today's Collection */}
-            <div className="mb-4 p-5 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-200">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <DollarSign className="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-green-700 uppercase tracking-wide">Today's Collection</p>
-                  <h3 className="text-3xl font-bold text-green-700">
-                    ₹{mockData.finance.todayCollection.toLocaleString()}
-                  </h3>
-                </div>
-              </div>
-              <p className="text-xs text-green-600 mt-2">Last updated: {new Date().toLocaleTimeString()}</p>
-            </div>
-
-            {/* Total Due Amount */}
-            <div className="p-5 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border border-orange-200">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-orange-600" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-orange-700 uppercase tracking-wide">Total Due Amount</p>
-                  <h3 className="text-3xl font-bold text-orange-700">
-                    ₹{mockData.finance.totalDue.toLocaleString()}
-                  </h3>
-                </div>
-              </div>
-              <p className="text-xs text-orange-600 mt-2">Requires follow-up</p>
-            </div>
-          </div>
-
-          {/* ========================================
-              QUICK ACTIONS
-              Add Student | Create User | View Reports
-              ======================================== */}
-          <div className="card-base">
-            <h2 className="text-lg font-bold text-slate-800 mb-6">Quick Actions</h2>
-            
-            <div className="space-y-3">
-              {/* Add Student */}
-              <button className="w-full btn-base bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 py-4 rounded-xl flex items-center justify-between group">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                    <UserPlus className="w-5 h-5" />
-                  </div>
-                  <div className="text-left">
-                    <p className="font-bold text-sm">Add Student</p>
-                    <p className="text-xs text-blue-100">Enroll new student</p>
-                  </div>
-                </div>
-                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                  <span className="text-white font-bold">→</span>
-                </div>
-              </button>
-
-              {/* Create User */}
-              <button className="w-full btn-base bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 py-4 rounded-xl flex items-center justify-between group">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                    <Settings className="w-5 h-5" />
-                  </div>
-                  <div className="text-left">
-                    <p className="font-bold text-sm">Create User</p>
-                    <p className="text-xs text-purple-100">Add staff or admin</p>
-                  </div>
-                </div>
-                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                  <span className="text-white font-bold">→</span>
-                </div>
-              </button>
-
-              {/* View Reports */}
-              <button className="w-full btn-base bg-gradient-to-r from-slate-600 to-slate-700 text-white hover:from-slate-700 hover:to-slate-800 py-4 rounded-xl flex items-center justify-between group">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                    <FileText className="w-5 h-5" />
-                  </div>
-                  <div className="text-left">
-                    <p className="font-bold text-sm">View Reports</p>
-                    <p className="text-xs text-slate-100">Analytics & insights</p>
-                  </div>
-                </div>
-                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                  <span className="text-white font-bold">→</span>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* ========================================
-              ALERT & NOTIFICATION BAR
-              Compliance Alerts | System Issues
-              ======================================== */}
-          <div className="card-base">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-800">Alerts & Notifications</h2>
-              <span className="text-xs font-semibold bg-red-100 text-red-600 px-3 py-1 rounded-full">
-                {mockData.alerts.filter(a => a.severity === 'high').length} High Priority
-              </span>
-            </div>
-
-            <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
-              {mockData.alerts.map((alert) => (
-                <div 
-                  key={alert.id}
-                  className={clsx(
-                    "p-4 rounded-xl border-l-4 transition-all hover:shadow-md cursor-pointer",
-                    alert.severity === 'high' && "bg-red-50 border-red-500",
-                    alert.severity === 'medium' && "bg-yellow-50 border-yellow-500",
-                    alert.severity === 'low' && "bg-blue-50 border-blue-500"
-                  )}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={clsx(
-                      "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0",
-                      alert.severity === 'high' && "bg-red-100",
-                      alert.severity === 'medium' && "bg-yellow-100",
-                      alert.severity === 'low' && "bg-blue-100"
-                    )}>
-                      <AlertTriangle className={clsx(
-                        "w-4 h-4",
-                        alert.severity === 'high' && "text-red-600",
-                        alert.severity === 'medium' && "text-yellow-600",
-                        alert.severity === 'low' && "text-blue-600"
-                      )} />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between gap-2 mb-1">
-                        <p className="text-sm font-semibold text-slate-800">{alert.message}</p>
-                        <span className={clsx(
-                          "text-xs font-bold px-2 py-1 rounded-full flex-shrink-0",
-                          alert.type === 'compliance' && "bg-purple-100 text-purple-700",
-                          alert.type === 'system' && "bg-blue-100 text-blue-700"
-                        )}>
-                          {alert.type}
-                        </span>
+            <div className="space-y-6">
+              {[
+                { label: 'Inquiry', value: mockData.admissions.inquiry, color: 'bg-blue-500', bg: 'bg-blue-50', text: 'text-blue-600', icon: '1' },
+                { label: 'Applied', value: mockData.admissions.applied, color: 'bg-cyan-500', bg: 'bg-cyan-50', text: 'text-cyan-600', icon: '2' },
+                { label: 'Verified', value: mockData.admissions.verified, color: 'bg-purple-500', bg: 'bg-purple-50', text: 'text-purple-600', icon: '3' },
+                { label: 'Enrolled', value: mockData.admissions.enrolled, color: 'bg-green-500', bg: 'bg-green-50', text: 'text-green-600', icon: <CheckCircle size={14} /> }
+              ].map((step, i) => (
+                <div key={i} className="relative">
+                  <div className="flex items-center justify-between mb-2 text-sm">
+                    <span className="font-bold text-slate-700 flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold ${step.bg} ${step.text}`}>
+                        {step.icon}
                       </div>
-                      <p className="text-xs text-slate-500">{alert.timestamp}</p>
-                    </div>
+                      {step.label}
+                    </span>
+                    <span className={`font-bold ${step.text}`}>{step.value}</span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full ${step.color} transition-all duration-1000 ease-out`}
+                      style={{ width: `${calculatePercentage(step.value)}%` }} 
+                    />
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Footer Note */}
-      <div className="text-center py-4">
-        <p className="text-xs text-slate-400">
-          <span className="font-semibold">Note:</span> All data displayed is currently mock data. 
-          API integration pending for real-time statistics.
-        </p>
+        {/* RIGHT COLUMN (1 span) */}
+        <div className="space-y-6">
+          
+          {/* FINANCE CARD */}
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+             <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-slate-800">Finance</h2>
+                <div className="p-2 bg-green-50 rounded-full text-green-600">
+                   <DollarSign size={20} />
+                </div>
+             </div>
+
+             <div className="space-y-4">
+                <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg shadow-green-500/20">
+                   <p className="text-emerald-100 text-sm font-medium mb-1">Today's Collection</p>
+                   <h3 className="text-3xl font-bold tracking-tight">₹{mockData.finance.todayCollection.toLocaleString()}</h3>
+                </div>
+                
+                <div className="p-5 rounded-2xl bg-white border border-slate-100 shadow-sm relative overflow-hidden group hover:border-orange-200 transition-colors">
+                   <div className="absolute right-0 top-0 w-24 h-24 bg-orange-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+                   <p className="text-slate-500 text-sm font-medium mb-1 relative z-10">Total Due Amount</p>
+                   <h3 className="text-2xl font-bold text-slate-800 relative z-10">₹{mockData.finance.totalDue.toLocaleString()}</h3>
+                   <div className="mt-2 flex items-center gap-1 text-xs font-bold text-orange-500 relative z-10">
+                      <AlertTriangle size={12} />
+                      Requires Attention
+                   </div>
+                </div>
+             </div>
+          </div>
+
+          {/* QUICK ACTIONS */}
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+             <h2 className="text-xl font-bold text-slate-800 mb-6">Quick Actions</h2>
+             <div className="space-y-3">
+                {[
+                   { label: 'Add Student', sub: 'New enrollment', icon: UserPlus, color: 'text-blue-600', bg: 'bg-blue-50', gradient: 'hover:from-blue-50 hover:to-blue-100' },
+                   { label: 'New User', sub: 'Staff access', icon: Settings, color: 'text-purple-600', bg: 'bg-purple-50', gradient: 'hover:from-purple-50 hover:to-purple-100' },
+                   { label: 'Reports', sub: 'View analytics', icon: FileText, color: 'text-pink-600', bg: 'bg-pink-50', gradient: 'hover:from-pink-50 hover:to-pink-100' }
+                ].map((action, idx) => (
+                   <button key={idx} className={`w-full flex items-center justify-between p-4 rounded-2xl border border-transparent hover:border-slate-200 transition-all duration-200 group ${action.bg} ${action.gradient}`}>
+                      <div className="flex items-center gap-4">
+                         <div className={`p-3 rounded-xl bg-white shadow-sm ${action.color}`}>
+                            <action.icon size={20} />
+                         </div>
+                         <div className="text-left">
+                            <p className="font-bold text-slate-700">{action.label}</p>
+                            <p className="text-xs text-slate-500">{action.sub}</p>
+                         </div>
+                      </div>
+                      <div className="opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all">
+                         <ArrowUpRight size={18} className="text-slate-400" />
+                      </div>
+                   </button>
+                ))}
+             </div>
+          </div>
+
+          {/* ALERTS */}
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+             <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold text-slate-800">Alerts</h2>
+                <span className="bg-red-50 text-red-600 px-2.5 py-1 rounded-lg text-xs font-bold">
+                   {mockData.alerts.filter(a => a.severity === 'high').length} Critical
+                </span>
+             </div>
+             
+             <div className="space-y-4">
+                {mockData.alerts.slice(0, 3).map((alert, idx) => (
+                   <div key={idx} className="flex gap-3 items-start p-3 hover:bg-slate-50 rounded-xl transition-colors cursor-pointer group">
+                      <div className={`
+                         w-2 h-2 rounded-full mt-2 flex-shrink-0
+                         ${alert.severity === 'high' ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 
+                           alert.severity === 'medium' ? 'bg-amber-400' : 'bg-blue-400'}
+                      `} />
+                      <div>
+                         <p className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 leading-snug">
+                            {alert.message}
+                         </p>
+                         <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-wide">
+                            {alert.timestamp} • {alert.type}
+                         </p>
+                      </div>
+                   </div>
+                ))}
+             </div>
+          </div>
+
+        </div>
+      </div>
+      
+      <div className="text-center text-slate-400 text-xs py-4">
+         Krimson OS v2.0 • Admin Dashboard
       </div>
     </div>
   );

@@ -2,23 +2,26 @@ import React from 'react';
 import { SYSTEM_ADMIN_DATA } from '../../../data/systemAdminData';
 import { Activity, Server, Cpu, Wifi, AlertTriangle, CheckCircle } from 'lucide-react';
 
-const SystemHealthMonitoring = () => {
-  const { health } = SYSTEM_ADMIN_DATA;
-
-  const StatCard = ({ title, value, icon: Icon, color, subtext }) => (
-    <div className="bg-white p-6 rounded-3xl shadow-sm border-b-4 relative overflow-hidden group" style={{ borderColor: color }}>
-      <div className="flex justify-between items-start relative z-10">
-        <div>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">{title}</p>
-          <h3 className="text-3xl font-extrabold text-slate-800 mt-2">{value}</h3>
-          <p className="text-xs text-slate-400 mt-2">{subtext}</p>
-        </div>
-        <div className="p-3 rounded-2xl bg-slate-50 text-slate-500 group-hover:bg-slate-100 transition-colors">
-          <Icon size={24} />
-        </div>
+const StatCard = ({ title, value, icon, color, subtext }) => {
+  const Icon = icon;
+  return (
+  <div className="bg-white p-6 rounded-3xl shadow-sm border-b-4 relative overflow-hidden group" style={{ borderColor: color }}>
+    <div className="flex justify-between items-start relative z-10">
+      <div>
+        <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">{title}</p>
+        <h3 className="text-3xl font-extrabold text-slate-800 mt-2">{value}</h3>
+        <p className="text-xs text-slate-400 mt-2">{subtext}</p>
+      </div>
+      <div className="p-3 rounded-2xl bg-slate-50 text-slate-500 group-hover:bg-slate-100 transition-colors">
+        <Icon size={24} />
       </div>
     </div>
-  );
+  </div>
+);
+};
+
+const SystemHealthMonitoring = () => {
+  const { health } = SYSTEM_ADMIN_DATA;
 
   return (
     <div className="space-y-8">
@@ -67,7 +70,7 @@ const SystemHealthMonitoring = () => {
           <div className="grid grid-cols-5 gap-2">
             {[...Array(25)].map((_, i) => {
                // Mock heatmap colors based on random latency
-               const latency = Math.random() * 200 + 50; 
+               const latency = 50 + ((i * 17) % 200); // Stable mock latency based on index 
                let bgClass = "bg-green-400";
                if (latency > 150) bgClass = "bg-yellow-400";
                if (latency > 220) bgClass = "bg-red-400";

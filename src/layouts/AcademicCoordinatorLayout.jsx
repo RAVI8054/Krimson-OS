@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Outlet, Link } from "react-router-dom";
 import CoordinatorSidebar from "../components/navigation/coordinator/Sidebar";
 import { authService } from "../services/authService";
 import { Menu } from "lucide-react";
 
 const AcademicCoordinatorLayout = () => {
-  const [user, setUser] = useState(null);
+  const [user] = useState(() => authService.getCurrentUser());
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const currentUser = authService.getCurrentUser();
-    setUser(currentUser);
-  }, []);
 
   const displayName = user?.name || "Coordinator";
   const userRole = user?.role || "Academic Coordinator";

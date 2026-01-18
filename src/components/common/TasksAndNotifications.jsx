@@ -14,7 +14,7 @@ import { CheckSquare, Bell, Clock, AlertCircle, Plus, Filter } from 'lucide-reac
  * - Notifications are effectively a history of alerts.
  */
 
-const TasksAndNotifications = ({ tasks = [], notifications = [], role }) => {
+const TasksAndNotifications = ({ tasks = [], notifications = [] }) => {
   const [activeTab, setActiveTab] = useState('Tasks'); // Tasks | Notifications
   
   // Mock fallback

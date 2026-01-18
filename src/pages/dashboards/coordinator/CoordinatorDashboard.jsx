@@ -2,7 +2,9 @@ import React from 'react';
 import { Activity, Database, Calendar } from 'lucide-react';
 import ConnectedAppsScanner from '../../../components/common/ConnectedAppsScanner';
 
-const StatCard = ({ icon: Icon, value, label, color, bg }) => (
+const StatCard = ({ icon, value, label, color, bg }) => {
+    const Icon = icon;
+    return (
     <div className="bg-white/80 backdrop-blur-lg rounded-[2rem] p-6 shadow-sm border border-white/50 flex flex-col justify-between h-full min-h-[160px]">
         <div className="flex justify-between items-start">
             <div className={`p-3 rounded-2xl ${bg}`}><Icon className={`h-6 w-6 ${color}`} /></div>
@@ -10,6 +12,7 @@ const StatCard = ({ icon: Icon, value, label, color, bg }) => (
         <div className="mt-4"><h3 className="text-3xl font-bold text-slate-800">{value}</h3><p className="text-slate-500 font-medium">{label}</p></div>
     </div>
 );
+};
 
 const CoordinatorDashboard = () => {
     return (

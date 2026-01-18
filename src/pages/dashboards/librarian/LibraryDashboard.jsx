@@ -2,24 +2,26 @@ import React from 'react';
 import { LIBRARIAN_DATA } from '../../../data/librarianData';
 import { Book, Users, Clock, AlertTriangle, Search, Plus, Edit, Trash2 } from 'lucide-react';
 
-const LibraryDashboard = () => {
-  const { stats, catalog } = LIBRARIAN_DATA;
-
-  // Widget Component
-  const StatCard = ({ title, value, icon: Icon, color, subtext }) => (
-    <div className="bg-white p-6 rounded-3xl shadow-sm border-b-4 relative overflow-hidden group" style={{ borderColor: color }}>
-      <div className="flex justify-between items-start relative z-10">
-        <div>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">{title}</p>
-          <h3 className="text-3xl font-extrabold text-slate-800 mt-2">{value}</h3>
-          <p className="text-xs text-slate-400 mt-2">{subtext}</p>
-        </div>
-        <div className="p-3 rounded-2xl bg-slate-50 text-slate-500 group-hover:bg-slate-100 transition-colors">
-          <Icon size={24} />
-        </div>
+const StatCard = ({ title, value, icon, color, subtext }) => {
+  const Icon = icon;
+  return (
+  <div className="bg-white p-6 rounded-3xl shadow-sm border-b-4 relative overflow-hidden group" style={{ borderColor: color }}>
+    <div className="flex justify-between items-start relative z-10">
+      <div>
+        <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">{title}</p>
+        <h3 className="text-3xl font-extrabold text-slate-800 mt-2">{value}</h3>
+        <p className="text-xs text-slate-400 mt-2">{subtext}</p>
+      </div>
+      <div className="p-3 rounded-2xl bg-slate-50 text-slate-500 group-hover:bg-slate-100 transition-colors">
+        <Icon size={24} />
       </div>
     </div>
-  );
+  </div>
+);
+};
+
+const LibraryDashboard = () => {
+  const { stats, catalog } = LIBRARIAN_DATA;
 
   return (
     <div className="space-y-8">

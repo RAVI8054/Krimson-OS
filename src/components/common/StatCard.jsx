@@ -31,11 +31,12 @@ const StatCard = ({
   title, 
   value, 
   subtitle, 
-  icon: Icon, 
+  icon, 
   color = 'blue', 
   onClick, 
   className 
 }) => {
+  const Icon = icon;
   // Map color prop to Tailwind utility classes
   const colorClasses = {
     blue: 'bg-blue-50 text-blue-600',

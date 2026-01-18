@@ -16,7 +16,6 @@ const LoginPage = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [userRole, setUserRole] = useState(null); // Store role for redirection after OTP
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -33,10 +32,9 @@ const LoginPage = () => {
       }
 
       // Call API to verify credentials
-      const response = await authService.login(authEmail, authPassword);
+      await authService.login(authEmail, authPassword);
       
       // On success, prepare for Step 2
-      setUserRole(response.user.role);
       setStep(2); // Move to OTP
       dispatch(addNotification({ type: 'info', message: 'Credentials verified. Please enter OTP.' }));
       

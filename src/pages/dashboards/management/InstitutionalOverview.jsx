@@ -2,30 +2,32 @@ import React from 'react';
 import { MANAGEMENT_DATA } from '../../../data/managementData';
 import { Users, GraduationCap, Calendar, DollarSign, TrendingUp, AlertTriangle } from 'lucide-react';
 
-const InstitutionalOverview = () => {
-  const { overview } = MANAGEMENT_DATA;
-
-  // Reusable KPI Card Component
-  const KPICard = ({ title, value, subtext, icon: Icon, color, trend }) => (
-    <div className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-      <div className={`absolute top-0 right-0 w-24 h-24 bg-${color}-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110`}></div>
-      <div className="relative z-10 flex justify-between items-start mb-4">
-        <div>
-           <h3 className="text-slate-500 text-xs font-bold uppercase tracking-wider">{title}</h3>
-           <h2 className="text-3xl font-extrabold text-slate-800 mt-2">{value}</h2>
-        </div>
-        <div className={`p-3 bg-${color}-50 text-${color}-500 rounded-2xl`}>
-          <Icon size={24} />
-        </div>
+const KPICard = ({ title, value, subtext, icon, color, trend }) => {
+  const Icon = icon;
+  return (
+  <div className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+    <div className={`absolute top-0 right-0 w-24 h-24 bg-${color}-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110`}></div>
+    <div className="relative z-10 flex justify-between items-start mb-4">
+      <div>
+         <h3 className="text-slate-500 text-xs font-bold uppercase tracking-wider">{title}</h3>
+         <h2 className="text-3xl font-extrabold text-slate-800 mt-2">{value}</h2>
       </div>
-      <div className="relative z-10 flex items-center gap-2">
-        <span className={`text-xs font-bold px-2 py-1 rounded-full ${trend.includes('+') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-          {trend}
-        </span>
-        <span className="text-xs text-slate-400">{subtext}</span>
+      <div className={`p-3 bg-${color}-50 text-${color}-500 rounded-2xl`}>
+        <Icon size={24} />
       </div>
     </div>
-  );
+    <div className="relative z-10 flex items-center gap-2">
+      <span className={`text-xs font-bold px-2 py-1 rounded-full ${trend.includes('+') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+        {trend}
+      </span>
+      <span className="text-xs text-slate-400">{subtext}</span>
+    </div>
+  </div>
+);
+};
+
+const InstitutionalOverview = () => {
+  const { overview } = MANAGEMENT_DATA;
 
   return (
     <div className="space-y-8">

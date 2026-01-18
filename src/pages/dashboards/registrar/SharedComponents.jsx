@@ -6,7 +6,9 @@ export const Card = ({ children, className = "" }) => (
   </div>
 );
 
-export const StatCard = ({ icon: Icon, value, label, color, bg }) => (
+export const StatCard = ({ icon, value, label, color, bg }) => {
+  const Icon = icon;
+  return (
   <Card className="flex flex-col justify-between h-full min-h-[140px]">
     <div className={`w-12 h-12 rounded-2xl ${bg} flex items-center justify-center`}>
       <Icon className={`h-6 w-6 ${color}`} />
@@ -17,6 +19,7 @@ export const StatCard = ({ icon: Icon, value, label, color, bg }) => (
     </div>
   </Card>
 );
+};
 
 export const Badge = ({ children, color }) => {
   const styles = {

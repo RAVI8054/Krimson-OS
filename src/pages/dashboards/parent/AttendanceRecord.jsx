@@ -3,10 +3,13 @@ import { CalendarCheck, AlertCircle, Clock } from 'lucide-react';
 
 const AttendanceRecord = () => {
   // Mock Data for Calendar
-  const days = Array.from({ length: 30 }, (_, i) => ({
-    day: i + 1,
-    status: Math.random() > 0.1 ? 'present' : (Math.random() > 0.5 ? 'absent' : 'holiday')
-  }));
+  const days = React.useMemo(() => Array.from({ length: 30 }, (_, i) => {
+    const r = (i * 7) % 100; 
+    return {
+      day: i + 1,
+      status: r > 10 ? 'present' : (r > 5 ? 'absent' : 'holiday')
+    };
+  }), []);
 
   return (
     <div className="space-y-6">

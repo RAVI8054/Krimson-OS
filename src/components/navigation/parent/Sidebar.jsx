@@ -90,7 +90,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             >
               {({ isActive }) => (
                 <>
-                  <span className={({ isActive }) => isActive ? "text-blue-500" : "text-white"}>
+                  <span className={isActive ? "text-blue-500" : "text-white"}>
                     {item.icon}
                   </span>
                   <span className="text-sm">{item.name}</span>

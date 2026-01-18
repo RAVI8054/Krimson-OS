@@ -21,16 +21,14 @@ import { getUserActiveRole, formatRoleForDisplay } from "../../utils/roleUtils";
 const WelcomeLanding = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [user, setUser] = useState(null);
+    const [user] = useState(() => authService.getCurrentUser());
     const [time, setTime] = useState(DateTime.now().setZone("Asia/Singapore"));
 
     useEffect(() => {
-        const currentUser = authService.getCurrentUser();
-        if (!currentUser) {
+        if (!user) {
             navigate("/login");
             return;
         }
-        setUser(currentUser);
 
         // Clock ticker
         const timer = setInterval(() => {
@@ -38,7 +36,7 @@ const WelcomeLanding = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [navigate]);
+    }, [navigate, user]);
 
     const handleLogout = () => {
         authService.logout();

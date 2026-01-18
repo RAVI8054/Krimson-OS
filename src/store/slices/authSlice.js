@@ -16,6 +16,7 @@
  */
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { api } from "../../services/api";
 
 // ---------------------------------------------------
 // TODO: API INTEGRATION POINT - Authentication
@@ -56,12 +57,7 @@ export const loginUser = createAsyncThunk(
       // ---------------------------------------------------
       // API call
       // ---------------------------------------------------
-      const response = await fetch("http://localhost:5000/api/v1/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-      });
-      const data = await response.json();
+      const data = await api.post("/auth/login", credentials);
 
       if (!data.success) {
         throw new Error(data.message || "Login failed");
@@ -82,25 +78,18 @@ export const loginUser = createAsyncThunk(
 /**
  * Async thunk for user logout
  */
-export const logoutUser = createAsyncThunk(
-  "auth/logout",
-  async (_, { rejectWithValue }) => {
-    try {
-      // ---------------------------------------------------
-      // TODO: Call logout API to invalidate token on server
-      // ---------------------------------------------------
-      // await fetch('/api/auth/logout', {
-      //   method: 'POST',
-      //   headers: { 'Authorization': `Bearer ${token}` }
-      // });
-      // ---------------------------------------------------
-
-      return true;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+export const logoutUser = createAsyncThunk("auth/logout", async () => {
+  // ---------------------------------------------------
+  // TODO: Call logout API to invalidate token on server
+  // ---------------------------------------------------
+  // try {
+  //   await api.post('/auth/logout');
+  // } catch (error) {
+  //   console.error("Logout failed", error);
+  // }
+  // ---------------------------------------------------
+  return true;
+});
 
 /**
  * Authentication slice

@@ -15,18 +15,17 @@ const UnifiedCommunicationHub = ({ role, data }) => {
   const [activeTab, setActiveTab] = useState(role === 'student' ? 'Notices' : 'Messages'); 
   const [activeChat, setActiveChat] = useState(null);
 
-  // Mock Data fallback if not provided
-  const messages = data?.messages || [];
-  const notifications = data?.notifications || []; // For notices tab
+   // Mock Data fallback if not provided
+   const messages = data?.messages || [];
 
   const isStudentOrParent = role === 'student' || role === 'parent';
   const isTeacher = role === 'teacher';
   const isAdmin = role === 'admin';
 
   return (
-    <div className="h-[calc(100vh-140px)] flex gap-6">
+    <div className="h-[calc(100vh-140px)] flex flex-col md:flex-row gap-6">
        {/* Sidebar */}
-       <div className="w-80 bg-white rounded-3xl p-4 shadow-sm flex flex-col gap-4">
+       <div className="w-full md:w-80 bg-white rounded-3xl p-4 shadow-sm flex flex-col gap-4">
           
           {/* Tab Switcher (Visible for Students/Parents) */}
           {isStudentOrParent && (
