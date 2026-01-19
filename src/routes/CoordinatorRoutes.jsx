@@ -17,7 +17,7 @@ const CoordinatorRoutes = () => {
           <Route path="timetable" element={<TimetableConsole />} />
           <Route path="approval" element={<LessonApprovalCenter />} />
           <Route path="assessment" element={<AssessmentTracker />} />
-          <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile" element={<ProfilePage roleOverride="Academic Coordinator" />} />
         </Route>
     </Routes>
   );

@@ -27,7 +27,7 @@ const AdminRoutes = () => {
         <Route path="admissions" element={<AdmissionsConsole />} />
         <Route path="users" element={<UserManagement />} />
         <Route path="classes" element={<ClassConfig />} />
-        <Route path="profile" element={<ProfilePage />} /> {/* Added route for profile page */}
+        <Route path="profile" element={<ProfilePage roleOverride="Administrator" />} /> {/* Added route for profile page */}
         <Route path="hr" element={<HRAdmin />} />
         <Route path="finance" element={<FinanceControl />} />
         <Route path="attendance" element={<AttendanceOversight />} />

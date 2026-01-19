@@ -43,7 +43,7 @@ const ROLE_THEMES = {
   'Default': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' }
 };
 
-const ProfilePage = () => {
+const ProfilePage = ({ roleOverride }) => {
   const [activeTab, setActiveTab] = useState('profile');
   
   // Initialize with default values, will be populated by effect
@@ -69,9 +69,9 @@ const ProfilePage = () => {
                 name: currentUser.name || 'User',
                 email: currentUser.email || '',
                 phone: currentUser.phone || '', // Might not be in initial auth data
-                role: currentRole || currentUser.role || 'User',
+                role: roleOverride || currentRole || currentUser.role || 'User',
                 avatar: currentUser.avatar || '',
-                bio: currentUser.bio || `Principal / ${currentRole || 'User'}` // Default bio based on role
+                bio: currentUser.bio || `Principal / ${roleOverride || currentRole || 'User'}` // Default bio based on role
             }));
         }
     };

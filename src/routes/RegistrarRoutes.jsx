@@ -17,7 +17,7 @@ const RegistrarRoutes = () => {
              <Route path="records" element={<RecordsView />} />
              <Route path="compliance" element={<ComplianceView />} />
              <Route path="withdrawals" element={<WithdrawalView />} />
-             <Route path="profile" element={<ProfilePage />} />
+             <Route path="profile" element={<ProfilePage roleOverride="Registrar" />} />
         </Route>
     </Routes>
   );

@@ -36,7 +36,7 @@ const ParentRoutes = () => {
            <Route path="cca" element={<ParentCoCurricularTracker />} />
            <Route path="feedback" element={<ParentFeedbackSurvey />} />
            <Route path="support" element={<ParentSupportCenter />} />
-           <Route path="profile" element={<ProfilePage />} />
+           <Route path="profile" element={<ProfilePage roleOverride="Parent" />} />
         </Route>
     </Routes>
   );

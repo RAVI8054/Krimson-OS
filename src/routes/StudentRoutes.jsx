@@ -32,7 +32,7 @@ const StudentRoutes = () => {
            <Route path="analytics" element={<PerformanceAnalytics />} />
            <Route path="fees" element={<FeeStatus />} />
            <Route path="behavior" element={<BehaviorLog />} />
-           <Route path="profile" element={<ProfilePage />} />
+           <Route path="profile" element={<ProfilePage roleOverride="Student" />} />
            <Route path="parentlink" element={<ParentLinkDashboard />} />
            <Route path="activities" element={<CoCurricularActivities />} />
            <Route path="support" element={<HelpAndSupport />} />

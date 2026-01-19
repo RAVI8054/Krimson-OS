@@ -7,7 +7,7 @@ import {
   HelpCircle, UserCircle, LogOut, X 
 } from 'lucide-react';
 
-const Sidebar = ({ isOpen, onClose }) => {
+const Sidebar = ({ isOpen, onClose, isWideScreen }) => {
   const menuItems = [
     { name: "Home Dashboard", path: "/dashboard/parent/home", icon: <LayoutDashboard size={20} /> }, // Screen 1
     { name: "My Children", path: "/dashboard/parent/children", icon: <Users size={20} /> }, // Screen 2
@@ -23,6 +23,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: "Co-Curricular", path: "/dashboard/parent/cca", icon: <Trophy size={20} /> }, // Screen 12
     { name: "Feedback Survey", path: "/dashboard/parent/feedback", icon: <MessageCircle size={20} /> }, // Screen 13
     { name: "Support Center", path: "/dashboard/parent/support", icon: <HelpCircle size={20} /> }, // Screen 14
+    { name: "Profile & Settings", path: "/dashboard/parent/profile", icon: <UserCircle size={20} /> }, // Screen 15
   ];
 
   const navigate = useNavigate();
@@ -35,17 +36,17 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Mobile Overlay */}
-      {isOpen && (
+      {/* Mobile Overlay - Show only when not wide screen */}
+      {isOpen && !isWideScreen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          className="fixed inset-0 bg-black/50 z-40"
           onClick={onClose}
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Sidebar Container - 800px breakpoint via isWideScreen */}
       <div className={`h-screen w-72 p-4 flex flex-col fixed left-0 top-0 z-50 transition-transform duration-300 ${
-        isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        isWideScreen ? 'translate-x-0' : (isOpen ? 'translate-x-0' : '-translate-x-full')
       }`}>
       {/* Gradient Container - Matches screenshot style */}
       <div className="h-full w-full rounded-3xl bg-gradient-to-b from-cyan-400 via-blue-400 to-pink-400 p-4 flex flex-col text-white shadow-2xl relative overflow-hidden">
@@ -54,13 +55,15 @@ const Sidebar = ({ isOpen, onClose }) => {
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
         <div className="absolute bottom-10 -left-10 w-40 h-40 bg-pink-500 opacity-20 rounded-full blur-2xl"></div>
 
-        {/* Close Button for Mobile */}
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors z-50 md:hidden"
-        >
-          <X size={20} />
-        </button>
+        {/* Close Button for Mobile - Show when not wide screen */}
+        {!isWideScreen && (
+          <button 
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors z-50"
+          >
+            <X size={20} />
+          </button>
+        )}
 
         {/* Logo Area */}
         <NavLink to="/dashboard/parent/home" className="flex items-center gap-3 mb-8 pl-2 relative z-10 cursor-pointer">

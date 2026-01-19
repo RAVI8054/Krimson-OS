@@ -32,7 +32,7 @@ import { api } from "../../services/api";
  * Initial authentication state
  */
 const initialState = {
-  user: null,
+  user: JSON.parse(localStorage.getItem("user") || "null"),
   token: localStorage.getItem("token") || null,
   currentRole: localStorage.getItem("currentRole") || null,
   availableRoles: JSON.parse(localStorage.getItem("availableRoles") || "[]"),
@@ -72,7 +72,7 @@ export const loginUser = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 /**
@@ -122,13 +122,14 @@ const authSlice = createSlice({
       const token = localStorage.getItem("token");
       const currentRole = localStorage.getItem("currentRole");
       const availableRoles = JSON.parse(
-        localStorage.getItem("availableRoles") || "[]"
+        localStorage.getItem("availableRoles") || "[]",
       );
 
       if (token) {
         state.token = token;
         state.currentRole = currentRole;
         state.availableRoles = availableRoles;
+        state.user = JSON.parse(localStorage.getItem("user") || "null");
         state.isAuthenticated = true;
       }
     },
@@ -154,7 +155,7 @@ const authSlice = createSlice({
       localStorage.setItem("currentRole", state.currentRole);
       localStorage.setItem(
         "availableRoles",
-        JSON.stringify(action.payload.roles)
+        JSON.stringify(action.payload.roles),
       );
       localStorage.setItem("user", JSON.stringify(action.payload.user)); // Also persist user object for WelcomeLanding
     });

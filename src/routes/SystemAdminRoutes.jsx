@@ -15,7 +15,7 @@ const SystemAdminRoutes = () => {
         <Route path="security" element={<SecurityAccessControl />} />
         <Route path="backup" element={<BackupRecoveryCenter />} />
         <Route path="audit" element={<AuditMaintenanceLog />} />
-        <Route path="profile" element={<ProfilePage />} />
+        <Route path="profile" element={<ProfilePage roleOverride="IT/System Admin" />} />
         
         {/* Default redirect */}
         <Route path="*" element={<Navigate to="health" replace />} />

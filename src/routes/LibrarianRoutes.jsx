@@ -15,7 +15,7 @@ const LibrarianRoutes = () => {
         <Route path="issue-return" element={<IssueReturnManager />} />
         <Route path="reservations" element={<ReservationRequestCenter />} />
         <Route path="reports" element={<LibraryReports />} />
-        <Route path="profile" element={<ProfilePage />} />
+        <Route path="profile" element={<ProfilePage roleOverride="Librarian" />} />
         
         {/* Default redirect */}
         <Route path="*" element={<Navigate to="dashboard" replace />} />

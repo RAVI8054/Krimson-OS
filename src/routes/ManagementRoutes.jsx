@@ -21,7 +21,7 @@ const ManagementRoutes = () => {
         <Route path="operations" element={<OperationalEfficiency />} />
         <Route path="compliance" element={<ComplianceRisk />} />
         <Route path="strategy" element={<StrategicPlanning />} />
-        <Route path="profile" element={<ProfilePage />} />
+        <Route path="profile" element={<ProfilePage roleOverride="Management" />} />
         
         {/* Default redirect to overview */}
         <Route path="*" element={<Navigate to="overview" replace />} />

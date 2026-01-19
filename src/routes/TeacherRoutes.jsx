@@ -38,7 +38,7 @@ const TeacherRoutes = () => {
            <Route path="resources" element={<ResourceLibrary />} />
            <Route path="reflection" element={<ReflectionJournal />} />
            <Route path="attendance-summary" element={<AttendanceSummary />} />
-           <Route path="profile" element={<ProfilePage />} />
+           <Route path="profile" element={<ProfilePage roleOverride="Teacher" />} />
            <Route path="support" element={<Support />} />
            
            {/* Fallback */}

@@ -1,14 +1,12 @@
 import React from 'react';
-import SupportHelpCenter from '../../../components/common/SupportHelpCenter';
+import SupportCenter from './SupportCenter';
 
 /**
  * Parent Support Wrapper
- * Screen 12: Support & Help Center
+ * Screen 14: Support & Help Center
  */
 const Support = () => {
-  return (
-    <SupportHelpCenter role="parent" />
-  );
+  return <SupportCenter />;
 };
 
 export default Support;

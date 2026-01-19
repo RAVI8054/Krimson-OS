@@ -18,7 +18,7 @@ const CounselorRoutes = () => {
         <Route path="cases" element={<InterventionCaseDashboard />} />
         <Route path="wellbeing" element={<WellbeingTrends />} />
         <Route path="collaboration" element={<CollaborationHub />} />
-        <Route path="profile" element={<ProfilePage />} />
+        <Route path="profile" element={<ProfilePage roleOverride="Counselor" />} />
         
         {/* Fallback for unknown sub-routes */}
         <Route path="*" element={<Navigate to="behavior" replace />} />

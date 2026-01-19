@@ -21,7 +21,7 @@ const FinanceRoutes = () => {
         <Route path="refunds" element={<RefundsLedgerControl />} />
         <Route path="reports" element={<FinancialReports />} />
         <Route path="audit" element={<AuditComplianceCenter />} />
-        <Route path="profile" element={<ProfilePage />} />
+        <Route path="profile" element={<ProfilePage roleOverride="Finance" />} />
         <Route index element={<Navigate to="dashboard" replace />} />
       </Route>
     </Routes>
