@@ -9,7 +9,9 @@ import {
     User,
     LogOut,
     Calendar,
-    School
+    School,
+    TrendingUp,
+    ArrowUpRight
 } from "lucide-react";
 import { authService } from "../../services/authService";
 import RoleSwitcher from "../../components/common/RoleSwitcher";
@@ -119,38 +121,87 @@ const WelcomeLanding = () => {
                     </div>
                 </div>
 
-                {/* Quick Actions Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                    <Link to={dashboardPath} className="group p-6 bg-white rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-blue-900/5 hover:border-cyan-200 transition-all">
-                        <div className="w-12 h-12 bg-cyan-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <LayoutDashboard className="h-6 w-6" />
+                {/* Quick Actions Grid - Premium Edition */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    {/* Dashboard Card */}
+                    <Link to={dashboardPath} className="group relative overflow-hidden p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500">
+                        {/* Gradient Background */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-cyan-400 via-blue-500 to-blue-600 opacity-90 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        {/* Animated Blob */}
+                        <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                        
+                        {/* Content */}
+                        <div className="relative z-10">
+                            <div className="w-16 h-16 bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                                <LayoutDashboard className="h-8 w-8 text-white" />
+                            </div>
+                            <h3 className="font-bold text-2xl text-white mb-2 tracking-tight">Dashboard</h3>
+                            <p className="text-white/90 text-sm font-medium">Go to your main workspace</p>
+                            
+                            {/* Hover Arrow */}
+                            <div className="mt-4 flex items-center gap-2 text-white/80 group-hover:text-white transition-colors">
+                                <span className="text-xs font-bold">Open</span>
+                                <ArrowUpRight className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            </div>
                         </div>
-                        <h3 className="font-bold text-lg text-slate-800 mb-1">Dashboard</h3>
-                        <p className="text-slate-500 text-sm">Go to your main workspace</p>
                     </Link>
 
-                    <div className="group p-6 bg-white rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-blue-900/5 hover:border-cyan-200 transition-all cursor-pointer">
-                        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <Bell className="h-6 w-6" />
+                    {/* Notifications Card */}
+                    <div className="group relative overflow-hidden p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer">
+                        {/* Gradient Background */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-purple-400 via-pink-500 to-rose-500 opacity-90 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        {/* Animated Blob */}
+                        <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                        
+                        {/* Content */}
+                        <div className="relative z-10">
+                            <div className="w-16 h-16 bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg relative">
+                                <Bell className="h-8 w-8 text-white group-hover:animate-bounce" />
+                                {/* Notification Badge */}
+                                <span className="absolute -top-2 -right-2 w-6 h-6 bg-white text-rose-600 rounded-full text-xs font-bold flex items-center justify-center shadow-lg">3</span>
+                            </div>
+                            <h3 className="font-bold text-2xl text-white mb-2 tracking-tight">Notifications</h3>
+                            <p className="text-white/90 text-sm font-medium">3 New alerts waiting</p>
+                            
+                            {/* Pulse Indicator */}
+                            <div className="mt-4 flex items-center gap-2">
+                                <span className="relative flex h-3 w-3">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                                </span>
+                                <span className="text-xs font-bold text-white/90">Active</span>
+                            </div>
                         </div>
-                        <h3 className="font-bold text-lg text-slate-800 mb-1">Notifications</h3>
-                        <p className="text-slate-500 text-sm">3 New alerts</p>
                     </div>
 
-                    <div className="group p-6 bg-white rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-blue-900/5 hover:border-cyan-200 transition-all cursor-pointer">
-                        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <CheckSquare className="h-6 w-6" />
+                    {/* Reports Card */}
+                    <div className="group relative overflow-hidden p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer">
+                        {/* Gradient Background */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 opacity-90 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        {/* Animated Blob */}
+                        <div className="absolute bottom-0 right-0 w-40 h-40 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                        
+                        {/* Content */}
+                        <div className="relative z-10">
+                            <div className="w-16 h-16 bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                                <FileText className="h-8 w-8 text-white" />
+                            </div>
+                            <h3 className="font-bold text-2xl text-white mb-2 tracking-tight">Reports</h3>
+                            <p className="text-white/90 text-sm font-medium">View analytics & insights</p>
+                            
+                            {/* Stats Preview */}
+                            <div className="mt-4 flex items-center gap-3">
+                                <div className="flex items-center gap-1 text-white">
+                                    <TrendingUp className="h-4 w-4" />
+                                    <span className="text-xs font-bold">+12.5%</span>
+                                </div>
+                                <div className="h-1 w-1 rounded-full bg-white/60"></div>
+                                <span className="text-xs text-white/80 font-medium">This month</span>
+                            </div>
                         </div>
-                        <h3 className="font-bold text-lg text-slate-800 mb-1">My Tasks</h3>
-                        <p className="text-slate-500 text-sm">12 Pending items</p>
-                    </div>
-
-                    <div className="group p-6 bg-white rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-blue-900/5 hover:border-cyan-200 transition-all cursor-pointer">
-                        <div className="w-12 h-12 bg-cyan-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <FileText className="h-6 w-6" />
-                        </div>
-                        <h3 className="font-bold text-lg text-slate-800 mb-1">Reports</h3>
-                        <p className="text-slate-500 text-sm">View analytics</p>
                     </div>
                 </div>
 

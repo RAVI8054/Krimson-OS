@@ -26,21 +26,21 @@ const ROLE_PERMISSIONS = {
 
 const ROLE_THEMES = {
   'Administrator': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
-  'Principal': { gradient: 'from-cyan-300 via-blue-300 to-pink-300', text: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Principal': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
   'Teacher': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
   'Student': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
   'Parent': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
   'Management': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
   'Director': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
-  'Registrar': { gradient: 'from-cyan-400 via-blue-500 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Registrar': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
   'Finance': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
   'IT/System Admin': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
   'Librarian': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
-  'Academic Coordinator': { gradient: 'from-cyan-300 via-blue-300 to-pink-300', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
-  'Coordinator': { gradient: 'from-cyan-300 via-blue-300 to-pink-300', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Academic Coordinator': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
+  'Coordinator': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
   'Counselor': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
   'School Counselor': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
-  'Default': { gradient: 'from-slate-700 to-slate-900', text: 'text-slate-600', bg: 'bg-slate-50', border: 'border-slate-100' }
+  'Default': { gradient: 'from-cyan-400 via-blue-400 to-pink-400', text: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' }
 };
 
 const ProfilePage = () => {
@@ -113,11 +113,16 @@ const ProfilePage = () => {
         {/* Left Sidebar Navigation */}
         <div className="w-full lg:w-64 flex-shrink-0">
            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden sticky top-8">
-              {/* Dynamic Gradient Header in Card */}
-              <div className={`h-24 bg-gradient-to-r ${theme.gradient}`}></div>
-              <div className="px-6 pb-6 -mt-12 flex flex-col items-center text-center relative z-10">
+              {/* Dynamic Gradient Header in Card with Decorative Blobs */}
+              <div className={`h-32 bg-gradient-to-r ${theme.gradient} relative overflow-hidden`}>
+                 {/* Decorative Blobs matching sidebar */}
+                 <div className="absolute -top-8 -right-8 w-32 h-32 bg-white opacity-20 rounded-full blur-2xl"></div>
+                 <div className="absolute bottom-0 -left-8 w-24 h-24 bg-pink-300 opacity-30 rounded-full blur-xl"></div>
+                 <div className="absolute top-4 left-1/3 w-16 h-16 bg-blue-200 opacity-25 rounded-full blur-lg"></div>
+              </div>
+              <div className="px-6 pb-6 -mt-16 flex flex-col items-center text-center relative z-10">
                  <div className="relative group cursor-pointer mb-3">
-                    <div className="w-24 h-24 rounded-full bg-white p-1 shadow-md">
+                    <div className="w-24 h-24 rounded-full bg-white p-1 shadow-lg">
                         <div className="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-slate-400 overflow-hidden border border-slate-100">
                            {user.avatar ? (
                              <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
@@ -146,8 +151,8 @@ const ProfilePage = () => {
                      onClick={() => setActiveTab(tab.id)}
                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all ${
                        activeTab === tab.id 
-                         ? `${theme.bg} ${theme.text} shadow-sm ring-1 ring-inset ${theme.border}` 
-                         : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                         ? 'bg-white text-blue-600 shadow-md font-bold' 
+                         : 'text-slate-500 hover:bg-white/10 hover:text-slate-900'
                      }`}
                    >
                      {tab.icon}

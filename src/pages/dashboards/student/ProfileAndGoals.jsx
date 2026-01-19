@@ -7,8 +7,11 @@ import { STUDENT_DATA } from '../../../data/studentData';
  * Uses: src/pages/common/UserProfile.jsx
  * Screen 10: Profile & Access Management
  */
+import { authService } from '../../../services/authService';
+
 const ProfileAndGoals = () => {
-  const { user, profile } = STUDENT_DATA;
+  const { profile } = STUDENT_DATA;
+  const user = authService.getCurrentUser() || STUDENT_DATA.user;
 
   return (
     <UserProfile 

@@ -53,26 +53,26 @@ const AdminLayout = () => {
       />
 
       {/* Main Content - Adjusted margin for floating sidebar */}
-      <div className="flex-1 md:ml-72 flex flex-col h-screen overflow-hidden relative transition-all duration-300">
+      <div className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden relative transition-all duration-300">
         
         {/* Header - Transparent/Glassmorphism */}
-        <header className="h-24 flex items-center justify-between px-8 z-10 sticky top-0">
+        <header className="h-auto py-3 md:py-6 flex items-center justify-between px-4 md:px-6 lg:px-8 z-10 sticky top-0">
           <div className="flex items-center gap-4">
             {/* Hamburger menu button - opens sidebar via Redux */}
             <button 
               onClick={openSidebar}
-              className="md:hidden p-2 bg-white/50 backdrop-blur border border-white/50 rounded-xl shadow-sm hover:shadow-md transition-all text-slate-600"
+              className="lg:hidden p-2 bg-white/50 backdrop-blur border border-white/50 rounded-xl shadow-sm hover:shadow-md transition-all text-slate-600"
               aria-label="Open navigation menu"
               type="button"
             >
               <Menu size={20} />
             </button>
             
-            <div className="hidden md:block">
-              <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
+           <div className="hidden md:block">
+              <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-slate-800 tracking-tight">
                 Admin Control Room
               </h2>
-              <p className="text-xs text-slate-500 font-medium ml-0.5">Global System Overview</p>
+              <p className="text-[10px] md:text-xs text-slate-500 font-medium ml-0.5">Global System Overview</p>
             </div>
           </div>
           
@@ -113,7 +113,7 @@ const AdminLayout = () => {
         </header>
 
         {/* Main content area */}
-        <main className="flex-1 overflow-y-auto px-8 pb-8 custom-scrollbar">
+        <main className="flex-1 overflow-y-auto px-4 md:px-6 lg:px-8 pb-6 md:pb-8 custom-scrollbar">
           <Outlet />
         </main>
       </div>

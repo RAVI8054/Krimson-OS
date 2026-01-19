@@ -31,12 +31,11 @@ const StatCard = ({
   title, 
   value, 
   subtitle, 
-  icon, 
+  icon: IconComponent, 
   color = 'blue', 
   onClick, 
   className 
 }) => {
-  const Icon = icon;
   // Map color prop to Tailwind utility classes
   const colorClasses = {
     blue: 'bg-blue-50 text-blue-600',
@@ -68,7 +67,7 @@ const StatCard = ({
         "p-4 rounded-xl shrink-0",
         colorClasses[color] || colorClasses.blue
       )}>
-        <Icon size={24} aria-hidden="true" />
+        <IconComponent size={24} aria-hidden="true" />
       </div>
 
       {/* Metrics content */}

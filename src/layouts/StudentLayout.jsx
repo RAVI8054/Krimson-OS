@@ -10,19 +10,19 @@ const StudentLayout = () => {
   return (
     <div className="min-h-screen bg-[#f3f5f9] flex font-sans">
       <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
-      <div className="flex-1 md:ml-72 p-8 overflow-x-hidden">
+      <div className="flex-1 lg:ml-80 p-4 md:p-6 lg:p-8 overflow-x-hidden transition-all duration-300">
         {/* Header */}
-        <header className="flex justify-between items-center mb-10">
+        <header className="flex justify-between items-center mb-6 md:mb-8 lg:mb-10">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 bg-white/50 backdrop-blur border border-white/50 rounded-xl shadow-sm hover:shadow-md transition-all text-slate-600"
+              className="lg:hidden p-2 bg-white/50 backdrop-blur border border-white/50 rounded-xl shadow-sm hover:shadow-md transition-all text-slate-600"
             >
               <Menu size={20} />
             </button>
           <div>
-            <h2 className="text-3xl font-bold text-slate-800 tracking-tight">Student Dashboard</h2>
-            <p className="text-slate-500 text-sm mt-1">Welcome back to your learning journey!</p>
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-800 tracking-tight">Student Dashboard</h2>
+            <p className="text-slate-500 text-xs md:text-sm mt-1">Welcome back to your learning journey!</p>
           </div>
           </div>
           <div className="flex items-center gap-5">

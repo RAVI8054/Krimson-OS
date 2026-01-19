@@ -30,6 +30,14 @@ const RoleLanding = ({ user, role, onContinue }) => {
   const effectiveUser = user || { name: "Ms. Neena", role: role || "Teacher" };
   const effectiveRole = role || "Teacher";
 
+  // Dynamic greeting based on Singapore time
+  const getGreeting = () => {
+    const hour = parseInt(time.toLocaleTimeString('en-US', { timeZone: 'Asia/Singapore', hour: '2-digit', hour12: false }));
+    if (hour < 12) return "Good Morning,";
+    if (hour < 18) return "Good Afternoon,";
+    return "Good Evening,";
+  };
+
   const quickLinks = [
       { id: 1, title: "Dashboard", icon: <Layout size={20}/>, path: `/dashboard/${effectiveRole.toLowerCase()}` },
       { id: 2, title: "Notifications", icon: <Bell size={20}/>, path: `/dashboard/${effectiveRole.toLowerCase()}/notifications` },
@@ -47,7 +55,7 @@ const RoleLanding = ({ user, role, onContinue }) => {
               <div className="absolute bottom-10 left-0 w-48 h-48 bg-pink-500 opacity-20 rounded-full blur-2xl -ml-16"></div>
               
               <div>
-                  <h1 className="text-4xl font-bold mb-2">Good Morning,</h1>
+                  <h1 className="text-4xl font-bold mb-2">{getGreeting()}</h1>
                   <h2 className="text-2xl font-medium opacity-90">{effectiveUser.name}!</h2>
                   <div className="inline-block px-4 py-1 bg-white/20 rounded-full mt-4 text-sm font-bold backdrop-blur-sm">
                       You're logged in as {effectiveRole}

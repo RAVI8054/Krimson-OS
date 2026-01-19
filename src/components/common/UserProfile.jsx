@@ -23,7 +23,15 @@ const UserProfile = ({ role, user, detailedInfo }) => {
       {/* Common Header */}
       <div className="bg-white rounded-3xl p-8 shadow-sm flex flex-col md:flex-row items-center md:items-start gap-8 relative overflow-hidden">
          {/* Background Decoration */}
-         <div className={`absolute top-0 left-0 w-full h-32 bg-gradient-to-r ${isStudent ? 'from-cyan-400 via-blue-400 to-pink-400' : 'from-indigo-500 to-purple-500'}`}></div>
+         <div className={`absolute inset-0 bg-gradient-to-r ${isStudent ? 'from-cyan-400 via-blue-400 to-pink-400' : 'from-indigo-500 to-purple-500'}`}>
+            {isStudent && (
+               <>
+                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-20 rounded-full blur-2xl"></div>
+                  <div className="absolute bottom-[-20px] -left-10 w-40 h-40 bg-pink-500 opacity-20 rounded-full blur-2xl"></div>
+                  <div className="absolute top-10 left-1/3 w-20 h-20 bg-blue-300 opacity-20 rounded-full blur-xl"></div>
+               </>
+            )}
+         </div>
          
          {/* Avatar */}
          <div className="relative z-10 mt-12">
@@ -34,10 +42,10 @@ const UserProfile = ({ role, user, detailedInfo }) => {
          <div className="flex-1 mt-16 text-center md:text-left relative z-10 w-full">
             <div className="flex flex-col md:flex-row justify-between items-center">
                <div>
-                  <h1 className="text-3xl font-bold text-slate-800">{user.name}</h1>
-                  <p className="text-indigo-600 font-bold uppercase text-sm tracking-wide mt-1">{user.role} {user.section && `• ${user.section}`}</p>
+                  <h1 className={`text-3xl font-bold ${isStudent ? 'text-white' : 'text-slate-800'}`}>{user.name}</h1>
+                  <p className={`${isStudent ? 'text-blue-100' : 'text-indigo-600'} font-bold uppercase text-sm tracking-wide mt-1`}>{user.role} {user.section && `• ${user.section}`}</p>
                </div>
-               <button className="mt-4 md:mt-0 px-4 py-2 border border-slate-200 rounded-xl text-slate-600 font-bold text-sm hover:bg-slate-50 flex items-center gap-2 bg-white/80 backdrop-blur-sm">
+               <button className={`mt-4 md:mt-0 px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 backdrop-blur-sm transition-colors ${isStudent ? 'bg-white/20 border border-white/30 text-white hover:bg-white/30' : 'border border-slate-200 text-slate-600 hover:bg-slate-50 bg-white/80'}`}>
                   <Edit2 size={16} /> Edit Profile
                </button>
             </div>
@@ -45,12 +53,12 @@ const UserProfile = ({ role, user, detailedInfo }) => {
             {/* Badges / Stats */}
             <div className="flex flex-wrap gap-4 mt-6 justify-center md:justify-start">
                {user.house && (
-                   <span className="px-3 py-1.5 bg-red-50 text-red-600 text-xs font-bold rounded-lg border border-red-100">
+                   <span className={`px-3 py-1.5 text-xs font-bold rounded-lg border ${isStudent ? 'bg-white/20 text-white border-white/30' : 'bg-red-50 text-red-600 border-red-100'}`}>
                       House: {user.house}
                    </span>
                )}
                {user.email && (
-                   <span className="flex items-center gap-2 text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg">
+                   <span className={`flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-lg ${isStudent ? 'bg-white/20 text-white' : 'text-slate-500 bg-slate-50'}`}>
                       <Mail size={14}/> {user.email}
                    </span>
                )}
@@ -60,7 +68,7 @@ const UserProfile = ({ role, user, detailedInfo }) => {
                    </span>
                )}
                {user.location && (
-                   <span className="flex items-center gap-2 text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg">
+                   <span className={`flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-lg ${isStudent ? 'bg-white/20 text-white' : 'text-slate-500 bg-slate-50'}`}>
                       <MapPin size={14}/> {user.location}
                    </span>
                )}
@@ -72,10 +80,25 @@ const UserProfile = ({ role, user, detailedInfo }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
          
          {/* Left Column */}
-         <div className="bg-white rounded-3xl p-8 shadow-sm space-y-6">
-            <h3 className="font-bold text-slate-800 text-lg border-b border-slate-100 pb-4 mb-4">
-                {isTeacher ? "Professional Details" : "Academic Goals"}
-            </h3>
+         <div className={`rounded-3xl p-8 shadow-lg space-y-6 relative overflow-hidden ${isStudent ? 'bg-gradient-to-br from-white via-blue-50/30 to-pink-50/30' : 'bg-white'}`}>
+            {isStudent && (
+               <>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-cyan-200 to-blue-300 opacity-20 rounded-full blur-3xl"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-pink-200 opacity-20 rounded-full blur-2xl"></div>
+               </>
+            )}
+            <div className="relative z-10">
+               <h3 className={`font-bold text-lg pb-4 mb-4 flex items-center gap-2 ${isStudent ? 'border-b-2 border-gradient-to-r from-cyan-300 to-pink-300' : 'border-b border-slate-100'}`}>
+                  {isTeacher ? (
+                     <span className="text-slate-800">Professional Details</span>
+                  ) : (
+                     <>
+                        <Target className="text-blue-500" size={20} />
+                        <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">Academic Goals</span>
+                     </>
+                  )}
+               </h3>
+            </div>
             
             {isTeacher && (
                 <>
@@ -97,11 +120,16 @@ const UserProfile = ({ role, user, detailedInfo }) => {
             )}
 
             {isStudent && (
-                <ul className="space-y-3">
+                <ul className="space-y-3 relative z-10">
                    {detailedInfo?.goals?.map((g, i) => (
-                      <li key={i} className="flex items-center gap-3 p-3 border border-slate-100 rounded-xl hover:border-indigo-200 transition-colors">
-                         <Target size={20} className="text-indigo-500" />
-                         <span className="text-sm text-slate-700 font-medium">{g}</span>
+                      <li key={i} className="group relative">
+                         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/10 via-blue-400/10 to-pink-400/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                         <div className="relative flex items-center gap-3 p-4 bg-white/80 backdrop-blur-sm border-2 border-slate-100 rounded-xl hover:border-blue-200 hover:shadow-md transition-all">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center flex-shrink-0 shadow-lg">
+                               <Target size={20} className="text-white" />
+                            </div>
+                            <span className="text-sm text-slate-700 font-semibold">{g}</span>
+                         </div>
                       </li>
                    ))}
                 </ul>
@@ -109,10 +137,28 @@ const UserProfile = ({ role, user, detailedInfo }) => {
          </div>
 
          {/* Right Column */}
-         <div className="bg-white rounded-3xl p-8 shadow-sm space-y-6">
-            <h3 className="font-bold text-slate-800 text-lg border-b border-slate-100 pb-4 mb-4 flex items-center gap-2">
-               {isTeacher ? <><Award className="text-yellow-500"/> Portfolio Highlights</> : <><Heart className="text-pink-500"/> Interests & Clubs</>}
-            </h3>
+         <div className={`rounded-3xl p-8 shadow-lg space-y-6 relative overflow-hidden ${isStudent ? 'bg-gradient-to-br from-white via-pink-50/30 to-blue-50/30' : 'bg-white'}`}>
+            {isStudent && (
+               <>
+                  <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-pink-200 to-rose-300 opacity-20 rounded-full blur-3xl"></div>
+                  <div className="absolute bottom-0 right-0 w-24 h-24 bg-cyan-200 opacity-20 rounded-full blur-2xl"></div>
+               </>
+            )}
+            <div className="relative z-10">
+               <h3 className={`font-bold text-lg pb-4 mb-4 flex items-center gap-2 ${isStudent ? 'border-b-2 border-gradient-to-r from-pink-300 to-cyan-300' : 'border-b border-slate-100'}`}>
+                  {isTeacher ? (
+                     <>
+                        <Award className="text-yellow-500"/>
+                        <span className="text-slate-800">Portfolio Highlights</span>
+                     </>
+                  ) : (
+                     <>
+                        <Heart className="text-pink-500"/>
+                        <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Interests & Clubs</span>
+                     </>
+                  )}
+               </h3>
+            </div>
 
             {isTeacher && (
                 <div className="space-y-4">
@@ -137,21 +183,35 @@ const UserProfile = ({ role, user, detailedInfo }) => {
             )}
 
             {isStudent && (
-                <>
+                <div className="relative z-10">
                     <div className="flex flex-wrap gap-2 mb-6">
-                        {detailedInfo?.interests?.map(int => (
-                            <span key={int} className="px-3 py-1.5 bg-pink-50 text-pink-600 text-xs font-bold rounded-lg border border-pink-100">{int}</span>
+                        {detailedInfo?.interests?.map((int, idx) => (
+                            <span 
+                               key={int} 
+                               className="px-4 py-2 bg-gradient-to-r from-pink-100 to-rose-100 text-pink-700 text-xs font-bold rounded-xl border-2 border-pink-200 shadow-sm hover:shadow-md hover:scale-105 transition-all cursor-pointer"
+                               style={{
+                                  animationDelay: `${idx * 0.1}s`
+                               }}
+                            >
+                               {int}
+                            </span>
                         ))}
                     </div>
-                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-3">Active Clubs</h4>
+                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-4 flex items-center gap-2">
+                       <div className="w-1 h-4 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-full"></div>
+                       Active Clubs
+                    </h4>
                     <div className="space-y-2">
                         {detailedInfo?.clubs?.map(club => (
-                            <div key={club} className="flex items-center gap-3 text-sm font-bold text-slate-600 p-2 hover:bg-slate-50 rounded-lg transition-colors">
-                                <div className="w-2 h-2 bg-indigo-500 rounded-full"></div> {club}
+                            <div key={club} className="group flex items-center gap-3 text-sm font-bold text-slate-700 p-3 bg-white/80 backdrop-blur-sm rounded-xl border-2 border-slate-100 hover:border-cyan-200 hover:shadow-md transition-all">
+                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center flex-shrink-0 shadow-md">
+                                   <div className="w-2 h-2 bg-white rounded-full"></div>
+                                </div>
+                                <span className="group-hover:text-blue-600 transition-colors">{club}</span>
                             </div>
                         ))}
                     </div>
-                </>
+                </div>
             )}
          </div>
 

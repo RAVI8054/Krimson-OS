@@ -13,7 +13,8 @@ import {
   Activity, 
   ArrowUpRight,
   Calendar,
-  Download
+  Download,
+  MoreHorizontal
 } from 'lucide-react';
 
 const AnalyticsCenter = () => {

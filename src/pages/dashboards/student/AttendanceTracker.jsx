@@ -1,7 +1,7 @@
 import React from 'react';
 import { STUDENT_DATA } from '../../../data/studentData';
-import { Download, CheckCircle, XCircle } from 'lucide-react';
-
+import { Download, CheckCircle, XCircle, ExternalLink } from 'lucide-react';
+ 
 const AttendanceTracker = () => {
   const { attendance } = STUDENT_DATA;
 
@@ -28,6 +28,10 @@ const AttendanceTracker = () => {
             <button className="mt-6 flex items-center justify-center gap-2 w-full py-2.5 border border-slate-200 rounded-xl text-slate-600 font-bold text-sm hover:bg-slate-50">
                <Download size={16} /> Download Certificate
             </button>
+            <a href="#" className="mt-2 flex items-center justify-center gap-1 text-[10px] font-bold text-slate-400 hover:text-blue-600 transition-colors group">
+               <span>View in app</span>
+               <ExternalLink size={10} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </a>
          </div>
 
          {/* Heatmap */}
