@@ -250,6 +250,36 @@ const LoginPage = () => {
               </form>
             )}
             
+            {/* ROLE SIMULATOR : Added as per user request for easy access */}
+            <div className="mt-8 pt-6 border-t border-slate-100/50">
+               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Select Role to Simulate Access:</p>
+               <div className="grid grid-cols-2 gap-2 h-48 overflow-y-auto pr-2 custom-scrollbar">
+                  {[
+                    { label: "Student", path: "/dashboard/student" },
+                    { label: "Teacher", path: "/dashboard/teacher" },
+                    { label: "Parent", path: "/dashboard/parent" },
+                    { label: "Principal", path: "/dashboard/principal" },
+                    { label: "Administrator", path: "/dashboard/admin" },
+                    { label: "Finance", path: "/dashboard/finance" },
+                    { label: "Management", path: "/dashboard/management" },
+                    { label: "Registrar", path: "/dashboard/registrar" },
+                    { label: "Academic Coordinator", path: "/dashboard/coordinator" },
+                    { label: "Counselor", path: "/dashboard/counselor" },
+                    { label: "Librarian", path: "/dashboard/librarian" },
+                    { label: "System Admin", path: "/dashboard/it-admin" },
+                  ].map((role) => (
+                    <button
+                      key={role.label}
+                      onClick={() => navigate(role.path)}
+                      className="p-2 text-left text-sm font-medium text-slate-600 bg-slate-50 hover:bg-white hover:text-blue-600 border border-slate-200 hover:border-blue-200 rounded-lg transition-all flex items-center justify-between group"
+                    >
+                      {role.label}
+                      <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
+                  ))}
+               </div>
+            </div>
+
             {/* Version / Info Footer */}
             <div className="mt-8 pt-6 border-t border-slate-100 text-center">
               <p className="text-xs text-slate-400">

@@ -1,801 +1,1403 @@
-import React, { useState, useEffect, useCallback } from "react";
+/**
+ * @component UserManagement
+ * @description Admin Screen 3 - User & Role Management
+ * Manage user accounts, privileges, and role hierarchies
+ */
+import React, { useState } from 'react';
+import { ADMIN_DATA } from '../../../data/adminData';
 import {
-  UserPlus,
-  RefreshCw,
-  CheckSquare,
-  Edit3,
-  UserX,
-  AlertCircle,
-  Users
-} from "lucide-react";
-import { userService } from "../../../services/userService";
-import { useAppDispatch } from "../../../store/hooks";
-import { addNotification } from "../../../store/slices/uiSlice";
-
-// Components
-import ActionDropdown from "./components/ActionDropdown";
-import RoleMultiSelector from "./components/RoleMultiSelector";
-import UserSearchPanel from "./components/UserSearchPanel";
-import UserListTable from "./components/UserListTable";
-
-const LEGACY_ROLE_MAP = {
-  "FINANCE": "FINANCE_OFFICER",
-  "FINANCE OFFICER": "FINANCE_OFFICER",
-  "ACADEMIC COORDINATOR": "ACADEMIC_COORDINATOR",
-  "IT": "IT_ADMIN",
-  "IT/SYSTEM ADMIN": "IT_ADMIN",
-  "IT ADMIN": "IT_ADMIN",
-  // Code mappings for robustness
-  "R01": "STUDENT",
-  "R02": "TEACHER",
-  "R03": "PARENT",
-  "R04": "PRINCIPAL",
-  "R05": "ADMINISTRATOR",
-  "R06": "FINANCE_OFFICER",
-  "R07": "REGISTRAR",
-  "R08": "MANAGEMENT",
-  "R09": "ACADEMIC_COORDINATOR",
-  "R10": "COUNSELOR",
-  "R11": "LIBRARIAN",
-  "R12": "IT_ADMIN",
-};
-
-const Card = ({ children, className = "" }) => (
-  <div
-    className={`bg-white rounded-3xl p-8 shadow-sm border border-slate-100 ${className}`}
-  >
-    {children}
-  </div>
-);
+  Users, UserPlus, Shield, Activity, Lock, Unlock, Eye, EyeOff,
+  Mail, Phone, Calendar, Clock, MapPin, Monitor, AlertTriangle,
+  CheckCircle, XCircle, Filter, Search, Download, Plus, Edit,
+  Trash2, Key, ChevronDown, ChevronRight, X, Check, ShieldAlert,
+  UserCheck, Building
+} from 'lucide-react';
 
 const UserManagement = () => {
-  const dispatch = useAppDispatch();
+  const data = ADMIN_DATA.userManagement;
+  const [selectedTab, setSelectedTab] = useState('users'); // users, activity, groups, security
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({ status: 'all', role: 'all', department: 'all', search: '' });
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState({});
 
-  // State for Database Data
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [roles, setRoles] = useState([]); // State for roles
-
-  // Pagination State
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    totalUsers: 0,
-  });
-
-  // Constants
-  const VALID_ROLES = [
-    { label: "Student", value: "STUDENT" },
-    { label: "Teacher", value: "TEACHER" },
-    { label: "Parent", value: "PARENT" },
-    { label: "Administrator", value: "ADMINISTRATOR" },
-    { label: "Principal", value: "PRINCIPAL" },
-    { label: "Finance Officer", value: "FINANCE_OFFICER" },
-    { label: "Registrar", value: "REGISTRAR" },
-    { label: "Academic Coordinator", value: "ACADEMIC_COORDINATOR" },
-    { label: "Counselor", value: "COUNSELOR" },
-    { label: "Librarian", value: "LIBRARIAN" },
-    { label: "Management", value: "MANAGEMENT" },
-    { label: "IT/System Admin", value: "IT_ADMIN" },
-  ];
-
-  const FETCH_LIMIT = 100; // Fetch more users to have enough data for local pagination
-  const ROWS_PER_PAGE = 10; // Show exactly 10 rows per page
-
-  // Local Pagination State
-  const [localPage, setLocalPage] = useState(1);
-
-  // Action Mode State - Controls which form to display
-  const [actionMode, setActionMode] = useState("add"); // "add" | "edit" | "suspend"
-
-  // Form State for Add User
+  // CRUD State Management
+  const [users, setUsers] = useState(data.users);
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [showAssignRoleModal, setShowAssignRoleModal] = useState(false);
+  const [showSuspendModal, setShowSuspendModal] = useState(false);
+  const [userToEdit, setUserToEdit] = useState(null);
+  const [userToSuspend, setUserToSuspend] = useState(null);
+  
+  // Form State
   const [newUser, setNewUser] = useState({
-    full_name: "",
-    role: "Student",
-    email: "",
+    name: '', email: '', phone: '', department: 'Academic', 
+    grade: '', roles: [], status: 'Active'
+  });
+  const [suspendReason, setSuspendReason] = useState('');
+
+  // Filter users based on active filters
+  const filteredUsers = users.filter(user => {
+    if (filters.status !== 'all' && user.status.toLowerCase() !== filters.status.toLowerCase()) return false;
+    if (filters.role !== 'all' && !user.roles.includes(filters.role)) return false;
+    if (filters.department !== 'all' && user.department !== filters.department) return false;
+    if (filters.search && !user.name.toLowerCase().includes(filters.search.toLowerCase()) 
+        && !user.email.toLowerCase().includes(filters.search.toLowerCase())) return false;
+    return true;
   });
 
-  // Search State for Edit/Suspend
-  const [searchEmail, setSearchEmail] = useState("");
-  const [searchedUser, setSearchedUser] = useState(null);
-  const [searching, setSearching] = useState(false);
-  const [searchError, setSearchError] = useState("");
-
-  // Edit Form State
-  const [editForm, setEditForm] = useState({
-    full_name: "",
-    roles: [], // Array of selected roles
-    email: "",
-  });
-
-  // Switch action mode
-  const switchActionMode = (mode) => {
-    setActionMode(mode);
-    // Reset all forms when switching
-    setSearchEmail("");
-    setSearchedUser(null);
-    setSearchError("");
-    setNewUser({ full_name: "", role: "Student", email: "" });
-    setEditForm({ full_name: "", roles: [], email: "" });
-  };
-
-  // Search user by email (for Edit/Suspend)
-  const handleSearchUser = async () => {
-    if (!searchEmail.trim()) {
-      setSearchError("Please enter an email address");
+  // CRUD Operations
+  const handleAddUser = () => {
+    if (!newUser.name || !newUser.email || !newUser.phone || newUser.roles.length === 0) {
+      alert('Please fill all required fields');
       return;
     }
-
-    setSearching(true);
-    setSearchError("");
-    setSearchedUser(null);
-
-    try {
-      const result = await userService.getUserByIdentifier(searchEmail);
-
-      if (result.success && result.data) {
-        setSearchedUser(result.data);
-        // Only populate edit form if in edit mode (or just do it anyway, harmless)
-        // Aggressive Role Cleaning: Deduplicate & Filter only valid roles
-        const rawRoles = result.data.roles || [result.data.active_role || result.data.role];
-        const validRoleValues = VALID_ROLES.map(r => r.value);
-        
-        const cleanedRoles = [...new Set(
-          rawRoles
-            .filter(Boolean)
-            .map(r => {
-                if (!r) return r;
-                const upper = r.toUpperCase();
-                return LEGACY_ROLE_MAP[upper] || upper;
-            })
-            .filter(r => validRoleValues.includes(r))
-        )];
-
-        setEditForm({
-          full_name: result.data.full_name,
-          roles: cleanedRoles,
-          email: result.data.email,
-        });
-      } else {
-        setSearchError("User not found with this email address");
-      }
-    } catch (err) {
-      console.error(err);
-      if (err.response?.status === 404) {
-        setSearchError("User not found with this email address");
-      } else {
-        setSearchError(err.message || "Error searching user");
-      }
-    } finally {
-      setSearching(false);
-    }
+    
+    const user = {
+      id: `user_${Date.now()}`,
+      userId: `USR${new Date().getFullYear()}${String(users.length + 1).padStart(3, '0')}`,
+      name: newUser.name,
+      email: newUser.email,
+      phone: newUser.phone,
+      roles: newUser.roles,
+      status: 'Active',
+      department: newUser.department,
+      grade: newUser.grade || null,
+      avatar: null,
+      lastLogin: null,
+      lastLoginIp: null,
+      accountCreated: new Date().toISOString().split('T')[0],
+      totalLogins: 0,
+      failedLoginAttempts: 0,
+      twoFactorEnabled: false,
+      ssoLinked: false,
+    };
+    
+    setUsers([...users, user]);
+    setShowAddUserModal(false);
+    setNewUser({ name: '', email: '', phone: '', department: 'Academic', grade: '', roles: [], status: 'Active' });
+    alert('User added successfully!');
   };
 
-  // Handle Edit User
-  const handleEditUser = async () => {
-    if (!searchedUser) {
-      dispatch(
-        addNotification({
-          type: "warning",
-          message: "Please search for a user first",
-        })
-      );
+  const handleEditUser = () => {
+    if (!userToEdit.name || !userToEdit.email || !userToEdit.phone) {
+      alert('Please fill all required fields');
       return;
     }
+    
+    setUsers(users.map(u => u.id === userToEdit.id ? userToEdit : u));
+    setShowEditUserModal(false);
+    setUserToEdit(null);
+    alert('User updated successfully!');
+  };
 
-    try {
-      const result = await userService.updateUser(searchedUser.email, {
-        full_name: editForm.full_name,
-        roles: editForm.roles,
-      });
+  const handleAssignRole = () => {
+    if (!userToEdit || userToEdit.roles.length === 0) {
+      alert('Please select at least one role');
+      return;
+    }
+    
+    setUsers(users.map(u => u.id === userToEdit.id ? userToEdit : u));
+    setShowAssignRoleModal(false);
+    setUserToEdit(null);
+    alert('Roles assigned successfully!');
+  };
 
-      if (result.success) {
-        dispatch(
-          addNotification({
-            type: "success",
-            message: "User roles updated successfully!",
-          })
-        );
+  const handleSuspendUser = () => {
+    if (!suspendReason.trim()) {
+      alert('Please provide a reason for suspension');
+      return;
+    }
+    
+    setUsers(users.map(u => 
+      u.id === userToSuspend.id 
+        ? { ...u, status: 'Suspended', suspensionReason: suspendReason, suspendedDate: new Date().toISOString().split('T')[0] }
+        : u
+    ));
+    setShowSuspendModal(false);
+    setUserToSuspend(null);
+    setSuspendReason('');
+    alert('User suspended successfully!');
+  };
 
-        // Reset form and switch back to add mode
-        switchActionMode("add");
+  const handleActivateUser = (user) => {
+    setUsers(users.map(u => 
+      u.id === user.id 
+        ? { ...u, status: 'Active', suspensionReason: null, suspendedDate: null }
+        : u
+    ));
+    alert('User activated successfully!');
+  };
 
-        // Refresh users list
-        fetchUsers(pagination.currentPage);
-      } else {
-        dispatch(
-          addNotification({
-            type: "error",
-            message: result.message || "Error updating user",
-          })
-        );
+  const toggleRole = (role, isAdding = true, formData, setFormData) => {
+    if (isAdding) {
+      if (!formData.roles.includes(role)) {
+        setFormData({ ...formData, roles: [...formData.roles, role] });
       }
-    } catch (err) {
-      console.error(err);
-      dispatch(
-        addNotification({
-          type: "error",
-          message: err.message || "Error updating user",
-        })
-      );
+    } else {
+      setFormData({ ...formData, roles: formData.roles.filter(r => r !== role) });
     }
   };
 
-  // Handle Suspend User
-  const handleSuspendUser = async () => {
-    if (!searchedUser) {
-      dispatch(
-        addNotification({
-          type: "warning",
-          message: "Please search for a user first",
-        })
-      );
-      return;
-    }
-
-    try {
-      const result = await userService.suspendUser(searchedUser.email);
-
-      if (result.success) {
-        dispatch(
-          addNotification({
-            type: "success",
-            message: `User ${searchedUser.email} suspended successfully!`,
-          })
-        );
-
-        // Reset form and switch back to add mode
-        switchActionMode("add");
-
-        // Refresh users list
-        fetchUsers(pagination.currentPage);
-      } else {
-        dispatch(
-          addNotification({
-            type: "error",
-            message: result.message || "Error suspending user",
-          })
-        );
-      }
-    } catch (err) {
-      console.error(err);
-      dispatch(
-        addNotification({
-          type: "error",
-          message: err.message || "Error suspending user",
-        })
-      );
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Active': return 'text-green-600 bg-green-50 border-green-200';
+      case 'Suspended': return 'text-red-600 bg-red-50 border-red-200';
+      case 'Pending': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      default: return 'text-slate-600 bg-slate-50 border-slate-200';
     }
   };
 
-  // Handle Unsuspend User
-  const handleUnsuspendUser = async () => {
-    if (!searchedUser) {
-      dispatch(
-        addNotification({
-          type: "warning",
-          message: "Please search for a user first",
-        })
-      );
-      return;
-    }
-
-    try {
-      const result = await userService.unsuspendUser(searchedUser.email);
-
-      if (result.success) {
-        dispatch(
-          addNotification({
-            type: "success",
-            message: `User ${searchedUser.email} unsuspended successfully!`,
-          })
-        );
-
-        // Reset form and switch back to add mode
-        switchActionMode("add");
-
-        // Refresh users list
-        fetchUsers(pagination.currentPage);
-      } else {
-        dispatch(
-          addNotification({
-            type: "error",
-            message: result.message || "Error unsuspending user",
-          })
-        );
-      }
-    } catch (err) {
-      console.error(err);
-      dispatch(
-        addNotification({
-          type: "error",
-          message: err.message || "Error unsuspending user",
-        })
-      );
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'Active': return <CheckCircle size={14} />;
+      case 'Suspended': return <Lock size={14} />;
+      case 'Pending': return <AlertTriangle size={14} />;
+      default: return <XCircle size={14} />;
     }
   };
 
-  // --- API FUNCTION: GET USERS ---
-  const fetchUsers = useCallback(async (page = 1) => {
-    setLoading(true);
-    const pageNum = parseInt(page, 10);
-    try {
-      const result = await userService.getAllUsers(pageNum, FETCH_LIMIT);
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Never';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
 
-      if (result.success) {
-        setUsers(result.data); // Update state with real DB data
-
-        // Update pagination state
-        if (result.pagination) {
-          setPagination({
-            currentPage: parseInt(result.pagination.page, 10),
-            totalPages: parseInt(result.pagination.totalPages, 10),
-            totalUsers: parseInt(result.pagination.total, 10),
-          });
-        }
-        setError(null);
-      } else {
-        console.error("Failed to load users:", result.message);
-        setError("Failed to load users");
-      }
-    } catch (err) {
-      console.error(err);
-      setError(err.message || "Error connecting to server.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // --- API FUNCTION: GET ROLES ---
-  const fetchRoles = useCallback(async () => {
-    try {
-      const result = await userService.getRoles();
-      if (result.success) {
-        const formattedRoles = result.data.map((role) => {
-          const rawName = role.name || role;
-          const upperName = typeof rawName === 'string' ? rawName.toUpperCase() : ''; 
-          // Normalize value using legacy map
-          const normalizedValue = LEGACY_ROLE_MAP[upperName] || rawName;
-          
-          return {
-            label: role.name || role,
-            value: normalizedValue, 
-          };
-        });
-        setRoles(formattedRoles);
-      } else {
-        console.error("Failed to load roles:", result.message);
-        dispatch(
-          addNotification({ type: "error", message: "Failed to load roles" })
-        );
-      }
-    } catch (err) {
-      console.error(err);
-      dispatch(
-        addNotification({ type: "error", message: "Error fetching roles" })
-      );
-    }
-  }, [dispatch]);
-
-  // Load users and roles on component mount
-  useEffect(() => {
-    fetchUsers(1);
-    fetchRoles();
-  }, [fetchUsers, fetchRoles]);
-
-  // --- API FUNCTION: ADD USER ---
-  const handleAddUser = async () => {
-    // Validation
-    if (!newUser.full_name || !newUser.email) {
-      dispatch(
-        addNotification({
-          type: "warning",
-          message: "Please enter Name and Email",
-        })
-      );
-      return;
-    }
-
-    try {
-      // ⚡ OPTIMIZATION: Frontend Check
-      const existingUserStr = newUser.email.toLowerCase();
-      const localDuplicate = users.find(
-        (u) =>
-          u.email.toLowerCase() === existingUserStr &&
-          (u.roles?.includes(newUser.role) || u.role === newUser.role)
-      );
-
-      if (localDuplicate) {
-        dispatch(
-          addNotification({
-            type: "error",
-            message: `User already has the role ${newUser.role}`,
-          })
-        );
-        return;
-      }
-
-      const result = await userService.createUser(newUser);
-
-      if (result.success) {
-        if (result.data.role_already_existed) {
-          dispatch(
-            addNotification({
-              type: "error",
-              message: `User already has the role ${newUser.role}`,
-            })
-          );
-        } else {
-          dispatch(
-            addNotification({
-              type: "success",
-              message: "User created/updated successfully!",
-            })
-          );
-
-          // If creating new user, refresh page 1 to show latest
-          setNewUser({ full_name: "", role: "Student", email: "" }); // Reset Form
-          fetchUsers(1);
-        }
-      } else {
-        dispatch(
-          addNotification({
-            type: "error",
-            message: result.message || "Failed to create user",
-          })
-        );
-      }
-    } catch (err) {
-      console.error(err);
-      dispatch(
-        addNotification({
-          type: "error",
-          message: err.message || "Error connecting to server",
-        })
-      );
-    }
+  const toggleGroup = (groupId) => {
+    setExpandedGroups(prev => ({ ...prev, [groupId]: !prev[groupId] }));
   };
 
   return (
     <div className="space-y-8 animate-fadeIn pb-10">
       
-      {/* ========================================
-          HEADER SECTION WITH GRADIENT THEME
-          ======================================== */}
+      {/* ======================================== HEADER ======================================== */}
       <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-pink-500" />
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600 opacity-20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-600 opacity-20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
 
         <div className="relative z-10 p-8 md:p-10 text-white">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-xs font-bold uppercase tracking-wider shadow-sm">
-                  Identity Management
-                </span>
-                <span className="flex items-center gap-1 text-xs font-medium text-white/90 bg-black/10 px-2 py-1 rounded-md">
-                   <Users size={12} className="text-green-300" />
-                   Active
+                  Security & Access Control
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-2 tracking-tight text-white drop-shadow-sm">
-                User Management
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 tracking-tight text-white drop-shadow-sm">
+                User & Role Management
               </h1>
               <p className="text-white/90 text-sm md:text-base max-w-2xl font-medium leading-relaxed">
-                Add and manage users for SSO access via Database.
+                Manage user accounts, assign roles, track activity, and control system access.
               </p>
             </div>
-            
-             <button
-              onClick={() => fetchUsers(pagination.currentPage)}
-              className="flex items-center gap-2 px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl font-bold border border-white/20 transition-all shadow-lg text-white group"
-            >
-              <RefreshCw className={`h-5 w-5 ${loading ? "animate-spin" : "group-hover:rotate-180 transition-transform duration-500"}`} />
-              <span>Refresh Data</span>
-            </button>
           </div>
         </div>
       </div>
 
-      {/* --- DYNAMIC USER MANAGEMENT FORM --- */}
-      <Card className="mb-6 relative overflow-visible">
-        <h3 className="font-bold text-2xl text-slate-800 mb-6 flex items-center gap-2">
-          {actionMode === "add" && <div className="p-2 bg-blue-100 text-blue-600 rounded-lg"><UserPlus size={24}/></div>}
-          {actionMode === "edit" && <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg"><Edit3 size={24}/></div>}
-          {actionMode === "suspend" && <div className="p-2 bg-red-100 text-red-600 rounded-lg"><UserX size={24}/></div>}
-          
-          {actionMode === "add" && "Add New User"}
-          {actionMode === "edit" && "Edit User Permissions"}
-          {actionMode === "suspend" && "Suspend User Access"}
-        </h3>
+      {/* ======================================== STATISTICS CARDS ======================================== */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-blue-100 text-blue-600 rounded-xl group-hover:scale-110 transition-transform">
+              <Users size={20} />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-slate-800">{data.stats.totalUsers}</p>
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">Total Users</p>
+              <p className="text-[10px] text-slate-400 mt-1">(get in app)</p>
+            </div>
+          </div>
+        </div>
 
-        {/* ADD USER FORM */}
-        {actionMode === "add" && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
-            <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                Full Name
-              </label>
-              <input
-                type="text"
-                className="w-full p-3 border border-slate-200 rounded-xl text-sm font-semibold bg-slate-50 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:font-normal"
-                placeholder="e.g. John Tan"
-                value={newUser.full_name}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, full_name: e.target.value })
-                }
-              />
+        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
+              <CheckCircle size={20} />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                Email (SSO ID)
-              </label>
-              <input
-                type="email"
-                className="w-full p-3 border border-slate-200 rounded-xl text-sm font-semibold bg-slate-50 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:font-normal"
-                placeholder="user@krimson.edu"
-                value={newUser.email}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, email: e.target.value })
-                }
-              />
+              <p className="text-2xl font-bold text-slate-800">{data.stats.activeUsers}</p>
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">Active Users</p>
+              <p className="text-[10px] text-slate-400 mt-1">(get in app)</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-red-100 text-red-600 rounded-xl group-hover:scale-110 transition-transform">
+              <Lock size={20} />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                Assign Role
-              </label>
+              <p className="text-2xl font-bold text-slate-800">{data.stats.suspendedUsers}</p>
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">Suspended</p>
+              <p className="text-[10px] text-slate-400 mt-1">(get in app)</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-yellow-100 text-yellow-600 rounded-xl group-hover:scale-110 transition-transform">
+              <AlertTriangle size={20} />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-slate-800">{data.stats.pendingUsers}</p>
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">Pending</p>
+              <p className="text-[10px] text-slate-400 mt-1">(get in app)</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-purple-100 text-purple-600 rounded-xl group-hover:scale-110 transition-transform">
+              <Activity size={20} />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-slate-800">{data.stats.recentRoleChanges}</p>
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">Role Changes</p>
+              <p className="text-[10px] text-slate-400 mt-1">(get in app)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================== ACTION BUTTONS & FILTERS ======================================== */}
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
+        <div className="flex flex-wrap gap-3 w-full md:w-auto">
+          <button 
+            onClick={() => setShowAddUserModal(true)}
+            className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white px-5 py-3 rounded-xl font-bold hover:shadow-lg transition-all flex items-center gap-2 text-sm shadow-md shadow-blue-500/20"
+          >
+            <UserPlus size={18} />
+            Add User
+          </button>
+          <button 
+            onClick={() => {
+              if (filteredUsers.length === 0) {
+                alert('No users available');
+                return;
+              }
+              setUserToEdit({ ...filteredUsers[0] });
+              setShowAssignRoleModal(true);
+            }}
+            className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white px-5 py-3 rounded-xl font-bold hover:shadow-lg transition-all flex items-center gap-2 text-sm shadow-md shadow-indigo-500/20"
+          >
+            <Shield size={18} />
+            Assign Roles
+          </button>
+          <button className="bg-white border-2 border-blue-100 text-blue-600 px-5 py-3 rounded-xl font-bold hover:bg-blue-50 hover:border-blue-200 transition-all flex flex-col items-center gap-0.5 text-sm">
+            <div className="flex items-center gap-2">
+              <Plus size={18} />
+              Create Group
+            </div>
+            <span className="text-[10px] text-slate-400 font-normal">(get in app)</span>
+          </button>
+        </div>
+
+        <div className="flex gap-3 w-full md:w-auto">
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex-1 md:flex-none px-5 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm ${
+              showFilters ? 'bg-slate-800 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            <Filter size={18} />
+            Filters
+          </button>
+          <button className="flex-1 md:flex-none bg-slate-50 text-slate-600 px-5 py-3 rounded-xl font-bold hover:bg-slate-100 transition-all flex flex-col items-center justify-center gap-0.5 text-sm">
+            <div className="flex items-center gap-2">
+              <Download size={18} />
+              Export
+            </div>
+            <span className="text-[10px] text-slate-400 font-normal">(get in app)</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Filters Panel */}
+      {showFilters && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-md animate-slideDown">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Status</label>
+              <select
+                value={filters.status}
+                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                className="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+              >
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+                <option value="pending">Pending</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Department</label>
+              <select
+                value={filters.department}
+                onChange={(e) => setFilters({ ...filters, department: e.target.value })}
+                className="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+              >
+                <option value="all">All Departments</option>
+                {data.departments.map(dept => (
+                  <option key={dept.id} value={dept.name}>{dept.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Search</label>
               <div className="relative">
-                 <select
-                  className="w-full p-3 border border-slate-200 rounded-xl text-sm font-semibold bg-slate-50 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all appearance-none cursor-pointer"
-                  value={newUser.role}
-                  onChange={(e) =>
-                    setNewUser({ ...newUser, role: e.target.value })
-                  }
-                >
-                  {[
-                    { label: "Select Role", value: "" },
-                    ...(roles.length > 0
-                      ? roles
-                      : VALID_ROLES),
-                  ].map((r) => (
-                    <option key={r.value} value={r.value}>
-                      {r.label}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-slate-400">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <input
+                  type="text"
+                  value={filters.search}
+                  onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                  placeholder="Name or email..."
+                  className="w-full border border-slate-200 bg-slate-50 rounded-xl pl-12 pr-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+                />
               </div>
             </div>
+            <div className="flex items-end">
+              <button
+                onClick={() => setFilters({ status: 'all', role: 'all', department: 'all', search: '' })}
+                className="bg-white border-2 border-slate-200 text-slate-600 px-4 py-3 rounded-xl text-sm font-bold hover:bg-slate-50 hover:text-slate-800 transition-colors w-full"
+              >
+                Clear Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-            {/* Split Button - Action + Dropdown */}
-            <ActionDropdown
-              mainLabel="Add User"
-              MainIcon={UserPlus}
-              onMainAction={handleAddUser}
-              actionMode={actionMode}
-              onSwitchMode={switchActionMode}
-              mainBtnClass="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 shadow-lg shadow-blue-500/30 text-white font-bold py-3 px-6 rounded-xl transition-all"
-            />
+      {/* ======================================== TABS ======================================== */}
+      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="flex flex-wrap gap-2 p-4 border-b border-slate-200 bg-slate-50/50">
+          {[
+            { id: 'users', label: 'User Accounts', icon: Users },
+            { id: 'activity', label: 'Activity & Logs', icon: Activity },
+            { id: 'groups', label: 'Groups & Departments', icon: Building },
+            { id: 'security', label: 'Security & Escalations', icon: ShieldAlert },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setSelectedTab(tab.id)}
+              className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+                selectedTab === tab.id
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-blue-500/30'
+                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+              }`}
+            >
+              <tab.icon size={16} />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* ======================================== USER ACCOUNTS TAB ======================================== */}
+        {selectedTab === 'users' && (
+          <div className="p-6">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-50 border-b border-slate-200">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">User</th>
+                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Roles</th>
+                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Department</th>
+                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Last Login</th>
+                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Status</th>
+                    <th className="px-4 py-3 text-right text-xs font-extrabold text-slate-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filteredUsers.map(user => (
+                    <tr key={user.id} className="hover:bg-blue-50/20 transition-colors group">
+                      <td className="px-4 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold shadow-md">
+                            {user.name.split(' ').map(n => n[0]).join('')}
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-800 text-sm">{user.name}</p>
+                            <p className="text-xs text-slate-500 flex items-center gap-1">
+                              <Mail size={10} />
+                              {user.email}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex flex-wrap gap-1.5">
+                          {user.roles.map((role, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200"
+                            >
+                              {role}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className="text-sm font-semibold text-slate-700">{user.department}</span>
+                        {user.grade && (
+                          <p className="text-xs text-slate-500">{user.grade}</p>
+                        )}
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex flex-col gap-1">
+                          <span className="text-xs font-semibold text-slate-700">{formatDate(user.lastLogin)}</span>
+                          {user.twoFactorEnabled && (
+                            <span className="text-[10px] text-green-600 bg-green-50 px-2 py-0.5 rounded-full w-fit flex items-center gap-1 border border-green-200">
+                              <Shield size={10} />
+                              2FA
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 w-fit border ${getStatusColor(user.status)}`}>
+                          {getStatusIcon(user.status)}
+                          {user.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setShowUserModal(true);
+                            }}
+                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                            title="View Details"
+                          >
+                            <Eye size={18} />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setUserToEdit({ ...user });
+                              setShowEditUserModal(true);
+                            }}
+                            className="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all"
+                            title="Edit User"
+                          >
+                            <Edit size={18} />
+                          </button>
+                          {user.status === 'Active' ? (
+                            <button
+                              onClick={() => {
+                                setUserToSuspend(user);
+                                setShowSuspendModal(true);
+                              }}
+                              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                              title="Suspend User"
+                            >
+                              <Lock size={18} />
+                            </button>
+                          ) : user.status === 'Suspended' ? (
+                            <button
+                              onClick={() => handleActivateUser(user)}
+                              className="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all"
+                              title="Activate User"
+                            >
+                              <Unlock size={18} />
+                            </button>
+                          ) : null}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {filteredUsers.length === 0 && (
+                <div className="text-center py-20">
+                  <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Users size={32} className="text-slate-300" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-700">No users found</h3>
+                  <p className="text-slate-500 max-w-xs mx-auto mt-1">Try adjusting your filters to see more results.</p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
-        {/* EDIT USER FORM */}
-        {actionMode === "edit" && (
-          <div className="space-y-6">
-            {/* Search Section */}
-            <UserSearchPanel
-              searchEmail={searchEmail}
-              setSearchEmail={setSearchEmail}
-              handleSearchUser={handleSearchUser}
-              searching={searching}
-              searchError={searchError}
-              theme="blue"
-            >
-              <ActionDropdown
-                mainLabel="Start Editing"
-                MainIcon={Edit3}
-                onMainAction={handleEditUser}
-                actionMode={actionMode}
-                onSwitchMode={switchActionMode}
-                disabled={!searchedUser}
-                mainBtnClass="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/20 text-white font-bold py-3 px-6 rounded-xl transition-all"
-              />
-            </UserSearchPanel>
-
-            {/* User Found - Edit Form */}
-            {searchedUser && (
-              <div className="space-y-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl animate-in slide-in-from-top-2 duration-300 shadow-inner">
-                <div className="flex items-center gap-2 text-blue-700 font-bold mb-2 pb-4 border-b border-slate-200">
-                  <CheckSquare className="h-5 w-5" />
-                  User Record Found
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full p-3 border border-slate-200 rounded-xl text-sm font-bold bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
-                      value={editForm.full_name}
-                      onChange={(e) =>
-                        setEditForm({ ...editForm, full_name: e.target.value })
-                      }
-                    />
+        {/* ======================================== ACTIVITY & LOGS TAB ======================================== */}
+        {selectedTab === 'activity' && (
+          <div className="p-6 space-y-6">
+            {/* Activity Logs */}
+            <div>
+              <h3 className="font-bold text-slate-800 text-lg mb-4">Recent Activity</h3>
+              <div className="space-y-3">
+                {data.activityLogs.map(log => (
+                  <div key={log.id} className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-sm transition-all">
+                    <div className={`p-2.5 rounded-xl ${
+                      log.status === 'Success' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                    }`}>
+                      {log.category === 'Authentication' && <Key size={18} />}
+                      {log.category === 'Role Management' && <Shield size={18} />}
+                      {log.category === 'Account Management' && <UserCheck size={18} />}
+                      {log.category === 'Security' && <ShieldAlert size={18} />}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between gap-4 mb-1">
+                        <div>
+                          <p className="font-bold text-slate-800 text-sm">{log.action}</p>
+                          <p className="text-xs text-slate-600 mt-0.5">{log.description}</p>
+                        </div>
+                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 border ${
+                          log.status === 'Success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'
+                        }`}>
+                          {log.status === 'Success' ? <CheckCircle size={10} /> : <XCircle size={10} />}
+                          {log.status}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-2">
+                        <span className="flex items-center gap-1">
+                          <Users size={12} />
+                          {log.userName}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock size={12} />
+                          {formatDate(log.timestamp)}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin size={12} />
+                          {log.ipAddress}
+                        </span>
+                        {log.changedBy && (
+                          <span className="text-blue-600 font-semibold">
+                            by {log.changedBy}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
+                ))}
+              </div>
+            </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      className="w-full p-3 border border-slate-200 rounded-xl text-sm font-bold bg-slate-100 text-slate-500 cursor-not-allowed"
-                      value={editForm.email}
-                      disabled
-                      title="Email cannot be changed"
-                    />
+            {/* Login History */}
+            <div>
+              <h3 className="font-bold text-slate-800 text-lg mb-4">Login History</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase">User</th>
+                      <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase">Login Time</th>
+                      <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase">Duration</th>
+                      <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase">Device</th>
+                      <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase">Location</th>
+                      <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {data.loginHistory.map(login => (
+                      <tr key={login.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-4 py-3">
+                          <span className="font-semibold text-slate-800 text-sm">{login.userName}</span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="text-xs text-slate-600">{formatDate(login.loginTime)}</span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="text-xs font-semibold text-slate-700">{login.duration}</span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="text-xs text-slate-600 flex items-center gap-1">
+                            <Monitor size={12} />
+                            {login.device}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="text-xs text-slate-600">{login.location}</span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold ${
+                            login.status === 'Active' ? 'bg-green-50 text-green-700' : 'bg-slate-100 text-slate-600'
+                          }`}>
+                            {login.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ======================================== GROUPS & DEPARTMENTS TAB ======================================== */}
+        {selectedTab === 'groups' && (
+          <div className="p-6 space-y-6">
+            {/* Departments */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-slate-800 text-lg">Departments</h3>
+                <button className="text-blue-600 text-sm font-bold hover:underline flex flex-col items-end">
+                  <div className="flex items-center gap-1">
+                    <Plus size={14} />
+                    New Department
                   </div>
-
-                  <div className="md:col-span-2">
-                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                        Manage Roles
-                     </label>
-                     <RoleMultiSelector
-                        selectedRoles={editForm.roles}
-                        onChange={(newRoles) =>
-                           setEditForm({ ...editForm, roles: newRoles })
-                        }
-                        roles={
-                           roles.length > 0
-                           ? roles.map((r) => ({ ...r, value: r.value }))
-                           : undefined
-                        }
-                     />
-                  </div>
-                </div>
-
-                {/* Update Button */}
-                <button
-                  onClick={handleEditUser}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold text-base hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                >
-                  <CheckSquare className="h-5 w-5" />
-                  Update User Record
+                  <span className="text-[9px] text-slate-400 font-normal">(get in app)</span>
                 </button>
               </div>
-            )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {data.departments.map(dept => (
+                  <div key={dept.id} className="bg-white border-2 border-slate-100 rounded-2xl p-5 hover:border-blue-200 hover:shadow-md transition-all group">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${dept.color} flex items-center justify-center text-white shadow-md`}>
+                          <Building size={24} />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-slate-800">{dept.name}</h4>
+                          <p className="text-xs text-slate-500">{dept.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="text-slate-600">
+                          <span className="font-bold text-slate-800">{dept.memberCount}</span> members
+                        </span>
+                        <span className="text-slate-500 text-xs">
+                          Head: <span className="font-semibold text-slate-700">{dept.head}</span>
+                        </span>
+                      </div>
+                      <button className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all opacity-0 group-hover:opacity-100">
+                        <Edit size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Grade Groups */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-slate-800 text-lg">Grade Groups</h3>
+              </div>
+              <div className="space-y-3">
+                {data.gradeGroups.map(group => (
+                  <div key={group.id} className="bg-slate-50 border border-slate-200 rounded-2xl p-4 hover:border-blue-200 transition-all">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-md">
+                          {group.memberCount}
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-slate-800 text-sm">{group.name}</h4>
+                          <p className="text-xs text-slate-500">{group.description}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-slate-500">Coordinator</p>
+                        <p className="text-sm font-semibold text-slate-700">{group.coordinator}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Roles Overview */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-slate-800 text-lg">System Roles</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {data.roles.map(role => (
+                  <div key={role.id} className="bg-white border-2 border-slate-100 rounded-2xl p-4 hover:border-blue-200 hover:shadow-md transition-all">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${role.color} flex items-center justify-center text-white shadow-md`}>
+                          <Shield size={20} />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-slate-800 text-sm">{role.name}</h4>
+                          <p className="text-xs text-slate-500">{role.description}</p>
+                        </div>
+                      </div>
+                      {role.requiresTwoFactorAuth && (
+                        <span className="px-2 py-1 rounded-md bg-green-50 text-green-700 text-[9px] font-bold border border-green-200">
+                          2FA Required
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                      <div className="flex items-center gap-3 text-xs">
+                        <span className="text-slate-600">
+                          <span className="font-bold text-slate-800">{role.memberCount}</span> users
+                        </span>
+                        <span className="text-slate-600">
+                          <span className="font-bold text-slate-800">{role.permissions}</span> perms
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
-        {/* SUSPEND USER FORM */}
-        {actionMode === "suspend" && (
-          <div className="space-y-6">
-            {/* Search Section */}
-            <UserSearchPanel
-              searchEmail={searchEmail}
-              setSearchEmail={setSearchEmail}
-              handleSearchUser={handleSearchUser}
-              searching={searching}
-              searchError={searchError}
-              theme="red"
-              placeholder="user@example.com or user_id"
-            >
-                 <ActionDropdown
-                    mainLabel="Suspend Mode"
-                    MainIcon={UserX}
-                    onMainAction={() => {}} // No top-level action
-                    actionMode={actionMode}
-                    onSwitchMode={switchActionMode}
-                    disabled={true} 
-                    mainBtnClass="bg-red-100 text-red-400 font-bold py-3 px-6 rounded-xl cursor-default"
-                    toggleBtnClass="bg-red-500 text-white hover:bg-red-600 transition-colors"
-                 />
-            </UserSearchPanel>
-
-            {/* User Found - Show Details */}
-            {searchedUser && (
-              <div className="space-y-6 p-6 bg-red-50/50 border border-red-100 rounded-2xl animate-in slide-in-from-top-2 duration-300">
-                {/* Header */}
-                <div className="flex items-center justify-between pb-6 border-b border-red-100">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-extrabold text-2xl shadow-lg shadow-red-500/30">
-                      {searchedUser.full_name?.charAt(0).toUpperCase() || "U"}
+        {/* ======================================== SECURITY & ESCALATIONS TAB ======================================== */}
+        {selectedTab === 'security' && (
+          <div className="p-6 space-y-6">
+            <div>
+              <h3 className="font-bold text-slate-800 text-lg mb-4">Role Escalation Requests (Two-Level Verification)</h3>
+              <p className="text-sm text-slate-600 mb-6">
+                Role escalations to Admin or Super Admin require approval from two authorized approvers.
+              </p>
+              <div className="space-y-4">
+                {data.securityEscalations.map(esc => (
+                  <div key={esc.id} className={`border-2 rounded-2xl p-5 ${
+                    esc.status === 'Pending' ? 'bg-yellow-50 border-yellow-200' :
+                    esc.status === 'Approved' ? 'bg-green-50 border-green-200' :
+                    'bg-red-50 border-red-200'
+                  }`}>
+                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-bold text-slate-800">{esc.requestedBy}</h4>
+                          <span className="text-slate-500 text-sm">→</span>
+                          <span className="px-2.5 py-1 rounded-lg bg-white text-blue-700 text-xs font-bold border border-blue-200">
+                            {esc.requestedRole}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mb-1">
+                          Current Role: <span className="font-semibold">{esc.currentRole}</span>
+                        </p>
+                        <p className="text-xs text-slate-600">
+                          Reason: <span className="italic">{esc.reason}</span>
+                        </p>
+                      </div>
+                      <span className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${
+                        esc.status === 'Pending' ? 'bg-yellow-100 text-yellow-700 border-yellow-300' :
+                        esc.status === 'Approved' ? 'bg-green-100 text-green-700 border-green-300' :
+                        'bg-red-100 text-red-700 border-red-300'
+                      }`}>
+                        {esc.status}
+                      </span>
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-800">
-                        {searchedUser.full_name || "N/A"}
-                      </h3>
-                      <p className="text-sm font-semibold text-slate-500">
-                        {searchedUser.email}
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    className={`px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wide border ${
-                      searchedUser.status === "suspended"
-                        ? "bg-red-100 text-red-700 border-red-200"
-                        : searchedUser.status === "active"
-                        ? "bg-green-100 text-green-700 border-green-200"
-                        : "bg-gray-100 text-gray-700 border-gray-200"
-                    }`}
-                  >
-                    {searchedUser.status?.toUpperCase() || "UNKNOWN"}
-                  </div>
-                </div>
 
-                {/* Details Grid */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white p-4 rounded-xl border border-red-100影子-sm">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
-                      User ID
-                    </p>
-                    <p className="text-sm font-mono font-bold text-slate-700 truncate">
-                      {searchedUser.user_id || "N/A"}
-                    </p>
-                  </div>
-                  <div className="bg-white p-4 rounded-xl border border-red-100 shadow-sm">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
-                      Active Role
-                    </p>
-                    <p className="text-sm font-bold text-slate-800">
-                      {searchedUser.active_role || searchedUser.role || "N/A"}
-                    </p>
-                  </div>
-                  {searchedUser.status === "suspended" &&
-                    searchedUser.updated_at && (
-                      <div className="col-span-2 bg-red-100 p-4 rounded-xl border border-red-200 flex items-center gap-3">
-                         <AlertCircle className="text-red-600" size={20} />
-                         <div>
-                            <p className="text-xs font-bold text-red-600 uppercase tracking-wider">
-                              Suspended On
-                            </p>
-                            <p className="text-sm font-bold text-red-900">
-                              {new Date(searchedUser.updated_at).toLocaleString("en-US", {dateStyle: "medium", timeStyle: "short"})}
-                            </p>
-                         </div>
+                    {/* Two-Level Approval Progress */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                      <div className={`p-4 rounded-xl border-2 ${
+                        esc.approver1.approved ? 'bg-green-100 border-green-300' : 'bg-white border-slate-200'
+                      }`}>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-xs font-bold text-slate-500 uppercase mb-1">Approver 1</p>
+                            <p className="font-bold text-slate-800">{esc.approver1.name}</p>
+                            {esc.approver1.approved && (
+                              <p className="text-xs text-green-700 mt-1">
+                                Approved on {formatDate(esc.approver1.approvedDate)}
+                              </p>
+                            )}
+                          </div>
+                          {esc.approver1.approved ? (
+                            <CheckCircle className="text-green-600" size={24} />
+                          ) : (
+                            <Clock className="text-slate-400" size={24} />
+                          )}
+                        </div>
+                      </div>
+
+                      <div className={`p-4 rounded-xl border-2 ${
+                        esc.approver2.approved ? 'bg-green-100 border-green-300' : 'bg-white border-slate-200'
+                      }`}>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-xs font-bold text-slate-500 uppercase mb-1">Approver 2</p>
+                            <p className="font-bold text-slate-800">{esc.approver2.name}</p>
+                            {esc.approver2.approved && (
+                              <p className="text-xs text-green-700 mt-1">
+                                Approved on {formatDate(esc.approver2.approvedDate)}
+                              </p>
+                            )}
+                          </div>
+                          {esc.approver2.approved ? (
+                            <CheckCircle className="text-green-600" size={24} />
+                          ) : (
+                            <Clock className="text-slate-400" size={24} />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 mt-4 text-xs text-slate-500">
+                      <Calendar size={12} />
+                      Requested on {formatDate(esc.requestDate)}
+                      {esc.completedDate && (
+                        <>
+                          <span className="mx-1">•</span>
+                          <span>Completed on {formatDate(esc.completedDate)}</span>
+                        </>
+                      )}
+                    </div>
+
+                    {esc.status === 'Pending' && (
+                      <div className="flex gap-2 mt-4">
+                        <button className="bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-green-700 transition-colors flex flex-col items-center gap-0.5">
+                          <span>Approve Request</span>
+                          <span className="text-[9px] text-white/70 font-normal">(get in app)</span>
+                        </button>
+                        <button className="bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-700 transition-colors flex flex-col items-center gap-0.5">
+                          <span>Reject Request</span>
+                          <span className="text-[9px] text-white/70 font-normal">(get in app)</span>
+                        </button>
                       </div>
                     )}
-                </div>
-
-                {/* Action Button */}
-                {searchedUser.status === "suspended" ? (
-                  <button
-                    onClick={handleUnsuspendUser}
-                    className="w-full p-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold text-base hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg flex items-center justify-center gap-2"
-                  >
-                    <CheckSquare className="h-5 w-5" />
-                    Unsuspend User Account
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleSuspendUser}
-                    className="w-full p-4 bg-gradient-to-r from-red-600 to-orange-600 text-white rounded-xl font-bold text-base hover:from-red-700 hover:to-orange-700 transition-all shadow-lg flex items-center justify-center gap-2"
-                  >
-                    <UserX className="h-5 w-5" />
-                    Confirm User Suspension
-                  </button>
-                )}
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
           </div>
         )}
-      </Card>
+      </div>
 
-      {/* --- USERS TABLE (Dynamic) --- */}
-      <UserListTable
-        users={users}
-        loading={loading}
-        error={error}
-        localPage={localPage}
-        setLocalPage={setLocalPage}
-        rowsPerPage={ROWS_PER_PAGE}
-      />
+      {/* ======================================== ADD USER MODAL ======================================== */}
+      {showAddUserModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-scaleUp">
+            <div className="bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-8 py-6 flex justify-between items-start">
+              <div>
+                <h3 className="font-bold text-2xl">Add New User</h3>
+                <p className="text-sm text-white/90 mt-1">Create a new user account</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowAddUserModal(false);
+                  setNewUser({ name: '', email: '', phone: '', department: 'Academic', grade: '', roles: [], status: 'Active' });
+                }}
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-8">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Full Name *</label>
+                  <input
+                    type="text"
+                    value={newUser.name}
+                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                    placeholder="e.g. Dr. John Smith"
+                    className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Email *</label>
+                    <input
+                      type="email"
+                      value={newUser.email}
+                      onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                      placeholder="john.smith@school.edu"
+                      className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Phone *</label>
+                    <input
+                      type="tel"
+                      value={newUser.phone}
+                      onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
+                      placeholder="+91 98765 43210"
+                      className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Department *</label>
+                    <select
+                      value={newUser.department}
+                      onChange={(e) => setNewUser({ ...newUser, department: e.target.value })}
+                      className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
+                    >
+                      {data.departments.map(dept => (
+                        <option key={dept.id} value={dept.name}>{dept.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Grade (Optional)</label>
+                    <input
+                      type="text"
+                      value={newUser.grade}
+                      onChange={(e) => setNewUser({ ...newUser, grade: e.target.value })}
+                      placeholder="e.g. Grade 5"
+                      className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Assign Roles *</label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {data.roles.slice(0, 5).map(role => (
+                      <button
+                        key={role.id}
+                        onClick={() => toggleRole(role.name, true, newUser, setNewUser)}
+                        className={`p-3 rounded-xl text-sm font-bold border-2 transition-all ${
+                          newUser.roles.includes(role.name)
+                            ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-500 text-blue-700'
+                            : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300'
+                        }`}
+                      >
+                        {role.name}
+                      </button>
+                    ))}
+                  </div>
+                  {newUser.roles.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {newUser.roles.map((role, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-100 text-blue-700 border border-blue-200 flex items-center gap-2"
+                        >
+                          {role}
+                          <button
+                            onClick={() => toggleRole(role, false, newUser, setNewUser)}
+                            className="hover:text-red-600"
+                          >
+                            <X size={14} />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowAddUserModal(false);
+                  setNewUser({ name: '', email: '', phone: '', department: 'Academic', grade: '', roles: [], status: 'Active' });
+                }}
+                className="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddUser}
+                className="px-5 py-2.5 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm shadow-lg shadow-blue-500/30"
+              >
+                Add User
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================== EDIT USER MODAL ======================================== */}
+      {showEditUserModal && userToEdit && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-scaleUp">
+            <div className="bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-8 py-6 flex justify-between items-start">
+              <div>
+                <h3 className="font-bold text-2xl">Edit User</h3>
+                <p className="text-sm text-white/90 mt-1">{userToEdit.name}</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowEditUserModal(false);
+                  setUserToEdit(null);
+                }}
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-8">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Full Name *</label>
+                  <input
+                    type="text"
+                    value={userToEdit.name}
+                    onChange={(e) => setUserToEdit({ ...userToEdit, name: e.target.value })}
+                    className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Email *</label>
+                    <input
+                      type="email"
+                      value={userToEdit.email}
+                      onChange={(e) => setUserToEdit({ ...userToEdit, email: e.target.value })}
+                      className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Phone *</label>
+                    <input
+                      type="tel"
+                      value={userToEdit.phone}
+                      onChange={(e) => setUserToEdit({ ...userToEdit, phone: e.target.value })}
+                      className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Department *</label>
+                    <select
+                      value={userToEdit.department}
+                      onChange={(e) => setUserToEdit({ ...userToEdit, department: e.target.value })}
+                      className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
+                    >
+                      {data.departments.map(dept => (
+                        <option key={dept.id} value={dept.name}>{dept.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Grade</label>
+                    <input
+                      type="text"
+                      value={userToEdit.grade || ''}
+                      onChange={(e) => setUserToEdit({ ...userToEdit, grade: e.target.value })}
+                      className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Current Roles</label>
+                  <div className="flex flex-wrap gap-2">
+                    {userToEdit.roles.map((role, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-100 text-blue-700 border border-blue-200"
+                      >
+                        {role}
+                      </span>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowEditUserModal(false);
+                      setShowAssignRoleModal(true);
+                    }}
+                    className="mt-3 text-blue-600 text-sm font-bold hover:underline flex items-center gap-1"
+                  >
+                    <Shield size={14} />
+                    Modify Roles
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowEditUserModal(false);
+                  setUserToEdit(null);
+                }}
+                className="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEditUser}
+                className="px-5 py-2.5 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm shadow-lg shadow-blue-500/30"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================== ASSIGN ROLE MODAL ======================================== */}
+      {showAssignRoleModal && userToEdit && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-scaleUp">
+            <div className="bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-8 py-6 flex justify-between items-start">
+              <div>
+                <h3 className="font-bold text-2xl">Assign Roles</h3>
+                <p className="text-sm text-white/90 mt-1">{userToEdit.name}</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowAssignRoleModal(false);
+                  setUserToEdit(null);
+                }}
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-8">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-3">Select Roles (Multiple Allowed)</label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {data.roles.slice(0, 5).map(role => (
+                      <button
+                        key={role.id}
+                        onClick={() => toggleRole(role.name, true, userToEdit, setUserToEdit)}
+                        className={`p-4 rounded-xl text-sm font-bold border-2 transition-all ${
+                          userToEdit.roles.includes(role.name)
+                            ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-500 text-blue-700'
+                            : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300'
+                        }`}
+                      >
+                        <div className="flex flex-col items-center gap-2">
+                          <Shield size={20} />
+                          <span>{role.name}</span>
+                          <span className="text-xs text-slate-500">{role.permissions} perms</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Selected Roles ({userToEdit.roles.length})</label>
+                  {userToEdit.roles.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {userToEdit.roles.map((role, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-2 rounded-lg text-sm font-bold bg-blue-100 text-blue-700 border border-blue-200 flex items-center gap-2"
+                        >
+                          {role}
+                          <button
+                            onClick={() => toggleRole(role, false, userToEdit, setUserToEdit)}
+                            className="hover:text-red-600"
+                          >
+                            <X size={16} />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-slate-500 italic">No roles selected</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowAssignRoleModal(false);
+                  setUserToEdit(null);
+                }}
+                className="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAssignRole}
+                className="px-5 py-2.5 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm shadow-lg shadow-blue-500/30"
+              >
+                Assign Roles
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================== SUSPEND USER MODAL ======================================== */}
+      {showSuspendModal && userToSuspend && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden animate-scaleUp">
+            <div className="bg-gradient-to-r from-red-400 to-orange-400 text-white px-8 py-6 flex justify-between items-start">
+              <div>
+                <h3 className="font-bold text-2xl">Suspend User</h3>
+                <p className="text-sm text-white/90 mt-1">{userToSuspend.name}</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowSuspendModal(false);
+                  setUserToSuspend(null);
+                  setSuspendReason('');
+                }}
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="p-8">
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+                  <div>
+                    <p className="font-bold text-red-800 text-sm mb-1">Warning</p>
+                    <p className="text-xs text-red-700">
+                      Suspending this user will revoke their access to the system immediately. They will not be able to log in until reactivated.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Reason for Suspension *</label>
+                <textarea
+                  value={suspendReason}
+                  onChange={(e) => setSuspendReason(e.target.value)}
+                  placeholder="Please provide a detailed reason for suspension..."
+                  rows={4}
+                  className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all resize-none"
+                />
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowSuspendModal(false);
+                  setUserToSuspend(null);
+                  setSuspendReason('');
+                }}
+                className="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSuspendUser}
+                className="px-5 py-2.5 rounded-xl font-bold bg-red-600 text-white hover:bg-red-700 transition-colors text-sm shadow-lg shadow-red-500/30"
+              >
+                Suspend User
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================== USER DETAILS MODAL ======================================== */}
+      {showUserModal && selectedUser && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-scaleUp">
+            
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-8 py-6 flex justify-between items-start">
+              <div>
+                <h3 className="font-bold text-2xl">{selectedUser.name}</h3>
+                <p className="text-sm text-white/90 mt-1 font-medium opacity-90">{selectedUser.email}</p>
+              </div>
+              <button
+                onClick={() => { setShowUserModal(false); setSelectedUser(null); }}
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="flex-1 overflow-y-auto p-8">
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">User ID</p>
+                  <p className="text-sm font-semibold text-slate-800">{selectedUser.userId}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Phone</p>
+                  <p className="text-sm font-semibold text-slate-800">{selectedUser.phone}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Department</p>
+                  <p className="text-sm font-semibold text-slate-800">{selectedUser.department}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Status</p>
+                  <span className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 w-fit border ${getStatusColor(selectedUser.status)}`}>
+                    {getStatusIcon(selectedUser.status)}
+                    {selectedUser.status}
+                  </span>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-2">Roles</p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedUser.roles.map((role, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200"
+                      >
+                        {role}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Account Created</p>
+                  <p className="text-sm font-semibold text-slate-800">{selectedUser.accountCreated}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Total Logins</p>
+                  <p className="text-sm font-semibold text-slate-800">{selectedUser.totalLogins}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Last Login</p>
+                  <p className="text-sm font-semibold text-slate-800">{formatDate(selectedUser.lastLogin)}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Last Login IP</p>
+                  <p className="text-sm font-semibold text-slate-800">{selectedUser.lastLoginIp || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">Two-Factor Auth</p>
+                  <span className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 w-fit ${
+                    selectedUser.twoFactorEnabled ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {selectedUser.twoFactorEnabled ? <CheckCircle size={12} /> : <XCircle size={12} />}
+                    {selectedUser.twoFactorEnabled ? 'Enabled' : 'Disabled'}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-500 uppercase mb-1">SSO Linked</p>
+                  <span className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 w-fit ${
+                    selectedUser.ssoLinked ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {selectedUser.ssoLinked ? <CheckCircle size={12} /> : <XCircle size={12} />}
+                    {selectedUser.ssoLinked ? 'Linked' : 'Not Linked'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+              <button onClick={() => setShowUserModal(false)} className="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors text-sm">Close</button>
+              <button className="px-5 py-2.5 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm shadow-lg shadow-blue-500/30 flex flex-col items-center gap-0.5">
+                <span>Edit User</span>
+                <span className="text-[10px] text-white/70 font-normal">(get in app)</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 };
