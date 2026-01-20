@@ -7,65 +7,531 @@ export const TEACHER_DATA = {
     subjects: ["Physics", "Chemistry"],
     gradeTaught: ["Grade 9", "Grade 10"],
     experience: "8 Years",
-    qualifications: ["M.Sc. Physics", "B.Ed"]
+    qualifications: ["M.Sc. Physics", "B.Ed"],
   },
-  
+
   // Screen 1: Home Dashboard
   dashboard: {
     classesToday: [
-      { id: 1, subject: "Physics", grade: "Grade 9-A", time: "08:30 AM", room: "Lab 3" },
-      { id: 2, subject: "Chemistry", grade: "Grade 10-C", time: "10:00 AM", room: "Room 204" },
-      { id: 3, subject: "Physics (Practical)", grade: "Grade 9-B", time: "11:30 AM", room: "Lab 1" }
+      {
+        id: 1,
+        subject: "Physics",
+        grade: "Grade 9-A",
+        time: "08:30 AM",
+        room: "Lab 3",
+      },
+      {
+        id: 2,
+        subject: "Chemistry",
+        grade: "Grade 10-C",
+        time: "10:00 AM",
+        room: "Room 204",
+      },
+      {
+        id: 3,
+        subject: "Physics (Practical)",
+        grade: "Grade 9-B",
+        time: "11:30 AM",
+        room: "Lab 1",
+      },
     ],
     pendingAssignments: 12,
     alerts: [
-      { id: 1, type: "Performance", msg: "3 students scored <40% in Unit Test 2" },
-      { id: 2, type: "Attendance", msg: "Grade 9-A attendance below 85% this week" }
-    ]
+      {
+        id: 1,
+        type: "Performance",
+        msg: "3 students scored <40% in Unit Test 2",
+      },
+      {
+        id: 2,
+        type: "Attendance",
+        msg: "Grade 9-A attendance below 85% this week",
+      },
+    ],
   },
 
   // Screen 2: Class Management
   classes: [
-    { id: "C1", grade: "Grade 9-A", subject: "Physics", students: 32, topic: "Newton's Laws" },
-    { id: "C2", grade: "Grade 10-C", subject: "Chemistry", students: 28, topic: "Chemical Reactions" },
-    { id: "C3", grade: "Grade 9-B", subject: "Physics", students: 30, topic: "Motion Graphs" }
+    {
+      id: "C1",
+      grade: "Grade 9-A",
+      subject: "Physics",
+      students: 32,
+      topic: "Newton's Laws",
+    },
+    {
+      id: "C2",
+      grade: "Grade 10-C",
+      subject: "Chemistry",
+      students: 28,
+      topic: "Chemical Reactions",
+    },
+    {
+      id: "C3",
+      grade: "Grade 9-B",
+      subject: "Physics",
+      students: 30,
+      topic: "Motion Graphs",
+    },
   ],
 
   // Screen 3: Lesson Planning
   lessons: {
     monday: [
-      { id: "L1", title: "Intro to Kinematics", status: "Completed", class: "9-A" },
-      { id: "L2", title: "Acid-Base Titration", status: "Pending", class: "10-C" }
+      {
+        id: "L1",
+        title: "Intro to Kinematics",
+        status: "Taught",
+        class: "9-A",
+        subject: "Physics",
+        time: "08:30 AM",
+        duration: "45 min",
+        objectives: [
+          "Understand basic concepts of motion",
+          "Define displacement, velocity, and acceleration",
+          "Apply kinematic equations in simple problems",
+        ],
+        materials: [
+          "Physics Textbook Ch.8",
+          "Motion Simulator App",
+          "Graphing Calculator",
+        ],
+        attachments: ["kinematics_worksheet.pdf", "motion_graphs.pptx"],
+        ncertOutcome: "LO-9.PS.3.1: Analyze motion using kinematic equations",
+        cbseCompetency: "SC-9.3: Scientific inquiry and problem solving",
+        aiSuggestions: [
+          "Video: Motion in One Dimension",
+          "Worksheet: Velocity-Time Graphs",
+        ],
+      },
+      {
+        id: "L2",
+        title: "Acid-Base Titration Lab",
+        status: "Pending",
+        class: "10-C",
+        subject: "Chemistry",
+        time: "10:00 AM",
+        duration: "60 min",
+        objectives: [
+          "Perform acid-base titration safely",
+          "Calculate molarity using titration data",
+          "Understand pH indicators",
+        ],
+        materials: [
+          "Burette",
+          "Conical Flask",
+          "Phenolphthalein Indicator",
+          "HCl & NaOH Solutions",
+        ],
+        attachments: ["lab_safety.pdf", "titration_procedure.docx"],
+        ncertOutcome: "LO-10.CH.4.2: Conduct quantitative chemical analysis",
+        cbseCompetency: "SC-10.2: Practical and experimental skills",
+        aiSuggestions: [
+          "Video: Titration Technique Demonstration",
+          "Quiz: Chemical Calculations",
+        ],
+      },
     ],
     tuesday: [
-      { id: "L3", title: "Force Vectors", status: "Pending", class: "9-B" }
-    ]
+      {
+        id: "L3",
+        title: "Force Vectors & Resolution",
+        status: "Pending",
+        class: "9-B",
+        subject: "Physics",
+        time: "09:00 AM",
+        duration: "45 min",
+        objectives: [
+          "Represent forces as vectors",
+          "Resolve vectors into components",
+          "Apply vector addition using graphical methods",
+        ],
+        materials: ["Vector Diagrams", "Protractor", "Graph Paper"],
+        attachments: ["vector_practice.pdf"],
+        ncertOutcome: "LO-9.PS.2.3: Apply vector concepts to force analysis",
+        cbseCompetency: "SC-9.4: Mathematical reasoning in science",
+        aiSuggestions: [
+          "Interactive: Vector Addition Simulator",
+          "Past Lesson: Newton's Second Law",
+        ],
+      },
+    ],
+    wednesday: [
+      {
+        id: "L4",
+        title: "Chemical Bonding Types",
+        status: "Taught",
+        class: "10-C",
+        subject: "Chemistry",
+        time: "11:30 AM",
+        duration: "45 min",
+        objectives: [
+          "Differentiate between ionic and covalent bonds",
+          "Explain electronegativity and bond polarity",
+          "Draw Lewis structures for simple molecules",
+        ],
+        materials: [
+          "Molecular Model Kit",
+          "Periodic Table",
+          "Whiteboard Markers",
+        ],
+        attachments: ["bonding_notes.pdf", "lewis_structures.pptx"],
+        ncertOutcome: "LO-10.CH.3.1: Understand chemical bonding principles",
+        cbseCompetency: "SC-10.1: Conceptual understanding",
+        aiSuggestions: [
+          "3D Models: Molecular Geometries",
+          "Worksheet: Electronegativity Practice",
+        ],
+      },
+    ],
+    thursday: [
+      {
+        id: "L5",
+        title: "Energy Conservation Lab",
+        status: "Pending",
+        class: "9-A",
+        subject: "Physics",
+        time: "08:30 AM",
+        duration: "60 min",
+        objectives: [
+          "Verify law of conservation of energy experimentally",
+          "Calculate potential and kinetic energy",
+          "Analyze energy transformations",
+        ],
+        materials: [
+          "Pendulum Setup",
+          "Stopwatch",
+          "Meter Scale",
+          "Motion Sensor",
+        ],
+        attachments: ["energy_lab_manual.pdf", "data_table.xlsx"],
+        ncertOutcome:
+          "LO-9.PS.5.2: Analyze energy transformations quantitatively",
+        cbseCompetency: "SC-9.2: Practical and experimental skills",
+        aiSuggestions: [
+          "Video: Pendulum Energy Demonstration",
+          "Calculator: Energy Conversion Tool",
+        ],
+      },
+    ],
+    friday: [
+      {
+        id: "L6",
+        title: "Periodic Table Trends",
+        status: "Pending",
+        class: "10-C",
+        subject: "Chemistry",
+        time: "10:00 AM",
+        duration: "45 min",
+        objectives: [
+          "Identify periodic trends in atomic properties",
+          "Explain variation in ionization energy",
+          "Predict chemical reactivity using trends",
+        ],
+        materials: [
+          "Interactive Periodic Table",
+          "Trend Graphs",
+          "Element Cards",
+        ],
+        attachments: ["periodic_trends.pdf", "practice_questions.docx"],
+        ncertOutcome: "LO-10.CH.2.4: Analyze periodic properties of elements",
+        cbseCompetency: "SC-10.4: Critical thinking and analysis",
+        aiSuggestions: [
+          "Interactive: Periodic Table Explorer",
+          "Quiz: Atomic Properties",
+        ],
+      },
+    ],
   },
 
   // Screen 4: Attendance Log (Mock for one class)
   attendance: [
-    { id: "S1", name: "Aarav Singh", roll: 1, status: "Present" },
-    { id: "S2", name: "Bianca Liu", roll: 2, status: "Absent", reason: "Sick Leave" },
-    { id: "S3", name: "Charlie Tan", roll: 3, status: "Present" },
-    { id: "S4", name: "David Kim", roll: 4, status: "Present" }
+    {
+      id: "S1",
+      name: "Aarav Singh",
+      roll: 1,
+      status: "Present",
+      parentPhone: "+91-9876543210",
+    },
+    {
+      id: "S2",
+      name: "Bianca Liu",
+      roll: 2,
+      status: "Absent",
+      reason: "Sick Leave",
+      parentPhone: "+91-9876543211",
+      notifiedParent: true,
+    },
+    {
+      id: "S3",
+      name: "Charlie Tan",
+      roll: 3,
+      status: "Present",
+      parentPhone: "+91-9876543212",
+    },
+    {
+      id: "S4",
+      name: "David Kim",
+      roll: 4,
+      status: "Present",
+      parentPhone: "+91-9876543213",
+    },
+    {
+      id: "S5",
+      name: "Elena Rodriguez",
+      roll: 5,
+      status: "Late",
+      arrivalTime: "09:15 AM",
+      parentPhone: "+91-9876543214",
+    },
+    {
+      id: "S6",
+      name: "Fatima Khan",
+      roll: 6,
+      status: "Present",
+      parentPhone: "+91-9876543215",
+    },
+    {
+      id: "S7",
+      name: "George Wilson",
+      roll: 7,
+      status: "Present",
+      parentPhone: "+91-9876543216",
+    },
+    {
+      id: "S8",
+      name: "Hannah Martinez",
+      roll: 8,
+      status: "Absent",
+      reason: "Family Emergency",
+      parentPhone: "+91-9876543217",
+      notifiedParent: false,
+    },
+    {
+      id: "S9",
+      name: "Ibrahim Ahmed",
+      roll: 9,
+      status: "Present",
+      parentPhone: "+91-9876543218",
+    },
+    {
+      id: "S10",
+      name: "Julia Chen",
+      roll: 10,
+      status: "Present",
+      parentPhone: "+91-9876543219",
+    },
+    {
+      id: "S11",
+      name: "Kevin Patel",
+      roll: 11,
+      status: "Present",
+      parentPhone: "+91-9876543220",
+    },
+    {
+      id: "S12",
+      name: "Lily Thompson",
+      roll: 12,
+      status: "Present",
+      parentPhone: "+91-9876543221",
+    },
+    {
+      id: "S13",
+      name: "Mohammed Ali",
+      roll: 13,
+      status: "Present",
+      parentPhone: "+91-9876543222",
+    },
+    {
+      id: "S14",
+      name: "Nina Gupta",
+      roll: 14,
+      status: "Present",
+      parentPhone: "+91-9876543223",
+    },
+    {
+      id: "S15",
+      name: "Oliver Brown",
+      roll: 15,
+      status: "Present",
+      parentPhone: "+91-9876543224",
+    },
   ],
 
   // Screen 5: Assignment Manager
   assignments: [
-    { id: "A1", title: "Physics Lab Report", class: "9-A", submitted: 28, total: 32, due: "Tomorrow" },
-    { id: "A2", title: "Periodic Table Quiz", class: "10-C", submitted: 15, total: 28, due: "Today" }
+    {
+      id: "A1",
+      title: "Physics Lab Report - Newton's Laws",
+      class: "Grade 9-A",
+      subject: "Physics",
+      submitted: 28,
+      total: 32,
+      graded: 20,
+      pending: 8,
+      due: "2026-01-22",
+      dueTime: "11:59 PM",
+      status: "Active",
+      type: "Lab Report",
+      maxMarks: 50,
+      attachments: ["lab_instructions.pdf", "rubric.pdf"],
+      template: "Lab Report Template",
+      aiAnalysis: {
+        completionRate: 87.5,
+        avgCompletion: 92,
+        plagiarismDetected: 2,
+        lowScores: 3,
+      },
+      submissions: [
+        {
+          studentId: "S1",
+          studentName: "Aarav Singh",
+          status: "Submitted",
+          submittedOn: "2026-01-20",
+          grade: 45,
+          plagiarism: false,
+          aiScore: 88,
+        },
+        {
+          studentId: "S2",
+          studentName: "Bianca Liu",
+          status: "Graded",
+          submittedOn: "2026-01-19",
+          grade: 48,
+          plagiarism: false,
+          aiScore: 95,
+        },
+        {
+          studentId: "S3",
+          studentName: "Charlie Tan",
+          status: "Pending",
+          submittedOn: null,
+          grade: null,
+          plagiarism: null,
+          aiScore: null,
+        },
+      ],
+    },
+    {
+      id: "A2",
+      title: "Periodic Table Quiz",
+      class: "Grade 10-C",
+      subject: "Chemistry",
+      submitted: 15,
+      total: 28,
+      graded: 10,
+      pending: 5,
+      due: "2026-01-20",
+      dueTime: "3:00 PM",
+      status: "Overdue",
+      type: "Quiz",
+      maxMarks: 25,
+      attachments: ["quiz_questions.pdf"],
+      template: "Multiple Choice Quiz",
+      aiAnalysis: {
+        completionRate: 53.6,
+        avgCompletion: 78,
+        plagiarismDetected: 1,
+        lowScores: 5,
+      },
+      submissions: [
+        {
+          studentId: "S10",
+          studentName: "Julia Chen",
+          status: "Graded",
+          submittedOn: "2026-01-19",
+          grade: 22,
+          plagiarism: false,
+          aiScore: 90,
+        },
+        {
+          studentId: "S11",
+          studentName: "Kevin Patel",
+          status: "Submitted",
+          submittedOn: "2026-01-20",
+          grade: null,
+          plagiarism: false,
+          aiScore: 85,
+        },
+      ],
+    },
+    {
+      id: "A3",
+      title: "Chemical Reactions Worksheet",
+      class: "Grade 10-C",
+      subject: "Chemistry",
+      submitted: 25,
+      total: 28,
+      graded: 25,
+      pending: 0,
+      due: "2026-01-18",
+      dueTime: "11:59 PM",
+      status: "Completed",
+      type: "Worksheet",
+      maxMarks: 30,
+      attachments: ["worksheet.pdf", "answer_key.pdf"],
+      template: "Standard Worksheet",
+      aiAnalysis: {
+        completionRate: 89.3,
+        avgCompletion: 94,
+        plagiarismDetected: 0,
+        lowScores: 2,
+      },
+      submissions: [],
+    },
+    {
+      id: "A4",
+      title: "Kinematics Problem Set",
+      class: "Grade 9-B",
+      subject: "Physics",
+      submitted: 18,
+      total: 30,
+      graded: 12,
+      pending: 6,
+      due: "2026-01-25",
+      dueTime: "11:59 PM",
+      status: "Active",
+      type: "Problem Set",
+      maxMarks: 40,
+      attachments: ["problems.pdf", "formula_sheet.pdf"],
+      template: "Problem Set Template",
+      aiAnalysis: {
+        completionRate: 60,
+        avgCompletion: 75,
+        plagiarismDetected: 0,
+        lowScores: 4,
+      },
+      submissions: [],
+    },
   ],
 
   // Screen 6: Communication
   messages: [
-    { id: 1, from: "Parent of Aarav", content: "Regarding his sick leave...", time: "10 min ago", unread: true },
-    { id: 2, from: "Principal's Office", content: "Staff meeting reminder", time: "1 hour ago", unread: false }
+    {
+      id: 1,
+      from: "Parent of Aarav",
+      content: "Regarding his sick leave...",
+      time: "10 min ago",
+      unread: true,
+    },
+    {
+      id: 2,
+      from: "Principal's Office",
+      content: "Staff meeting reminder",
+      time: "1 hour ago",
+      unread: false,
+    },
   ],
 
   // Screen 8: Calendar
   calendarEvents: [
-    { id: 1, title: "Science Fair Info Session", date: "2026-01-10", type: "Event" },
-    { id: 2, title: "Department Meeting", date: "2026-01-12", type: "Meeting" }
+    {
+      id: 1,
+      title: "Science Fair Info Session",
+      date: "2026-01-10",
+      type: "Event",
+    },
+    { id: 2, title: "Department Meeting", date: "2026-01-12", type: "Meeting" },
   ],
 
   // Screen 9: Insights
@@ -74,8 +540,8 @@ export const TEACHER_DATA = {
     attendanceTrend: "+2%",
     riskStudents: [
       { name: "John Doe", issue: "Consistent Low Grades" },
-      { name: "Jane Doe", issue: "Truancy" }
-    ]
+      { name: "Jane Doe", issue: "Truancy" },
+    ],
   },
 
   // Screen 14: Attendance Summary
@@ -84,13 +550,13 @@ export const TEACHER_DATA = {
     classBreakdown: [
       { class: "9-A", percentage: 96 },
       { class: "9-B", percentage: 92 },
-      { class: "10-C", percentage: 95 }
-    ]
+      { class: "10-C", percentage: 95 },
+    ],
   },
 
   // Screen 15: Profile Portfolio
   portfolio: {
     certifications: ["Advanced Physics Pedagogy", "Safety in Labs"],
-    workshops: ["Digital Classrooms 2025", "Inclusive Education"]
-  }
+    workshops: ["Digital Classrooms 2025", "Inclusive Education"],
+  },
 };

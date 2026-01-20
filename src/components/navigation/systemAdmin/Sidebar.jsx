@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   Activity, Shield, Database, FileText, 
-  Server, LogOut, X 
+  Server, LogOut, X, Settings 
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -17,6 +17,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: "Access Control", path: "/dashboard/it-admin/security", icon: <Shield size={20} /> }, // Screen 2
     { name: "Backup Center", path: "/dashboard/it-admin/backup", icon: <Database size={20} /> }, // Screen 3
     { name: "Audit Logs", path: "/dashboard/it-admin/audit", icon: <FileText size={20} /> }, // Screen 4
+    { name: "Account Settings", path: "/dashboard/it-admin/profile", icon: <Settings size={20} /> }, // Screen 5
   ];
 
   return (

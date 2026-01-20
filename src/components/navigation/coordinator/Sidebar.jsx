@@ -10,7 +10,6 @@ const Sidebar = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
 
     const menuItems = [
-        { title: 'Dashboard', path: '/dashboard/coordinator', icon: Home },
         { title: 'Curriculum Planner', path: '/dashboard/coordinator/curriculum', icon: BookOpen },
         { title: 'Timetable Console', path: '/dashboard/coordinator/timetable', icon: Calendar },
         { title: 'Lesson Approval', path: '/dashboard/coordinator/approval', icon: CheckSquare },
@@ -18,9 +17,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     ];
 
     const isActive = (path) => {
-        if (path === "/dashboard/coordinator" && location.pathname === "/dashboard/coordinator") return true;
-        if (path !== "/dashboard/coordinator" && location.pathname.startsWith(path)) return true;
-        return false;
+        return location.pathname.startsWith(path);
     };
 
     const handleLogout = () => {

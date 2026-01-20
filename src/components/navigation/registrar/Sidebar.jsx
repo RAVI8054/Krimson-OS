@@ -9,7 +9,6 @@ const Sidebar = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
 
     const menuItems = [
-        { id: 'home', title: 'Overview', path: '/dashboard/registrar', icon: LayoutGrid },
         { id: 'admissions', title: 'Admissions', path: '/dashboard/registrar/admissions', icon: Users },
         { id: 'records', title: 'Student Records', path: '/dashboard/registrar/records', icon: FolderOpen },
         { id: 'compliance', title: 'Compliance Center', path: '/dashboard/registrar/compliance', icon: AlertCircle },

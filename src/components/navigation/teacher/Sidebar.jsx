@@ -4,7 +4,7 @@ import {
   Users, BookOpen, CalendarCheck, FileText, 
   BarChart2, MessageSquare, Calendar, Activity, 
   CheckSquare, Book, FileBarChart, PenTool, PieChart, LogOut,
-  LayoutDashboard, X
+  LayoutDashboard, X, UserCircle
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -29,8 +29,8 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: "Resources Library", path: "/dashboard/teacher/resources", icon: <Book size={20} /> }, // Screen 12
     { name: "Feedback & Reflections", path: "/dashboard/teacher/reflection", icon: <PenTool size={20} /> }, // Screen 13
     { name: "Attendance Summary", path: "/dashboard/teacher/attendance-summary", icon: <PieChart size={20} /> }, // Screen 14
-    { name: "Support Center", path: "/dashboard/teacher/support", icon: <MessageSquare size={20} /> }, // Screen 12 (New)
-    // Screen 15 is accessed via profile at bottom
+    { name: "Profile Settings", path: "/dashboard/teacher/profile", icon: <UserCircle size={20} /> }, // Screen 15
+    { name: "Support Center", path: "/dashboard/teacher/support", icon: <MessageSquare size={20} /> }, // Screen 16
   ];
 
   return (
