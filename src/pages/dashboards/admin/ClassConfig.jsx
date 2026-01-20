@@ -77,7 +77,7 @@ const ClassConfig = () => {
           HEADER SECTION (Updated to match other screens)
           ======================================== */}
       <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-pink-500" />
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-600 opacity-20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
 
@@ -92,7 +92,7 @@ const ClassConfig = () => {
                    <Calendar size={12} /> {activeAcademicYear}
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-2 tracking-tight text-white drop-shadow-sm">
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 tracking-tight text-white drop-shadow-sm">
                 Class & Section Config
               </h1>
               <p className="text-white/90 text-sm md:text-base max-w-2xl font-medium leading-relaxed">
@@ -100,52 +100,61 @@ const ClassConfig = () => {
               </p>
             </div>
           </div>
+        </div>
+      </div>
 
-           {/* Summary Stats in Header Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 hover:bg-white/20 transition-all">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-white/20 rounded-xl"> <Building size={20} /> </div>
-                <div>
-                   <p className="text-2xl font-bold">{totalGrades}</p>
-                   <p className="text-xs text-white/80 font-medium uppercase tracking-wide">Total Grades</p>
-                </div>
-              </div>
+      {/* ========================================
+          SUMMARY STATISTICS CARDS
+          ======================================== */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-blue-100 text-blue-600 rounded-xl group-hover:scale-110 transition-transform"><Building size={20} /></div>
+            <div>
+              <p className="text-2xl font-bold text-slate-800">{totalGrades}</p>
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">Total Grades</p>
+              <p className="text-[10px] text-slate-400 mt-1">(get in app)</p>
             </div>
-            
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 hover:bg-white/20 transition-all">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-white/20 rounded-xl"> <FileText size={20} /> </div>
-                <div>
-                   <p className="text-2xl font-bold">{totalSections}</p>
-                   <p className="text-xs text-white/80 font-medium uppercase tracking-wide">Total Sections</p>
-                </div>
-              </div>
-            </div>
+          </div>
+        </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 hover:bg-white/20 transition-all">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-white/20 rounded-xl"> <Users size={20} /> </div>
-                <div>
-                   <p className="text-2xl font-bold">{totalStudentsAllocated}</p>
-                   <p className="text-xs text-white/80 font-medium uppercase tracking-wide">Allocated Students</p>
-                </div>
-              </div>
+        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-purple-100 text-purple-600 rounded-xl group-hover:scale-110 transition-transform"><FileText size={20} /></div>
+            <div>
+              <p className="text-2xl font-bold text-slate-800">{totalSections}</p>
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">Total Sections</p>
+              <p className="text-[10px] text-slate-400 mt-1">(get in app)</p>
             </div>
+          </div>
+        </div>
 
-            <div className={`
-               rounded-2xl p-4 border transition-all backdrop-blur-md
-               ${unassignedStudents > 0 ? 'bg-amber-500/20 border-amber-400/50 ring-2 ring-amber-500/20' : 'bg-white/10 border-white/20'}
-            `}>
-              <div className="flex items-center gap-3">
-                <div className={`p-2.5 rounded-xl ${unassignedStudents > 0 ? 'bg-amber-500' : 'bg-white/20'}`}> 
-                   <AlertTriangle size={20} /> 
-                </div>
-                <div>
-                   <p className="text-2xl font-bold">{unassignedStudents}</p>
-                   <p className="text-xs text-white/80 font-medium uppercase tracking-wide">Unassigned</p>
-                </div>
-              </div>
+        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform"><Users size={20} /></div>
+            <div>
+              <p className="text-2xl font-bold text-slate-800">{totalStudentsAllocated}</p>
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">Allocated Students</p>
+              <p className="text-[10px] text-slate-400 mt-1">(get in app)</p>
+            </div>
+          </div>
+        </div>
+
+        <div className={`rounded-2xl p-4 border shadow-sm hover:shadow-md transition-all group ${
+          unassignedStudents > 0 
+            ? 'bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200' 
+            : 'bg-white border-slate-100'
+        }`}>
+          <div className="flex items-center gap-3">
+            <div className={`p-2.5 rounded-xl group-hover:scale-110 transition-transform ${
+              unassignedStudents > 0 ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-600'
+            }`}>
+              <AlertTriangle size={20} />
+            </div>
+            <div>
+              <p className={`text-2xl font-bold ${unassignedStudents > 0 ? 'text-amber-700' : 'text-slate-800'}`}>{unassignedStudents}</p>
+              <p className={`text-xs font-medium uppercase tracking-wide ${unassignedStudents > 0 ? 'text-amber-600' : 'text-slate-500'}`}>Unassigned</p>
+              <p className="text-[10px] text-slate-400 mt-1">(get in app)</p>
             </div>
           </div>
         </div>
@@ -178,17 +187,26 @@ const ClassConfig = () => {
       {/* 🔹 ACTION BUTTONS */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
-          <button className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white px-5 py-3 rounded-xl font-bold hover:shadow-lg transition-all flex items-center gap-2 text-sm shadow-md shadow-blue-500/20">
-            <Plus size={18} />
-            Add Grade
+          <button className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white px-5 py-3 rounded-xl font-bold hover:shadow-lg transition-all flex flex-col items-center gap-0.5 text-sm shadow-md shadow-blue-500/20">
+            <div className="flex items-center gap-2">
+              <Plus size={18} />
+              Add Grade
+            </div>
+            <span className="text-[10px] text-white/70 font-normal">(get in app)</span>
           </button>
-          <button className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white px-5 py-3 rounded-xl font-bold hover:shadow-lg transition-all flex items-center gap-2 text-sm shadow-md shadow-indigo-500/20">
-            <Plus size={18} />
-            Add Section
+          <button className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white px-5 py-3 rounded-xl font-bold hover:shadow-lg transition-all flex flex-col items-center gap-0.5 text-sm shadow-md shadow-indigo-500/20">
+            <div className="flex items-center gap-2">
+              <Plus size={18} />
+              Add Section
+            </div>
+            <span className="text-[10px] text-white/70 font-normal">(get in app)</span>
           </button>
-          <button className="bg-white border-2 border-blue-100 text-blue-600 px-5 py-3 rounded-xl font-bold hover:bg-blue-50 hover:border-blue-200 transition-all flex items-center gap-2 text-sm">
-            <RefreshCw size={18} />
-            Auto-Assign Students
+          <button className="bg-white border-2 border-blue-100 text-blue-600 px-5 py-3 rounded-xl font-bold hover:bg-blue-50 hover:border-blue-200 transition-all flex flex-col items-center gap-0.5 text-sm">
+            <div className="flex items-center gap-2">
+              <RefreshCw size={18} />
+              Auto-Assign Students
+            </div>
+            <span className="text-[10px] text-slate-400 font-normal">(get in app)</span>
           </button>
         </div>
         
@@ -200,9 +218,12 @@ const ClassConfig = () => {
             <Filter size={18} />
             Filters
           </button>
-          <button className="flex-1 md:flex-none bg-slate-50 text-slate-600 px-5 py-3 rounded-xl font-bold hover:bg-slate-100 transition-all flex items-center justify-center gap-2 text-sm">
-            <Download size={18} />
-            Export
+          <button className="flex-1 md:flex-none bg-slate-50 text-slate-600 px-5 py-3 rounded-xl font-bold hover:bg-slate-100 transition-all flex flex-col items-center justify-center gap-0.5 text-sm">
+            <div className="flex items-center gap-2">
+              <Download size={18} />
+              Export
+            </div>
+            <span className="text-[10px] text-slate-400 font-normal">(get in app)</span>
           </button>
         </div>
       </div>
@@ -258,7 +279,7 @@ const ClassConfig = () => {
              <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">{ADMIN_DATA.grades.length} Total</span>
           </div>
           
-          <div className="space-y-3 max-h-[800px] overflow-y-auto pr-2 custom-scrollbar">
+          <div className="space-y-3 max-h-[800px] overflow-y-auto pr-2 custom-scrollbar-hidden">
              {ADMIN_DATA.grades.map(grade => (
                <div 
                  key={grade.id}
@@ -449,7 +470,7 @@ const ClassConfig = () => {
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-scaleUp">
             
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-8 py-6 flex justify-between items-start">
+            <div className="bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-8 py-6 flex justify-between items-start">
               <div>
                 <h3 className="font-bold text-2xl">Class {selectedSection.section} Allocation</h3>
                 <p className="text-sm text-white/90 mt-1 font-medium opacity-90">Manage students assigned to this section</p>
@@ -485,8 +506,11 @@ const ClassConfig = () => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center mb-4">
                    <h4 className="font-bold text-slate-800">Enrolled Students</h4>
-                   <button className="text-blue-600 text-xs font-bold hover:underline flex items-center gap-1">
-                      <Plus size={14} /> Add New
+                   <button className="text-blue-600 text-xs font-bold hover:underline flex flex-col items-end">
+                      <div className="flex items-center gap-1">
+                        <Plus size={14} /> Add New
+                      </div>
+                      <span className="text-[9px] text-slate-400 font-normal">(get in app)</span>
                    </button>
                 </div>
                 
@@ -520,7 +544,10 @@ const ClassConfig = () => {
             
             <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
                <button onClick={() => setShowStudentModal(false)} className="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors text-sm">Cancel</button>
-               <button className="px-5 py-2.5 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm shadow-lg shadow-blue-500/30">Save Changes</button>
+               <button className="px-5 py-2.5 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm shadow-lg shadow-blue-500/30 flex flex-col items-center gap-0.5">
+                 <span>Save Changes</span>
+                 <span className="text-[10px] text-white/70 font-normal">(get in app)</span>
+               </button>
             </div>
 
           </div>

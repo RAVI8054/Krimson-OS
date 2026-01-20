@@ -25,7 +25,8 @@ const PrincipalLayout = () => {
               <Menu size={20} />
             </button>
           <h2 className="text-base md:text-lg lg:text-xl font-semibold text-slate-800">
-            {userRole} Dashboard
+            {/* {userRole}  */}Principal
+            Dashboard
           </h2>
           </div>
           <div className="flex items-center space-x-4">

@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { 
   User, Lock, Bell, Layout, Shield, FileText, 
-  Save, Download, CheckCircle, AlertCircle, Camera 
+  Save, Download, CheckCircle, AlertCircle, Camera,
+  UserCheck, Key, FileSignature, Clock, Settings, Users
 } from 'lucide-react';
 
 import { authService } from '../../services/authService';
@@ -144,6 +145,7 @@ const ProfilePage = ({ roleOverride }) => {
                    { id: 'security', label: 'Security & Login', icon: <Lock size={18} /> },
                    { id: 'preferences', label: 'Preferences', icon: <Bell size={18} /> },
                    { id: 'permissions', label: 'Permissions', icon: <Shield size={18} /> },
+                   ...(user.role === 'Principal' ? [{ id: 'credentials', label: 'Credentials & Access', icon: <FileSignature size={18} /> }] : []),
                    { id: 'activity', label: 'Activity Log', icon: <FileText size={18} /> },
                  ].map(tab => (
                    <button
@@ -357,6 +359,159 @@ const ProfilePage = ({ roleOverride }) => {
                 </div>
              </div>
            )}
+
+            {/* CREDENTIALS & ACCESS TAB (Principal Only) */}
+            {activeTab === 'credentials' && user.role === 'Principal' && (
+              <div className="space-y-6 animate-fade-in">
+                {/* Digital Signature Management */}
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 md:p-8 rounded-2xl border-2 border-blue-200 shadow-lg">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                      <FileSignature className="text-white" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-slate-800 text-lg">Digital Signature Management</h3>
+                      <p className="text-sm text-slate-600">For official document approvals</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 mb-4">
+                    <div className="flex justify-between items-center p-4 bg-white rounded-xl">
+                      <div>
+                        <p className="text-xs text-slate-500">Status</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <CheckCircle className="text-green-600" size={16} />
+                          <p className="font-bold text-green-600 text-sm">Active & Verified</p>
+                        </div>
+                      </div>
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="p-4 bg-white rounded-xl">
+                        <p className="text-xs text-slate-500">Issued On</p>
+                        <p className="font-semibold text-slate-800 text-sm">01 Jan 2024</p>
+                      </div>
+                      <div className="p-4 bg-white rounded-xl">
+                        <p className="text-xs text-slate-500">Valid Until</p>
+                        <p className="font-semibold text-slate-800 text-sm">31 Dec 2026</p>
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-white rounded-xl">
+                      <p className="text-xs text-slate-500 mb-1">Certificate ID</p>
+                      <p className="font-mono font-bold text-slate-800 text-sm">DS-2024-P1001-K</p>
+                    </div>
+
+                    <div className="p-4 bg-white rounded-xl">
+                      <p className="text-xs text-slate-500 mb-1">Security Level</p>
+                      <div className="flex items-center gap-2">
+                        <Shield className="text-purple-600" size={16} />
+                        <p className="font-semibold text-purple-600 text-sm">Level 3 - Highest</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm">
+                    <Settings size={16} />
+                    <span>Manage Signature</span>
+                    <span className="text-xs opacity-80">(get in app)</span>
+                  </button>
+                </div>
+
+                {/* Proxy Access Assignment */}
+                <div className="bg-gradient-to-br from-pink-50 to-purple-50 p-6 md:p-8 rounded-2xl border-2 border-pink-200 shadow-lg">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                      <UserCheck className="text-white" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-slate-800 text-lg">Proxy Access Assignment</h3>
+                      <p className="text-sm text-slate-600">Delegate access to Vice Principal</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl p-5 mb-4 border border-slate-200">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-200 to-purple-200 flex items-center justify-center">
+                          <Users className="text-purple-700" size={24} />
+                        </div>
+                        <div>
+                          <p className="font-bold text-slate-800 text-base">Ms. Sarah Johnson</p>
+                          <p className="text-xs text-slate-500">Vice Principal</p>
+                        </div>
+                      </div>
+                      
+                      {/* Toggle Switch */}
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" defaultChecked />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-pink-600 peer-checked:to-purple-600"></div>
+                      </label>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-500">Access Level</span>
+                        <span className="font-semibold text-slate-800">Temporary Administrative Access</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-500">Granted On</span>
+                        <span className="font-semibold text-slate-800">15 Jan 2026</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-500">Valid Until</span>
+                        <div className="flex items-center gap-1">
+                          <Clock className="text-amber-600" size={14} />
+                          <span className="font-semibold text-amber-600">31 Dec 2026</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t border-slate-200">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-xs font-semibold text-green-600">Access Currently Active</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm mb-4">
+                    <Key size={16} />
+                    <span>Modify Access</span>
+                    <span className="text-xs opacity-80">(get in app)</span>
+                  </button>
+
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="text-amber-600 flex-shrink-0 mt-0.5" size={16} />
+                      <p className="text-xs text-amber-800">
+                        Proxy access grants temporary administrative permissions. Review and update regularly.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Integration Info */}
+                <div className="bg-gradient-to-r from-slate-50 to-slate-100 p-6 rounded-2xl border border-slate-200">
+                  <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                    <div className="flex-1">
+                      <h4 className="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <Shield className="text-cyan-600" size={18} />
+                        System Integration & Security
+                      </h4>
+                      <p className="text-sm text-slate-600">
+                        This profile is synchronized with <span className="font-semibold text-blue-600">Single Sign-On (SSO)</span> and integrated with the <span className="font-semibold text-purple-600">HR/Staff Database</span> for seamless authentication and access management.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-green-100 rounded-xl border border-green-200">
+                      <CheckCircle className="text-green-600" size={16} />
+                      <span className="text-sm font-semibold text-green-700">SSO Verified</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
            {/* ACTIVITY LOG TAB */}
            {activeTab === 'activity' && (

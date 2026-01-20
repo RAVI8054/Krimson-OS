@@ -143,7 +143,7 @@ const AdminOverview = () => {
             border: "group-hover:border-pink-200"
           }
         ].map((stat, idx) => (
-          <div key={idx} className={`bg-white rounded-3xl p-6 shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 group ${stat.border}`}>
+          <div key={idx} className={`bg-white rounded-3xl p-6 shadow-sm border border-slate-100 hover:shadow-xl hover:scale-105 transition-all duration-300 group ${stat.border}`}>
             <div className="flex justify-between items-start mb-4">
               <div className={`p-3 rounded-2xl ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform duration-300`}>
                 <stat.icon size={24} strokeWidth={2.5} />
@@ -156,6 +156,7 @@ const AdminOverview = () => {
               <h3 className="text-3xl font-bold text-slate-800 mb-1 tracking-tight">{stat.value}</h3>
               <p className="text-sm font-semibold text-slate-500">{stat.label}</p>
               <p className="text-xs text-slate-400 mt-1">{stat.sub}</p>
+              <p className="text-[10px] text-slate-400 mt-2">(get in app)</p>
             </div>
           </div>
         ))}
@@ -178,9 +179,12 @@ const AdminOverview = () => {
                 <h2 className="text-xl font-bold text-slate-800">Today's Attendance</h2>
                 <p className="text-sm text-slate-500">Live tracking of students and staff</p>
               </div>
-              <button className="flex items-center gap-1 text-sm font-semibold text-blue-600 bg-blue-50 px-4 py-2 rounded-xl hover:bg-blue-100 transition-colors">
-                View Report
-                <ArrowUpRight size={16} />
+              <button className="flex flex-col items-center gap-0.5 text-sm font-semibold text-blue-600 bg-blue-50 px-4 py-2 rounded-xl hover:bg-blue-100 transition-colors group">
+                <div className="flex items-center gap-1">
+                  View Report
+                  <ArrowUpRight size={16} />
+                </div>
+                <span className="text-[10px] text-slate-400 font-normal">(get in app)</span>
               </button>
             </div>
 
@@ -338,6 +342,7 @@ const AdminOverview = () => {
                          <div className="text-left">
                             <p className="font-bold text-slate-700">{action.label}</p>
                             <p className="text-xs text-slate-500">{action.sub}</p>
+                            <p className="text-[10px] text-slate-400 mt-0.5">(get in app)</p>
                          </div>
                       </div>
                       <div className="opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all">
