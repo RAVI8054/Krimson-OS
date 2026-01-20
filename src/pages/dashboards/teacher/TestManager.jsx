@@ -252,7 +252,7 @@ const TestManager = () => {
           className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
             filterStatus === 'scheduled' 
               ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white border-blue-500 shadow-lg' 
-              : 'bg-white border-blue-200 hover:border-blue-300 hover:shadow-md'
+              : 'bg-white border-blue-200 hover:border-blue-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
           }`}
           onClick={() => setFilterStatus(filterStatus === 'scheduled' ? 'all' : 'scheduled')}
         >
@@ -271,7 +271,7 @@ const TestManager = () => {
           className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
             filterStatus === 'live' 
               ? 'bg-gradient-to-br from-green-500 to-emerald-500 text-white border-green-500 shadow-lg' 
-              : 'bg-white border-green-200 hover:border-green-300 hover:shadow-md'
+              : 'bg-white border-green-200 hover:border-green-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
           }`}
           onClick={() => setFilterStatus(filterStatus === 'live' ? 'all' : 'live')}
         >
@@ -290,7 +290,7 @@ const TestManager = () => {
           className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
             filterStatus === 'grading' 
               ? 'bg-gradient-to-br from-orange-500 to-amber-500 text-white border-orange-500 shadow-lg' 
-              : 'bg-white border-orange-200 hover:border-orange-300 hover:shadow-md'
+              : 'bg-white border-orange-200 hover:border-orange-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
           }`}
           onClick={() => setFilterStatus(filterStatus === 'grading' ? 'all' : 'grading')}
         >
@@ -305,7 +305,7 @@ const TestManager = () => {
           </h3>
         </div>
 
-        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-purple-200 bg-white hover:border-purple-300 hover:shadow-md transition-all">
+        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-purple-200 bg-white hover:border-purple-300 hover:shadow-lg hover:scale-105 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Tests</p>
             <FileText className="text-purple-400 opacity-60" size={20} />

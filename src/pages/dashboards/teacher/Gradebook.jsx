@@ -4,7 +4,7 @@ import {
   Download, TrendingUp, TrendingDown, AlertTriangle, CheckCircle,
   Users, Filter, Search, Calendar, BarChart2, MessageSquare,
   Award, Target, Activity, FileText, Eye, Edit, Share2,
-  ChevronDown, X, Sparkles, Shield, Send
+  ChevronDown, ChevronLeft, ChevronRight, X, Sparkles, Shield, Send
 } from 'lucide-react';
 
 const Gradebook = () => {
@@ -130,6 +130,111 @@ const Gradebook = () => {
       atRisk: true,
       remarks: ['Requires immediate intervention', 'Parent meeting scheduled']
     },
+    {
+      id: 'S9',
+      name: 'Isabella Chen',
+      roll: 9,
+      assessments: { unitTest1: 90, unitTest2: 88, project: 92, midterm: 89 },
+      participation: 'A',
+      attendance: 95,
+      behaviorScore: 91,
+      trend: 'improving',
+      trendValue: 3,
+      overallGrade: 'A',
+      avgScore: 89.75,
+      atRisk: false,
+      remarks: []
+    },
+    {
+      id: 'S10',
+      name: 'James Anderson',
+      roll: 10,
+      assessments: { unitTest1: 72, unitTest2: 76, project: 78, midterm: 74 },
+      participation: 'B',
+      attendance: 88,
+      behaviorScore: 80,
+      trend: 'improving',
+      trendValue: 5,
+      overallGrade: 'B',
+      avgScore: 75,
+      atRisk: false,
+      remarks: []
+    },
+    {
+      id: 'S11',
+      name: 'Keira Patel',
+      roll: 11,
+      assessments: { unitTest1: 95, unitTest2: 93, project: 96, midterm: 94 },
+      participation: 'A+',
+      attendance: 99,
+      behaviorScore: 96,
+      trend: 'improving',
+      trendValue: 2,
+      overallGrade: 'A+',
+      avgScore: 94.5,
+      atRisk: false,
+      remarks: []
+    },
+    {
+      id: 'S12',
+      name: 'Liam O\'Brien',
+      roll: 12,
+      assessments: { unitTest1: 65, unitTest2: 68, project: 70, midterm: 66 },
+      participation: 'C',
+      attendance: 85,
+      behaviorScore: 75,
+      trend: 'improving',
+      trendValue: 4,
+      overallGrade: 'C',
+      avgScore: 67.25,
+      atRisk: false,
+      remarks: []
+    },
+    {
+      id: 'S13',
+      name: 'Maya Thompson',
+      roll: 13,
+      assessments: { unitTest1: 80, unitTest2: 82, project: 85, midterm: 83 },
+      participation: 'A',
+      attendance: 92,
+      behaviorScore: 86,
+      trend: 'improving',
+      trendValue: 6,
+      overallGrade: 'A',
+      avgScore: 82.5,
+      atRisk: false,
+      remarks: []
+    },
+    {
+      id: 'S14',
+      name: 'Noah Garcia',
+      roll: 14,
+      assessments: { unitTest1: 55, unitTest2: 52, project: 58, midterm: 50 },
+      participation: 'D',
+      attendance: 75,
+      behaviorScore: 68,
+      trend: 'declining',
+      trendValue: -12,
+      overallGrade: 'D',
+      avgScore: 53.75,
+      atRisk: true,
+      remarks: ['Critical attention needed', 'Falling behind in coursework']
+    },
+    {
+      id: 'S15',
+      name: 'Olivia Brown',
+      roll: 15,
+      assessments: { unitTest1: 86, unitTest2: 88, project: 90, midterm: 87 },
+      participation: 'A',
+      attendance: 97,
+      behaviorScore: 89,
+      trend: 'improving',
+      trendValue: 4,
+      overallGrade: 'A',
+      avgScore: 87.75,
+      atRisk: false,
+      remarks: []
+    },
   ]);
 
   const [selectedClass, setSelectedClass] = useState('Grade 9-A');
@@ -137,6 +242,8 @@ const Gradebook = () => {
   const [filterMode, setFilterMode] = useState('all'); // 'all', 'atRisk', 'improving', 'declining'
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // Filter students
   const filteredStudents = students.filter(student => {
@@ -232,10 +339,10 @@ const Gradebook = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
+          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer hover:scale-105 hover:shadow-lg duration-300 ${
             filterMode === 'atRisk' 
               ? 'bg-gradient-to-br from-red-500 to-pink-500 text-white border-red-500 shadow-lg' 
-              : 'bg-white border-red-200 hover:border-red-300 hover:shadow-md'
+              : 'bg-white border-red-200 hover:border-red-300'
           }`}
           onClick={() => setFilterMode(filterMode === 'atRisk' ? 'all' : 'atRisk')}
         >
@@ -251,10 +358,10 @@ const Gradebook = () => {
         </div>
 
         <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
+          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer hover:scale-105 hover:shadow-lg duration-300 ${
             filterMode === 'improving' 
               ? 'bg-gradient-to-br from-green-500 to-emerald-500 text-white border-green-500 shadow-lg' 
-              : 'bg-white border-green-200 hover:border-green-300 hover:shadow-md'
+              : 'bg-white border-green-200 hover:border-green-300'
           }`}
           onClick={() => setFilterMode(filterMode === 'improving' ? 'all' : 'improving')}
         >
@@ -269,7 +376,7 @@ const Gradebook = () => {
           </h3>
         </div>
 
-        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-blue-200 bg-white hover:border-blue-300 hover:shadow-md transition-all">
+        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-blue-200 bg-white hover:border-blue-300 hover:shadow-lg hover:scale-105 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Avg Score</p>
             <BarChart2 className="text-blue-400 opacity-60" size={20} />
@@ -277,7 +384,7 @@ const Gradebook = () => {
           <h3 className="text-2xl md:text-3xl font-bold text-blue-600">{stats.avgScore}%</h3>
         </div>
 
-        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-purple-200 bg-white hover:border-purple-300 hover:shadow-md transition-all">
+        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-purple-200 bg-white hover:border-purple-300 hover:shadow-lg hover:scale-105 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Avg Attendance</p>
             <CheckCircle className="text-purple-400 opacity-60" size={20} />
@@ -408,7 +515,7 @@ const Gradebook = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredStudents.map((student) => (
+              {filteredStudents.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((student) => (
                 <tr 
                   key={student.id} 
                   className={`hover:bg-slate-50 transition-colors ${student.atRisk ? 'bg-red-50/30' : ''}`}
@@ -498,6 +605,31 @@ const Gradebook = () => {
             <p className="text-sm text-slate-500">
               {searchQuery || filterMode !== 'all' ? 'Try adjusting your filters' : 'No students in this class'}
             </p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {filteredStudents.length > itemsPerPage && (
+          <div className="p-4 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-sm text-slate-500">
+              Showing {Math.min((currentPage - 1) * itemsPerPage + 1, filteredStudents.length)} to {Math.min(currentPage * itemsPerPage, filteredStudents.length)} of {filteredStudents.length} entries
+            </span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="p-2 border border-slate-200 rounded-lg disabled:opacity-50 hover:bg-slate-50"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredStudents.length / itemsPerPage)))}
+                disabled={currentPage === Math.ceil(filteredStudents.length / itemsPerPage)}
+                className="p-2 border border-slate-200 rounded-lg disabled:opacity-50 hover:bg-slate-50"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
           </div>
         )}
       </div>

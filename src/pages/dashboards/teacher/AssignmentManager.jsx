@@ -142,10 +142,10 @@ const AssignmentManager = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
+          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer hover:scale-105 hover:shadow-lg duration-300 ${
             viewMode === 'all' 
               ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white border-purple-500 shadow-lg' 
-              : 'bg-white border-purple-200 hover:border-purple-300 hover:shadow-md'
+              : 'bg-white border-purple-200 hover:border-purple-300'
           }`}
           onClick={() => setViewMode('all')}
         >
@@ -161,10 +161,10 @@ const AssignmentManager = () => {
         </div>
 
         <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
+          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer hover:scale-105 hover:shadow-lg duration-300 ${
             viewMode === 'active' 
               ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white border-blue-500 shadow-lg' 
-              : 'bg-white border-blue-200 hover:border-blue-300 hover:shadow-md'
+              : 'bg-white border-blue-200 hover:border-blue-300'
           }`}
           onClick={() => setViewMode('active')}
         >
@@ -180,10 +180,10 @@ const AssignmentManager = () => {
         </div>
 
         <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
+          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer hover:scale-105 hover:shadow-lg duration-300 ${
             viewMode === 'overdue' 
               ? 'bg-gradient-to-br from-red-500 to-pink-500 text-white border-red-500 shadow-lg' 
-              : 'bg-white border-red-200 hover:border-red-300 hover:shadow-md'
+              : 'bg-white border-red-200 hover:border-red-300'
           }`}
           onClick={() => setViewMode('overdue')}
         >
@@ -199,10 +199,10 @@ const AssignmentManager = () => {
         </div>
 
         <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
+          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer hover:scale-105 hover:shadow-lg duration-300 ${
             viewMode === 'completed' 
               ? 'bg-gradient-to-br from-green-500 to-emerald-500 text-white border-green-500 shadow-lg' 
-              : 'bg-white border-green-200 hover:border-green-300 hover:shadow-md'
+              : 'bg-white border-green-200 hover:border-green-300'
           }`}
           onClick={() => setViewMode('completed')}
         >

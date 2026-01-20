@@ -181,7 +181,7 @@ const StudentInsights = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-blue-200 bg-white hover:shadow-md transition-all">
+        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-blue-200 bg-white hover:shadow-lg hover:scale-105 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Students</p>
             <Users className="text-blue-400 opacity-60" size={20} />
@@ -193,7 +193,7 @@ const StudentInsights = () => {
           className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
             filterRisk === 'atRisk' 
               ? 'bg-gradient-to-br from-red-500 to-pink-500 text-white border-red-500 shadow-lg' 
-              : 'bg-white border-red-200 hover:border-red-300 hover:shadow-md'
+              : 'bg-white border-red-200 hover:border-red-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
           }`}
           onClick={() => setFilterRisk(filterRisk === 'atRisk' ? 'all' : 'atRisk')}
         >
@@ -208,7 +208,7 @@ const StudentInsights = () => {
           </h3>
         </div>
 
-        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-purple-200 bg-white hover:shadow-md transition-all">
+        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-purple-200 bg-white hover:shadow-lg hover:scale-105 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Avg Attendance</p>
             <Activity className="text-purple-400 opacity-60" size={20} />
@@ -216,7 +216,7 @@ const StudentInsights = () => {
           <h3 className="text-2xl md:text-3xl font-bold text-purple-600">{stats.avgAttendance}%</h3>
         </div>
 
-        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-green-200 bg-white hover:shadow-md transition-all">
+        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-green-200 bg-white hover:shadow-lg hover:scale-105 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Avg Grade</p>
             <Award className="text-green-400 opacity-60" size={20} />

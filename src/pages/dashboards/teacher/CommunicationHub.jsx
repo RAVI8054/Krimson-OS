@@ -219,7 +219,7 @@ const CommunicationHub = () => {
           className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
             filterType === 'all' 
               ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white border-blue-500 shadow-lg' 
-              : 'bg-white border-blue-200 hover:border-blue-300 hover:shadow-md'
+              : 'bg-white border-blue-200 hover:border-blue-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
           }`}
           onClick={() => setFilterType('all')}
         >
@@ -238,7 +238,7 @@ const CommunicationHub = () => {
           className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
             filterType === 'unread' 
               ? 'bg-gradient-to-br from-orange-500 to-amber-500 text-white border-orange-500 shadow-lg' 
-              : 'bg-white border-orange-200 hover:border-orange-300 hover:shadow-md'
+              : 'bg-white border-orange-200 hover:border-orange-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
           }`}
           onClick={() => setFilterType('unread')}
         >
@@ -257,7 +257,7 @@ const CommunicationHub = () => {
           className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
             filterType === 'direct' 
               ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white border-purple-500 shadow-lg' 
-              : 'bg-white border-purple-200 hover:border-purple-300 hover:shadow-md'
+              : 'bg-white border-purple-200 hover:border-purple-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
           }`}
           onClick={() => setFilterType('direct')}
         >
@@ -276,7 +276,7 @@ const CommunicationHub = () => {
           className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
             filterType === 'broadcast' 
               ? 'bg-gradient-to-br from-green-500 to-emerald-500 text-white border-green-500 shadow-lg' 
-              : 'bg-white border-green-200 hover:border-green-300 hover:shadow-md'
+              : 'bg-white border-green-200 hover:border-green-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
           }`}
           onClick={() => setFilterType('broadcast')}
         >

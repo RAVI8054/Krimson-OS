@@ -4,7 +4,7 @@ import {
   Check, X, Save, User, Clock, AlertCircle, Send, 
   CheckCircle, Calendar, Filter, Search, Users,
   FileText, TrendingUp, Bell, ChevronDown, MessageSquare,
-  UserX, UserCheck, Timer
+  UserX, UserCheck, Timer, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
 const AttendanceLog = () => {
@@ -17,6 +17,8 @@ const AttendanceLog = () => {
   const [viewMode, setViewMode] = useState('all'); // 'all', 'present', 'absent', 'late'
   const [searchQuery, setSearchQuery] = useState('');
   const [showSummary, setShowSummary] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // Filter attendance based on view mode and search
   const filteredAttendance = attendance.filter(student => {
@@ -131,10 +133,10 @@ const AttendanceLog = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
+          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer hover:scale-105 hover:shadow-lg duration-300 ${
             viewMode === 'all' 
               ? 'bg-gradient-to-br from-blue-500 to-purple-500 text-white border-blue-500 shadow-lg' 
-              : 'bg-white border-blue-200 hover:border-blue-300 hover:shadow-md'
+              : 'bg-white border-blue-200 hover:border-blue-300'
           }`}
           onClick={() => setViewMode('all')}
         >
@@ -150,10 +152,10 @@ const AttendanceLog = () => {
         </div>
 
         <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
+          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer hover:scale-105 hover:shadow-lg duration-300 ${
             viewMode === 'present' 
               ? 'bg-gradient-to-br from-green-500 to-emerald-500 text-white border-green-500 shadow-lg' 
-              : 'bg-white border-green-200 hover:border-green-300 hover:shadow-md'
+              : 'bg-white border-green-200 hover:border-green-300'
           }`}
           onClick={() => setViewMode('present')}
         >
@@ -169,10 +171,10 @@ const AttendanceLog = () => {
         </div>
 
         <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
+          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer hover:scale-105 hover:shadow-lg duration-300 ${
             viewMode === 'absent' 
               ? 'bg-gradient-to-br from-red-500 to-pink-500 text-white border-red-500 shadow-lg' 
-              : 'bg-white border-red-200 hover:border-red-300 hover:shadow-md'
+              : 'bg-white border-red-200 hover:border-red-300'
           }`}
           onClick={() => setViewMode('absent')}
         >
@@ -188,10 +190,10 @@ const AttendanceLog = () => {
         </div>
 
         <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
+          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer hover:scale-105 hover:shadow-lg duration-300 ${
             viewMode === 'late' 
               ? 'bg-gradient-to-br from-orange-500 to-amber-500 text-white border-orange-500 shadow-lg' 
-              : 'bg-white border-orange-200 hover:border-orange-300 hover:shadow-md'
+              : 'bg-white border-orange-200 hover:border-orange-300'
           }`}
           onClick={() => setViewMode('late')}
         >
@@ -276,7 +278,7 @@ const AttendanceLog = () => {
             <h3 className="font-bold text-slate-800 text-lg">
               Student List 
               <span className="ml-2 text-sm text-slate-500 font-normal">
-                (Showing {filteredAttendance.length} of {stats.total})
+                (Showing {Math.min((currentPage - 1) * itemsPerPage + 1, filteredAttendance.length)} - {Math.min(currentPage * itemsPerPage, filteredAttendance.length)} of {filteredAttendance.length})
               </span>
             </h3>
             {viewMode !== 'all' && (
@@ -303,7 +305,7 @@ const AttendanceLog = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredAttendance.map((student) => (
+              {filteredAttendance.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((student) => (
                 <tr key={student.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white font-bold shadow-md">
@@ -401,7 +403,7 @@ const AttendanceLog = () => {
 
         {/* Mobile View */}
         <div className="md:hidden divide-y divide-slate-100">
-          {filteredAttendance.map((student) => (
+          {filteredAttendance.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((student) => (
             <div key={student.id} className="p-4">
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white font-bold shadow-md flex-shrink-0">
@@ -504,6 +506,31 @@ const AttendanceLog = () => {
                 Clear All Filters
               </button>
             )}
+          </div>
+        )}
+
+        {/* Pagination Controls */}
+        {filteredAttendance.length > itemsPerPage && (
+          <div className="p-4 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-sm text-slate-500 hidden md:inline">
+              Page {currentPage} of {Math.ceil(filteredAttendance.length / itemsPerPage)}
+            </span>
+            <div className="flex gap-2 ml-auto">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="p-2 border border-slate-200 rounded-lg disabled:opacity-50 hover:bg-slate-50"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredAttendance.length / itemsPerPage)))}
+                disabled={currentPage === Math.ceil(filteredAttendance.length / itemsPerPage)}
+                className="p-2 border border-slate-200 rounded-lg disabled:opacity-50 hover:bg-slate-50"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
           </div>
         )}
       </div>

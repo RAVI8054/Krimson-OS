@@ -78,7 +78,7 @@ const HomeDashboard = () => {
 
       {/* Quick Stats Grid - Key Metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-cyan-400 group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-cyan-400 group hover:shadow-lg transition-all duration-300 hover:scale-105">
           <div className="flex items-start justify-between mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Classes Today</p>
             <Calendar className="text-cyan-400 opacity-60" size={20} />
@@ -89,7 +89,7 @@ const HomeDashboard = () => {
           <p className="text-xs text-cyan-600 font-semibold mt-1">Scheduled Sessions</p>
         </div>
 
-        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-blue-400 group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-blue-400 group hover:shadow-lg transition-all duration-300 hover:scale-105">
           <div className="flex items-start justify-between mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pending Review</p>
             <FileText className="text-blue-400 opacity-60" size={20} />
@@ -100,7 +100,7 @@ const HomeDashboard = () => {
           <p className="text-xs text-blue-600 font-semibold mt-1">Assignments</p>
         </div>
 
-        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-purple-400 group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-purple-400 group hover:shadow-lg transition-all duration-300 hover:scale-105">
           <div className="flex items-start justify-between mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Attendance</p>
             <ClipboardCheck className="text-purple-400 opacity-60" size={20} />
@@ -111,7 +111,7 @@ const HomeDashboard = () => {
           <p className="text-xs text-green-600 font-semibold mt-1">1 Pending</p>
         </div>
 
-        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-pink-400 group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-pink-400 group hover:shadow-lg transition-all duration-300 hover:scale-105">
           <div className="flex items-start justify-between mb-2">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Alerts</p>
             <AlertTriangle className="text-pink-400 opacity-60" size={20} />
