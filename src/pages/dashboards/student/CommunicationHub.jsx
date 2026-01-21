@@ -253,7 +253,13 @@ const CommunicationHub = () => {
                   {/* Actions */}
                   <div className="flex gap-3 pt-3 border-t border-slate-100">
                     <button
-                      onClick={() => setExpandedMessage(isExpanded ? null : message.id)}
+                      onClick={() => {
+                        const newExpandedState = isExpanded ? null : message.id;
+                        setExpandedMessage(newExpandedState);
+                        if (!isExpanded && message.requiresAck && !isAcknowledged) {
+                          handleAcknowledge(message.id);
+                        }
+                      }}
                       className="flex-1 flex items-center justify-center gap-2 text-xs font-semibold bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-2 py-2 rounded-lg hover:shadow-lg transition-all hover:scale-105"
                     >
                       <Eye size={14} />
@@ -270,16 +276,6 @@ const CommunicationHub = () => {
                       </div>
                       <span className="text-[9px] font-normal opacity-80 whitespace-nowrap">Go to App</span>
                     </button>
-
-                    {message.requiresAck && !isAcknowledged && (
-                      <button
-                        onClick={() => handleAcknowledge(message.id)}
-                        className="flex-1 flex items-center justify-center gap-2 text-xs font-semibold bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-2 py-2 rounded-lg hover:shadow-lg transition-all hover:scale-105"
-                      >
-                        <CheckCircle size={14} />
-                        Acknowledge
-                      </button>
-                    )}
 
                     {isAcknowledged && (
                       <div className="flex-1 flex items-center justify-center gap-2 text-xs font-semibold text-green-600 bg-green-50 px-2 py-2 rounded-lg border border-green-200">
