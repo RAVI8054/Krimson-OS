@@ -267,32 +267,7 @@ const BehaviorLog = () => {
         </div>
       )}
 
-      {/* Consistency Streak */}
-      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm">
-        <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <TrendingUp className="text-green-500" size={24} />
-          Consistency Streak
-        </h2>
-
-        <div className="flex items-center gap-3 mb-4">
-          {[1,2,3,4,5].map(week => (
-            <div key={week} 
-                 className={`flex-1 h-12 rounded-xl flex items-center justify-center font-bold text-sm transition-all ${
-                   week <= behavior.consistencyStreak 
-                     ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-lg scale-105' 
-                     : 'bg-slate-100 text-slate-300'
-                 }`}>
-              {week}
-            </div>
-          ))}
-        </div>
-
-        <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
-          <p className="text-sm text-green-700 font-medium text-center">
-            🎉 You are on a <span className="font-bold">{behavior.consistencyStreak}-week streak</span> of {behavior.streakType}!
-          </p>
-        </div>
-      </div>
+      
     </div>
   );
 };

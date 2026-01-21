@@ -5,68 +5,189 @@ import { TrendingUp, Target, Award, Lightbulb } from 'lucide-react';
 const PerformanceAnalytics = () => {
   const { analytics, user } = STUDENT_DATA;
 
+  // --- SVG Radar Chart Helpers ---
+  const radarRadius = 100;
+  const radarCenter = 120;
+  const angleSlice = (Math.PI * 2) / analytics.subjectStrengths.length;
+
+  const getCoordinates = (value, index) => {
+    const angle = index * angleSlice - Math.PI / 2;
+    const r = (value / 100) * radarRadius;
+    return {
+      x: radarCenter + r * Math.cos(angle),
+      y: radarCenter + r * Math.sin(angle),
+    };
+  };
+
+  const radarPoints = analytics.subjectStrengths
+    .map((s, i) => {
+      const { x, y } = getCoordinates(s.score, i);
+      return `${x},${y}`;
+    })
+    .join(' ');
+
+  const bgRadarPoints = analytics.subjectStrengths
+    .map((s, i) => {
+      const { x, y } = getCoordinates(100, i); // Full scale for background
+      return `${x},${y}`;
+    })
+    .join(' ');
+
+
+  // --- SVG Line Chart Helpers ---
+  const chartHeight = 200;
+  const chartWidth = 500;
+  const chartPadding = 40;
+  
+  // Scales
+  const getX = (index) => chartPadding + (index / (analytics.academicGrowth.length - 1)) * (chartWidth - 2 * chartPadding);
+  const getY = (value) => chartHeight - chartPadding - (value / 100) * (chartHeight - 2 * chartPadding);
+
+  const createPath = (key) => {
+      return analytics.academicGrowth.map((d, i) => {
+          return `${i === 0 ? 'M' : 'L'} ${getX(i)} ${getY(d[key])}`;
+      }).join(' ');
+  };
+
+
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-         <div className="bg-white p-6 rounded-3xl shadow-sm text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600"><Target /></div>
-            <h3 className="text-3xl font-extrabold text-slate-800">#{analytics.rank}</h3>
-            <p className="text-xs text-slate-400 font-bold uppercase mt-1">Class Rank</p>
-         </div>
-         <div className="bg-white p-6 rounded-3xl shadow-sm text-center">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600"><TrendingUp /></div>
-            <h3 className="text-3xl font-extrabold text-slate-800">{analytics.percentile}</h3>
-            <p className="text-xs text-slate-400 font-bold uppercase mt-1">Percentile</p>
-         </div>
-         <div className="col-span-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl p-8 text-white flex items-center justify-between relative overflow-hidden">
-            <div className="relative z-10">
-               <h3 className="text-xl font-bold mb-2">Keep Pushing, {user.name.split(' ')[0]}!</h3>
-               <p className="opacity-80 text-sm max-w-xs">Your Math scores have improved by 12% since last term. Consistent practice unlocks greatness.</p>
-            </div>
-            <Award size={80} className="text-white opacity-20 absolute -right-4 -bottom-4"/>
-         </div>
+      {/* 1. Academic Growth & Rank Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Class Rank Card */}
+          <div className="bg-white p-6 rounded-3xl shadow-sm text-center flex flex-col items-center justify-center">
+             <div className="relative mb-4">
+                 <div className="w-24 h-24 rounded-full border-4 border-indigo-100 flex items-center justify-center">
+                     <div className="text-4xl font-extrabold text-indigo-600">#{analytics.rank}</div>
+                 </div>
+                 <div className="absolute -bottom-2 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                     Top 10%
+                 </div>
+             </div>
+             <p className="text-slate-500 font-bold">Class Rank</p>
+             <p className="text-xs text-slate-400 mt-1">Out of {analytics.totalStudents} students</p>
+          </div>
+
+          {/* Academic Growth Line Chart */}
+          <div className="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm overflow-hidden">
+             <div className="flex justify-between items-center mb-6">
+                 <div>
+                    <h3 className="text-lg font-bold text-slate-800">Academic Growth</h3>
+                    <p className="text-xs text-slate-500">Subject-wise performance over terms</p>
+                 </div>
+                 <div className="flex gap-4 text-xs font-bold">
+                     <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500"></span> Math</div>
+                     <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500"></span> Science</div>
+                     <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-purple-500"></span> English</div>
+                 </div>
+             </div>
+             
+             <div className="w-full overflow-x-auto">
+                <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full min-w-[500px]">
+                    {/* Grid Lines */}
+                    {[20, 40, 60, 80, 100].map(val => (
+                        <line key={val} x1={chartPadding} y1={getY(val)} x2={chartWidth - chartPadding} y2={getY(val)} stroke="#e2e8f0" strokeDasharray="4"/>
+                    ))}
+                    
+                    {/* Lines */}
+                    <path d={createPath('math')} fill="none" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" />
+                    <path d={createPath('science')} fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" />
+                    <path d={createPath('english')} fill="none" stroke="#a855f7" strokeWidth="3" strokeLinecap="round" />
+
+                    {/* Dots */}
+                    {analytics.academicGrowth.map((d, i) => (
+                        <g key={i}>
+                            <circle cx={getX(i)} cy={getY(d.math)} r="4" fill="white" stroke="#3b82f6" strokeWidth="2" />
+                            <circle cx={getX(i)} cy={getY(d.science)} r="4" fill="white" stroke="#22c55e" strokeWidth="2" />
+                            <circle cx={getX(i)} cy={getY(d.english)} r="4" fill="white" stroke="#a855f7" strokeWidth="2" />
+                            {/* X-Axis Labels */}
+                            <text x={getX(i)} y={chartHeight - 10} textAnchor="middle" fontSize="10" fill="#64748b" fontWeight="bold">{d.term}</text>
+                        </g>
+                    ))}
+                </svg>
+             </div>
+          </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-         {/* Radar Chart Visual Mock */}
-         <div className="bg-white p-8 rounded-3xl shadow-sm flex flex-col items-center">
-            <h3 className="font-bold text-slate-800 mb-8 self-start">Subject Strength Analysis</h3>
-            <div className="relative w-64 h-64">
-               {/* Just a decorative SVG to mimic radar chart */}
-               <svg viewBox="0 0 100 100" className="w-full h-full text-indigo-500 opacity-20">
-                  <polygon points="50,10 90,40 70,90 30,90 10,40" fill="currentColor" />
+         {/* 2. Strength & Weakness Radar Chart */}
+         <div className="bg-white p-6 rounded-3xl shadow-sm flex flex-col items-center">
+            <h3 className="font-bold text-slate-800 mb-2 self-start">Subject Strength Radar</h3>
+            <div className="relative w-64 h-64 my-4">
+               <svg viewBox="0 0 240 240" className="w-full h-full">
+                  {/* Background Polygon */}
+                  <polygon points={bgRadarPoints} fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1" />
+                  {/* Grid Levels */}
+                  {[0.25, 0.5, 0.75].map(scale => (
+                      <polygon 
+                        key={scale}
+                        points={analytics.subjectStrengths.map((s, i) => { const {x,y} = getCoordinates(100*scale, i); return `${x},${y}`; }).join(' ')} 
+                        fill="none" 
+                        stroke="#cbd5e1" 
+                        strokeWidth="0.5" 
+                        strokeDasharray="4"
+                      />
+                  ))}
+                  
+                  {/* Data Polygon */}
+                  <polygon points={radarPoints} fill="rgba(99, 102, 241, 0.2)" stroke="#6366f1" strokeWidth="2" />
+                  
+                  {/* Labels */}
+                  {analytics.subjectStrengths.map((s, i) => {
+                      const { x, y } = getCoordinates(115, i);
+                      return (
+                          <text 
+                            key={s.subject} 
+                            x={x} 
+                            y={y} 
+                            textAnchor="middle" 
+                            alignmentBaseline="middle" 
+                            fontSize="10" 
+                            fontWeight="bold" 
+                            fill="#64748b"
+                          >
+                            {s.subject}
+                          </text>
+                      );
+                  })}
                </svg>
-               <svg viewBox="0 0 100 100" className="w-full h-full text-indigo-600 absolute top-0 left-0">
-                  <polygon points="50,15 85,45 65,85 35,85 15,45" fill="rgba(79, 70, 229, 0.4)" stroke="currentColor" strokeWidth="2" />
-               </svg>
-               {/* Labels */}
-               <span className="absolute top-0 left-1/2 -translate-x-1/2 text-xs font-bold text-slate-500">Math</span>
-               <span className="absolute bottom-5 right-5 text-xs font-bold text-slate-500">History</span>
-               <span className="absolute bottom-5 left-5 text-xs font-bold text-slate-500">English</span>
             </div>
+            <p className="text-xs text-slate-500 text-center italic">Visualization of performance across core disciplines.</p>
          </div>
 
-         {/* AI Tips */}
-         <div>
-            <div className="bg-gradient-to-br from-pink-500 to-rose-500 rounded-3xl p-6 text-white shadow-lg mb-6">
+         {/* 3. AI Study Tips */}
+         <div className="space-y-6">
+            <div className="bg-gradient-to-br from-violet-500 to-fuchsia-600 rounded-3xl p-6 text-white shadow-xl">
                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 bg-white/20 rounded-lg"><Lightbulb size={20}/></div>
-                  <h3 className="font-bold">AI Study Companion</h3>
+                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm"><Lightbulb size={24}/></div>
+                  <div>
+                      <h3 className="font-bold text-lg">AI Study Companion</h3>
+                      <p className="text-xs opacity-80">Personalized insights based on your gaps</p>
+                  </div>
                </div>
-               <p className="text-sm opacity-90 mb-4">"Based on your recent tests, focusing on <strong>Organic Chemistry</strong> and <strong>Calculus Limits</strong> will boost your Science grade significantly."</p>
-               <button className="w-full py-3 bg-white text-pink-600 font-bold rounded-xl text-xs hover:bg-slate-100">Get Daily Study Plan</button>
+               
+               <div className="space-y-4">
+                   {analytics.aiStudyTips.map(tip => (
+                       <div key={tip.id} className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
+                           <div className="flex justify-between items-start mb-1">
+                               <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-lg bg-white/20 text-white`}>
+                                   {tip.subject} • {tip.topic}
+                               </span>
+                           </div>
+                           <p className="text-sm font-medium mb-3 leading-relaxed">"{tip.tip}"</p>
+                           <button className="w-full py-2 bg-white text-violet-600 font-bold rounded-lg text-xs hover:bg-slate-50 transition-colors shadow-sm">
+                               {tip.action} →
+                           </button>
+                       </div>
+                   ))}
+               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-3xl shadow-sm">
-               <h4 className="font-bold text-slate-700 mb-4">Recommended Actions</h4>
-               <ul className="space-y-3">
-                  <li className="flex items-center gap-3 text-sm text-slate-600">
-                     <span className="w-2 h-2 bg-green-500 rounded-full"></span> Review Chapter 4: Calculus
-                  </li>
-                  <li className="flex items-center gap-3 text-sm text-slate-600">
-                     <span className="w-2 h-2 bg-yellow-500 rounded-full"></span> Practice History Dates Quiz
-                  </li>
-               </ul>
+            <div className="bg-orange-50 border border-orange-100 p-6 rounded-3xl">
+                <h4 className="font-bold text-orange-800 mb-2">Focus Area</h4>
+                <p className="text-sm text-orange-700">
+                    Your <strong>Chemistry</strong> score (78%) is slightly below your average. Consistent revision of organic compounds is recommended this week.
+                </p>
             </div>
          </div>
       </div>

@@ -505,17 +505,101 @@ export const STUDENT_DATA = {
 
   // Screen 9: Analytics
   analytics: {
-    strength: { math: 90, science: 85, english: 75, history: 60, sports: 95 },
-    rank: 5,
-    percentile: "92nd",
+    gpa: 3.8,
+    attendance: 98, // percentage
+    assignmentsCompleted: 45,
+    totalAssignments: 50,
+    rank: 4,
+    totalStudents: 42,
+    percentile: "Top 10%",
+    academicGrowth: [
+      { term: "Term 1", math: 75, science: 70, english: 80 },
+      { term: "Term 2", math: 82, science: 75, english: 82 },
+      { term: "Term 3", math: 88, science: 85, english: 85 },
+      { term: "Term 4", math: 92, science: 88, english: 88 },
+    ],
+    subjectStrengths: [
+      { subject: "Math", score: 92, fullMark: 100 },
+      { subject: "Physics", score: 85, fullMark: 100 },
+      { subject: "Chem", score: 78, fullMark: 100 },
+      { subject: "Bio", score: 88, fullMark: 100 },
+      { subject: "Eng", score: 90, fullMark: 100 },
+      { subject: "Hist", score: 80, fullMark: 100 },
+    ],
+    aiStudyTips: [
+      {
+        id: 1,
+        subject: "Physics",
+        topic: "Optics",
+        tip: "Focus on ray diagrams. Your practical scores are high, but theory needs review.",
+        action: "Review Chapter 4",
+        color: "blue",
+      },
+      {
+        id: 2,
+        subject: "History",
+        topic: "World War II",
+        tip: "Create a timeline for key events. Visualizing dates will improve retention.",
+        action: "View Timeline",
+        color: "orange",
+      },
+    ],
   },
 
   // Screen 10: Fees
   fees: {
     totalDue: 1500,
+    totalPaid: 4500,
     dueDate: "2026-01-31",
     status: "Pending",
-    history: [{ id: 101, date: "2025-09-01", amount: 1500, status: "Paid" }],
+    qrCode:
+      "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=school@bank&pn=KrimsonHigh&am=1500&cu=INR", // Mock QR
+    upcomingDues: [
+      {
+        id: 1,
+        title: "Term 2 Tuition",
+        amount: 1500,
+        date: "2026-01-31",
+        type: "Tuition",
+      },
+      {
+        id: 2,
+        title: "Lab Maintenance",
+        amount: 500,
+        date: "2026-02-15",
+        type: "Lab",
+      },
+    ],
+    history: [
+      {
+        id: 104,
+        date: "2025-09-01",
+        amount: 1500,
+        status: "Paid",
+        method: "Online",
+      },
+      {
+        id: 103,
+        date: "2025-06-01",
+        amount: 1500,
+        status: "Paid",
+        method: "Bank Transfer",
+      },
+      {
+        id: 102,
+        date: "2025-03-01",
+        amount: 750,
+        status: "Paid",
+        method: "Cash",
+      },
+      {
+        id: 101,
+        date: "2025-01-01",
+        amount: 750,
+        status: "Paid",
+        method: "Online",
+      },
+    ],
   },
 
   // Screen 11: Behavior
