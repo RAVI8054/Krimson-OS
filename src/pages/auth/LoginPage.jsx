@@ -89,7 +89,7 @@ const LoginPage = () => {
               <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-slate-800" />
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 tracking-tight">
-              Krimson OS
+              Krimson SSO
             </h1>
             <p className="text-slate-700 text-sm sm:text-base lg:text-lg">
               Centralized School Ecosystem
