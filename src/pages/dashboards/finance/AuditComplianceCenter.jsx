@@ -17,8 +17,17 @@ import {
  * Output: Audit-ready financial summary linked to Principal and Admin dashboards
  */
 
+import Pagination from '../../../components/common/Pagination';
+
 const AuditComplianceCenter = () => {
   const [selectedTab, setSelectedTab] = useState('documents'); // documents, remarks, discrepancies
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  // Reset page on tab change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedTab]);
 
   // Static data - ready for API integration
   const stats = [
@@ -386,7 +395,7 @@ const AuditComplianceCenter = () => {
             </div>
 
             <div className="space-y-4">
-              {documents.map((doc) => (
+              {documents.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((doc) => (
                 <div key={doc.id} className="p-5 rounded-2xl bg-gradient-to-br from-white to-gray-50 border border-gray-200 hover:shadow-lg transition-all">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     <div className="flex-1">
@@ -439,6 +448,14 @@ const AuditComplianceCenter = () => {
                 </div>
               ))}
             </div>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(documents.length / itemsPerPage)}
+              onPageChange={setCurrentPage}
+              itemsPerPage={itemsPerPage}
+              totalItems={documents.length}
+            />
           </div>
         )}
 
@@ -456,7 +473,7 @@ const AuditComplianceCenter = () => {
             </div>
 
             <div className="space-y-4">
-              {auditRemarks.map((remark) => (
+              {auditRemarks.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((remark) => (
                 <div key={remark.id} className="p-6 rounded-2xl bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 hover:shadow-lg transition-all">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
@@ -506,6 +523,14 @@ const AuditComplianceCenter = () => {
                 </div>
               ))}
             </div>
+            
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(auditRemarks.length / itemsPerPage)}
+              onPageChange={setCurrentPage}
+              itemsPerPage={itemsPerPage}
+              totalItems={auditRemarks.length}
+            />
           </div>
         )}
 
@@ -525,7 +550,7 @@ const AuditComplianceCenter = () => {
             </div>
 
             <div className="space-y-4">
-              {discrepancies.map((disc) => (
+              {discrepancies.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((disc) => (
                 <div key={disc.id} className="p-6 rounded-2xl bg-gradient-to-br from-white to-gray-50 border-2 border-red-100 hover:shadow-lg transition-all">
                   <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                     <div className="flex-1">
@@ -593,6 +618,14 @@ const AuditComplianceCenter = () => {
                 </div>
               ))}
             </div>
+            
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(discrepancies.length / itemsPerPage)}
+              onPageChange={setCurrentPage}
+              itemsPerPage={itemsPerPage}
+              totalItems={discrepancies.length}
+            />
           </div>
         )}
 

@@ -104,8 +104,8 @@ const AdmissionsView = () => {
   const getStatusColor = (status) => {
     switch(status) {
       case 'Completed': return { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-300' };
-      case 'Verification': return { bg: 'bg-yellow-100', text: 'text-yellow-700', border: 'border-yellow-300' };
-      case 'Pending': return { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-300' };
+      case 'Verification': return { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-300' };
+      case 'Pending': return { bg: 'bg-yellow-100', text: 'text-yellow-700', border: 'border-yellow-300' };
       case 'Inquiry': return { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-300' };
       default: return { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-300' };
     }

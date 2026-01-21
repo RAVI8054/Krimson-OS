@@ -18,8 +18,12 @@ import {
  * Design: Clean grid layout with colored financial indicators (Green = Paid, Red = Due)
  */
 
+import Pagination from '../../../components/common/Pagination';
+
 const FinanceDashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('month'); // month, term, year
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Static data - ready for API integration
   const feesCollected = {
@@ -444,7 +448,7 @@ const FinanceDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {recentTransactions.map((transaction) => (
+                {recentTransactions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((transaction) => (
                   <tr key={transaction.id} className="border-b border-gray-100 hover:bg-blue-50/50 transition-colors">
                     <td className="p-4">
                       <span className="text-xs font-mono text-gray-600">{transaction.id}</span>
@@ -487,6 +491,14 @@ const FinanceDashboard = () => {
                 ))}
               </tbody>
             </table>
+            
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(recentTransactions.length / itemsPerPage)}
+              onPageChange={setCurrentPage}
+              itemsPerPage={itemsPerPage}
+              totalItems={recentTransactions.length}
+            />
           </div>
         </div>
 

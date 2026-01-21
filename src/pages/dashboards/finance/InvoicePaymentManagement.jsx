@@ -18,12 +18,16 @@ import {
  * Design: Table view with filters — Date | Grade | Payment Mode | Status
  */
 
+import Pagination from '../../../components/common/Pagination';
+
 const InvoicePaymentManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterGrade, setFilterGrade] = useState('all');
   const [filterPaymentMode, setFilterPaymentMode] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterDateRange, setFilterDateRange] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Static data - ready for API integration
   const stats = [
@@ -383,7 +387,7 @@ const InvoicePaymentManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredInvoices.map((invoice) => (
+                {filteredInvoices.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((invoice) => (
                   <tr key={invoice.invoiceId} className="border-b border-gray-100 hover:bg-blue-50/50 transition-colors">
                     <td className="p-4">
                       <div className="flex items-center gap-2">
@@ -454,6 +458,14 @@ const InvoicePaymentManagement = () => {
                 ))}
               </tbody>
             </table>
+            
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(filteredInvoices.length / itemsPerPage)}
+              onPageChange={setCurrentPage}
+              itemsPerPage={itemsPerPage}
+              totalItems={filteredInvoices.length}
+            />
           </div>
 
           {/* Action Buttons */}

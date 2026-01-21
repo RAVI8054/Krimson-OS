@@ -18,9 +18,13 @@ import {
  * Integration: Reporting Engine + Analytics API
  */
 
+import Pagination from '../../../components/common/Pagination';
+
 const FinancialReports = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [selectedReport, setSelectedReport] = useState('collection');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
 
   // Static data - ready for API integration
   const stats = [
@@ -189,7 +193,7 @@ const FinancialReports = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
-            {availableReports.map((report) => (
+            {availableReports.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((report) => (
               <div key={report.id} className="p-6 rounded-2xl bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all">
                 <div className="flex items-start justify-between mb-4">
                   <div className={`p-3 rounded-xl bg-gradient-to-br ${report.color}`}>
@@ -240,6 +244,14 @@ const FinancialReports = () => {
               </div>
             ))}
           </div>
+          
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(availableReports.length / itemsPerPage)}
+            onPageChange={setCurrentPage}
+            itemsPerPage={itemsPerPage}
+            totalItems={availableReports.length}
+          />
         </div>
 
         {/* Collection Summary Chart */}

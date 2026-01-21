@@ -10,7 +10,7 @@ import ExamDashboard from "../pages/dashboards/student/ExamDashboard";
 import GradesReport from "../pages/dashboards/student/GradesReport";
 import CommunicationHub from "../pages/dashboards/student/CommunicationHub";
 import PerformanceAnalytics from "../pages/dashboards/student/PerformanceAnalytics";
-import FeeStatus from "../pages/dashboards/student/FeeStatus";
+
 import BehaviorLog from "../pages/dashboards/student/BehaviorLog";
 import ParentLinkDashboard from "../pages/dashboards/student/ParentLinkDashboard";
 import CoCurricularActivities from "../pages/dashboards/student/CoCurricularActivities";
@@ -31,7 +31,7 @@ const StudentRoutes = () => {
            <Route path="grades" element={<GradesReport />} />
            <Route path="communication" element={<CommunicationHub />} />
            <Route path="analytics" element={<PerformanceAnalytics />} />
-           <Route path="fees" element={<FeeStatus />} />
+         
            <Route path="behavior" element={<BehaviorLog />} />
            <Route path="profile" element={<ProfileAndGoals />} />
            <Route path="parentlink" element={<ParentLinkDashboard />} />

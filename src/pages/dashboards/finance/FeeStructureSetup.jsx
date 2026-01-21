@@ -17,9 +17,13 @@ import {
  * Outcome: Ensures consistent billing across grades and academic years
  */
 
+import Pagination from '../../../components/common/Pagination';
+
 const FeeStructureSetup = () => {
   const [selectedGrade, setSelectedGrade] = useState('all');
   const [selectedTerm, setSelectedTerm] = useState('term1');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3; // Showing just 3 usually fits well in grid
 
   // Static data - ready for API integration
   const stats = [
@@ -330,7 +334,7 @@ const FeeStructureSetup = () => {
           </div>
 
           <div className="space-y-4">
-            {feeSchedules.map((schedule, index) => {
+            {feeSchedules.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((schedule, index) => {
               const termData = schedule.termFees[selectedTerm];
               
               return (
@@ -393,6 +397,14 @@ const FeeStructureSetup = () => {
               );
             })}
           </div>
+          
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(feeSchedules.length / itemsPerPage)}
+            onPageChange={setCurrentPage}
+            itemsPerPage={itemsPerPage}
+            totalItems={feeSchedules.length}
+          />
         </div>
 
         {/* Scholarships & Concessions */}

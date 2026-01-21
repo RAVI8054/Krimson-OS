@@ -17,10 +17,14 @@ import {
  * Output: Generates actionable defaulter reports for each class teacher and admin
  */
 
+import Pagination from '../../../components/common/Pagination';
+
 const FeeCollectionTracker = () => {
   const [sortBy, setSortBy] = useState('amount'); // student, class, amount
   const [selectedGrade, setSelectedGrade] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Static data - ready for API integration
   const stats = [
@@ -349,7 +353,7 @@ const FeeCollectionTracker = () => {
           </div>
 
           <div className="space-y-4">
-            {sortedDefaulters.map((defaulter) => (
+            {sortedDefaulters.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((defaulter) => (
               <div key={defaulter.id} className="p-6 rounded-2xl bg-gradient-to-br from-white to-gray-50 border-2 border-red-100 hover:border-red-200 hover:shadow-lg transition-all">
                 <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                   <div className="flex-1">
@@ -429,6 +433,14 @@ const FeeCollectionTracker = () => {
               </div>
             ))}
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(sortedDefaulters.length / itemsPerPage)}
+            onPageChange={setCurrentPage}
+            itemsPerPage={itemsPerPage}
+            totalItems={sortedDefaulters.length}
+          />
 
           {/* Bulk Actions */}
           <div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-gray-200">

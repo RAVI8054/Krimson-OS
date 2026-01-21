@@ -58,14 +58,14 @@ const PerformanceAnalytics = () => {
           <div className="bg-white p-6 rounded-3xl shadow-sm text-center flex flex-col items-center justify-center">
              <div className="relative mb-4">
                  <div className="w-24 h-24 rounded-full border-4 border-indigo-100 flex items-center justify-center">
-                     <div className="text-4xl font-extrabold text-indigo-600">#{analytics.rank}</div>
+                     <div className="text-4xl font-extrabold text-indigo-600">{analytics.grade}</div>
                  </div>
                  <div className="absolute -bottom-2 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                     Top 10%
+                     {analytics.percentile}
                  </div>
              </div>
-             <p className="text-slate-500 font-bold">Class Rank</p>
-             <p className="text-xs text-slate-400 mt-1">Out of {analytics.totalStudents} students</p>
+             <p className="text-slate-500 font-bold">Overall Grade</p>
+             <p className="text-xs text-slate-400 mt-1">GPA: {analytics.gpa}</p>
           </div>
 
           {/* Academic Growth Line Chart */}

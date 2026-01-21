@@ -17,9 +17,18 @@ import {
  * Outcome: Fully transparent transaction correction process
  */
 
+import Pagination from '../../../components/common/Pagination';
+
 const RefundsLedgerControl = () => {
   const [selectedTab, setSelectedTab] = useState('pending'); // pending, approved, rejected
   const [selectedMonth, setSelectedMonth] = useState('january');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  // Reset page on tab change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedTab]);
 
   // Static data - ready for API integration
   const stats = [
@@ -326,7 +335,7 @@ const RefundsLedgerControl = () => {
           </div>
 
           <div className="space-y-4">
-            {filteredRequests.map((request) => (
+            {filteredRequests.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((request) => (
               <div key={request.id} className="p-6 rounded-2xl bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 hover:shadow-lg transition-all">
                 <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                   <div className="flex-1">
@@ -431,6 +440,14 @@ const RefundsLedgerControl = () => {
               </div>
             ))}
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(filteredRequests.length / itemsPerPage)}
+            onPageChange={setCurrentPage}
+            itemsPerPage={itemsPerPage}
+            totalItems={filteredRequests.length}
+          />
         </div>
 
         {/* Adjustment Logs (Credit/Debit Notes) */}
@@ -469,7 +486,7 @@ const RefundsLedgerControl = () => {
                 </tr>
               </thead>
               <tbody>
-                {adjustmentLogs.map((log) => (
+                {adjustmentLogs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((log) => (
                   <tr key={log.id} className="border-b border-gray-100 hover:bg-blue-50/50 transition-colors">
                     <td className="p-4">
                       <span className="text-sm font-mono text-blue-600">{log.id}</span>
@@ -516,6 +533,14 @@ const RefundsLedgerControl = () => {
                 ))}
               </tbody>
             </table>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(adjustmentLogs.length / itemsPerPage)}
+              onPageChange={setCurrentPage}
+              itemsPerPage={itemsPerPage}
+              totalItems={adjustmentLogs.length}
+            />
           </div>
         </div>
 

@@ -506,6 +506,7 @@ export const STUDENT_DATA = {
   // Screen 9: Analytics
   analytics: {
     gpa: 3.8,
+    grade: "A",
     attendance: 98, // percentage
     assignmentsCompleted: 45,
     totalAssignments: 50,
