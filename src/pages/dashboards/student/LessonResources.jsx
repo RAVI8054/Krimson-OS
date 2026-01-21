@@ -5,22 +5,17 @@ import { Search, FileText, Video, Beaker, Download, BookOpen, Clock, Filter, X, 
 const LessonResources = () => {
   const { resources } = STUDENT_DATA;
   const [selectedSubject, setSelectedSubject] = useState('All');
+  const [selectedTopic, setSelectedTopic] = useState('All');
+  const [selectedWeek, setSelectedWeek] = useState('All');
   const [selectedType, setSelectedType] = useState('All');
 
-  // Extended mock resources with more variety
-  const allResources = [
-    { id: 1, subject: 'MATH', title: 'Calculus Basics', type: 'Document', chapter: 'Chapter 4', source: 'NCERT', saved: false, read: false },
-    { id: 2, subject: 'HISTORY', title: 'World War II Notes', type: 'Document', chapter: 'Chapter 4', source: 'NCERT', saved: true, read: false },
-    { id: 3, subject: 'PHYSICS', title: 'Gravity Experiment', type: 'Experiment', chapter: 'Chapter 2', source: 'Lab Manual', saved: false, read: true },
-    { id: 4, subject: 'CHEMISTRY', title: 'Chemical Reactions', type: 'Video', chapter: 'Chapter 5', source: 'Khan Academy', saved: true, read: false },
-    { id: 5, subject: 'BIOLOGY', title: 'Cell Structure', type: 'Document', chapter: 'Chapter 1', source: 'NCERT', saved: false, read: false },
-    { id: 6, subject: 'MATH', title: 'Algebra Introduction', type: 'Video', chapter: 'Chapter 3', source: 'MIT OCW', saved: false, read: true },
-  ];
+  const [resourceStates, setResourceStates] = useState(resources);
 
-  const [resourceStates, setResourceStates] = useState(allResources);
-
-  const subjects = ['All', 'MATH', 'PHYSICS', 'CHEMISTRY', 'BIOLOGY', 'HISTORY'];
-  const types = ['All', 'Document', 'Video', 'Experiment'];
+  // Extract unique values for filters
+  const subjects = ['All', ...new Set(resources.map(r => r.subject))];
+  const topics = ['All', ...new Set(resources.map(r => r.topic))];
+  const weeks = ['All', ...new Set(resources.map(r => r.week))];
+  const types = ['All', ...new Set(resources.map(r => r.type))];
 
   const toggleSaved = (id) => {
     setResourceStates(prev => prev.map(r => r.id === id ? {...r, saved: !r.saved} : r));
@@ -32,8 +27,10 @@ const LessonResources = () => {
 
   const filteredResources = resourceStates.filter(res => {
     const matchSubject = selectedSubject === 'All' || res.subject === selectedSubject;
+    const matchTopic = selectedTopic === 'All' || res.topic === selectedTopic;
+    const matchWeek = selectedWeek === 'All' || res.week === selectedWeek;
     const matchType = selectedType === 'All' || res.type === selectedType;
-    return matchSubject && matchType;
+    return matchSubject && matchTopic && matchWeek && matchType;
   });
 
   const getIcon = (type) => {
@@ -87,12 +84,27 @@ const LessonResources = () => {
 
       {/* Filters Section */}
       <div className="bg-white p-6 rounded-3xl shadow-lg border border-slate-100">
-        <div className="flex items-center gap-3 mb-4">
-          <Filter size={20} className="text-blue-600" />
-          <h3 className="font-bold text-slate-800">Filters</h3>
+        <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+                <Filter size={20} className="text-blue-600" />
+                <h3 className="font-bold text-slate-800">Filters</h3>
+            </div>
+            {(selectedSubject !== 'All' || selectedTopic !== 'All' || selectedWeek !== 'All' || selectedType !== 'All') && (
+                <button 
+                    onClick={() => {
+                        setSelectedSubject('All');
+                        setSelectedTopic('All');
+                        setSelectedWeek('All');
+                        setSelectedType('All');
+                    }}
+                    className="flex items-center gap-1 text-xs font-bold text-red-500 hover:text-red-600"
+                >
+                    <X size={14}/> Clear Filters
+                </button>
+            )}
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* Subject Filter */}
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase mb-2">Subject</p>
@@ -113,6 +125,36 @@ const LessonResources = () => {
             </div>
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               {/* Topic Filter */}
+               <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase mb-2">Topic</p>
+                  <select 
+                     value={selectedTopic}
+                     onChange={(e) => setSelectedTopic(e.target.value)}
+                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 outline-none focus:border-blue-400 transition-all"
+                  >
+                     {topics.map(topic => (
+                        <option key={topic} value={topic}>{topic}</option>
+                     ))}
+                  </select>
+               </div>
+
+               {/* Week Filter */}
+               <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase mb-2">Week</p>
+                  <select 
+                     value={selectedWeek}
+                     onChange={(e) => setSelectedWeek(e.target.value)}
+                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 outline-none focus:border-blue-400 transition-all"
+                  >
+                     {weeks.map(week => (
+                        <option key={week} value={week}>{week}</option>
+                     ))}
+                  </select>
+               </div>
+          </div>
+
           {/* Type Filter */}
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase mb-2">Resource Type</p>
@@ -127,9 +169,9 @@ const LessonResources = () => {
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
-                  {type === 'Document' && <FileText size={14} />}
                   {type === 'Video' && <Video size={14} />}
                   {type === 'Experiment' && <Beaker size={14} />}
+                  {type === 'Document' && <FileText size={14} />}
                   {type}
                 </button>
               ))}
