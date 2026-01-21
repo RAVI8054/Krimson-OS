@@ -383,33 +383,7 @@ const FinanceSnapshot = () => {
         </div>
       </div>
 
-      {/* Integration Info */}
-      <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-100">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-green-500 rounded-xl">
-            <DollarSign className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h4 className="font-bold text-green-900 mb-2">Finance API & Payment Gateway Integration</h4>
-            <p className="text-sm text-green-800 mb-3">
-              All financial data is synchronized with the Finance API and Payment Gateway in real-time. Monthly 
-              summaries are auto-generated in PDF format and can be downloaded for board meetings and compliance 
-              purposes. Payment reminders are automatically sent to parents for overdue fees.
-            </p>
-            <div className="flex gap-3">
-              <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-bold transition-colors flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                Download Monthly PDF
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-              <button className="px-4 py-2 bg-white hover:bg-slate-50 text-green-700 rounded-lg text-sm font-bold transition-colors border border-green-200 flex items-center gap-2">
-                Payment Settings
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };

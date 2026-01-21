@@ -222,6 +222,7 @@ const AttendanceSummary = () => {
             <Calendar className="text-blue-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-blue-600">{overallStats.currentMonth}%</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-green-200 bg-white hover:shadow-lg hover:scale-105 transition-all duration-300">
@@ -230,6 +231,7 @@ const AttendanceSummary = () => {
             <CheckCircle className="text-green-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-green-600">{overallStats.avgAttendance}%</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-purple-200 bg-white hover:shadow-lg hover:scale-105 transition-all duration-300">
@@ -238,6 +240,7 @@ const AttendanceSummary = () => {
             <Users className="text-purple-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-purple-600">{overallStats.totalStudents}</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-red-200 bg-white hover:shadow-lg hover:scale-105 transition-all duration-300">
@@ -246,6 +249,7 @@ const AttendanceSummary = () => {
             <AlertTriangle className="text-red-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-red-600">{overallStats.atRiskStudents}</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
       </div>
 

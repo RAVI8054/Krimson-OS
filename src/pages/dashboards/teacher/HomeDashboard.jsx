@@ -52,6 +52,7 @@ const HomeDashboard = () => {
         <div className="absolute right-0 top-0 w-48 h-48 md:w-64 md:h-64 bg-white opacity-10 rounded-full blur-3xl -mr-16 -mt-16"></div>
         <div className="absolute bottom-0 left-0 w-32 h-32 md:w-40 md:h-40 bg-pink-300 opacity-20 rounded-full blur-3xl -ml-10 -mb-10"></div>
         
+
         <div className="relative z-10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
@@ -65,7 +66,7 @@ const HomeDashboard = () => {
                 {formatDate(currentTime)} • {formatTime(currentTime)}
               </p>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <div className="px-4 py-2 bg-white/20 backdrop-blur-md rounded-xl">
                 <p className="text-xs opacity-80">Today's Classes</p>
@@ -86,6 +87,7 @@ const HomeDashboard = () => {
           <h3 className="text-2xl md:text-3xl font-bold text-slate-800 group-hover:text-cyan-600 transition-colors">
             {dashboard.classesToday.length}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
           <p className="text-xs text-cyan-600 font-semibold mt-1">Scheduled Sessions</p>
         </div>
 

@@ -265,6 +265,7 @@ const TestManager = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${filterStatus === 'scheduled' ? 'text-white' : 'text-slate-800'}`}>
             {stats.scheduled}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -284,6 +285,7 @@ const TestManager = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${filterStatus === 'live' ? 'text-white' : 'text-green-600'}`}>
             {stats.live}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -303,6 +305,7 @@ const TestManager = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${filterStatus === 'grading' ? 'text-white' : 'text-orange-600'}`}>
             {stats.grading}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-purple-200 bg-white hover:border-purple-300 hover:shadow-lg hover:scale-105 transition-all duration-300">
@@ -311,6 +314,7 @@ const TestManager = () => {
             <FileText className="text-purple-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-purple-600">{stats.total}</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
       </div>
 

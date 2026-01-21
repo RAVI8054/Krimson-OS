@@ -104,6 +104,7 @@ const LessonPlanning = () => {
             <BookOpen className="text-cyan-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-slate-800">{totalLessons}</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-green-400 hover:shadow-lg hover:scale-105 transition-all duration-300">
@@ -112,6 +113,7 @@ const LessonPlanning = () => {
             <CheckCircle className="text-green-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-green-600">{countByStatus('Taught')}</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-orange-400 hover:shadow-lg hover:scale-105 transition-all duration-300">
@@ -120,6 +122,7 @@ const LessonPlanning = () => {
             <Clock className="text-orange-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-orange-600">{countByStatus('Pending')}</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="bg-white p-4 md:p-6 rounded-3xl shadow-sm border-l-4 border-purple-400 hover:shadow-lg hover:scale-105 transition-all duration-300">
@@ -130,6 +133,7 @@ const LessonPlanning = () => {
           <h3 className="text-2xl md:text-3xl font-bold text-purple-600">
             {Math.round((countByStatus('Taught') / totalLessons) * 100)}%
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
       </div>
 

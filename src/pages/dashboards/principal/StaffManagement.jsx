@@ -331,33 +331,7 @@ const StaffManagement = () => {
         </div>
       </div>
 
-      {/* Integration Info */}
-      <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border border-indigo-100">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-indigo-500 rounded-xl">
-            <Users className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h4 className="font-bold text-indigo-900 mb-2">HR Module & Attendance API Integration</h4>
-            <p className="text-sm text-indigo-800 mb-3">
-              Staff data is synchronized with the HR Module in real-time, including attendance, leave requests, and 
-              substitution approvals. The "Send Circular" feature broadcasts messages to all departments simultaneously 
-              via the Messaging API. All attendance records are timestamped and archived for compliance purposes.
-            </p>
-            <div className="flex gap-3">
-              <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-bold transition-colors flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                Download Staff Report
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-              <button className="px-4 py-2 bg-white hover:bg-slate-50 text-indigo-700 rounded-lg text-sm font-bold transition-colors border border-indigo-200 flex items-center gap-2">
-                HR Settings
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };

@@ -327,34 +327,7 @@ const StrategicPlanning = () => {
         </div>
       </div>
 
-      {/* Integration & Outcome Summary */}
-      <div className="bg-gradient-to-br from-slate-50 to-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="text-cyan-600" size={16} />
-              </div>
-              <h4 className="font-bold text-slate-800">Integration</h4>
-            </div>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              This dashboard integrates data from the <span className="font-semibold text-blue-600">Analytics Engine</span> and <span className="font-semibold text-purple-600">Planning Module</span> to provide real-time insights into institutional performance.
-            </p>
-          </div>
-          
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                <CheckCircle className="text-green-600" size={16} />
-              </div>
-              <h4 className="font-bold text-slate-800">Outcome</h4>
-            </div>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Enables <span className="font-semibold text-green-600">data-driven decision-making</span> and comprehensive <span className="font-semibold text-indigo-600">institutional growth tracking</span> across all key performance areas.
-            </p>
-          </div>
-        </div>
-      </div>
+     
     </div>
   );
 };

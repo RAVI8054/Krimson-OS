@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { 
   User, Lock, Bell, Layout, Shield, FileText, 
   Save, Download, CheckCircle, AlertCircle, Camera,
-  UserCheck, Key, FileSignature, Clock, Settings, Users
+  UserCheck, Key, FileSignature, Clock, Settings, Users,
+  Briefcase, Award, Star, Upload, GraduationCap, Medal, LineChart
 } from 'lucide-react';
 
 import { authService } from '../../services/authService';
@@ -146,6 +147,7 @@ const ProfilePage = ({ roleOverride }) => {
                    { id: 'preferences', label: 'Preferences', icon: <Bell size={18} /> },
                    { id: 'permissions', label: 'Permissions', icon: <Shield size={18} /> },
                    ...(user.role === 'Principal' ? [{ id: 'credentials', label: 'Credentials & Access', icon: <FileSignature size={18} /> }] : []),
+                   ...(user.role === 'Teacher' ? [{ id: 'portfolio', label: 'Professional Portfolio', icon: <Briefcase size={18} /> }] : []),
                    { id: 'activity', label: 'Activity Log', icon: <FileText size={18} /> },
                  ].map(tab => (
                    <button
@@ -363,6 +365,7 @@ const ProfilePage = ({ roleOverride }) => {
             {/* CREDENTIALS & ACCESS TAB (Principal Only) */}
             {activeTab === 'credentials' && user.role === 'Principal' && (
               <div className="space-y-6 animate-fade-in">
+                {/* ... existing principal content ... */}
                 {/* Digital Signature Management */}
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 md:p-8 rounded-2xl border-2 border-blue-200 shadow-lg">
                   <div className="flex items-center gap-3 mb-6">
@@ -512,6 +515,179 @@ const ProfilePage = ({ roleOverride }) => {
                 </div>
               </div>
             )}
+
+            {/* PROFESSIONAL PORTFOLIO TAB (Teacher Only) */}
+            {activeTab === 'portfolio' && user.role === 'Teacher' && (
+               <div className="space-y-6 animate-fade-in">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                     <div>
+                        <h2 className="text-xl font-bold text-slate-800">Professional Portfolio</h2>
+                        <p className="text-slate-500 text-sm">Manage your achievements, credentials, and growth milestones.</p>
+                     </div>
+                     <button className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl text-sm font-bold shadow-lg hover:shadow-xl hover:from-cyan-600 hover:to-blue-600 transition-all flex items-center gap-2">
+                        <Download size={18} />
+                        Export Digital Portfolio
+                     </button>
+                  </div>
+
+                  {/* Top Stats Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                     <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                        <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                           <Award size={24} />
+                        </div>
+                        <div>
+                           <p className="text-2xl font-bold text-slate-800">12</p>
+                           <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Certifications</p>
+                        </div>
+                     </div>
+                     <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                        <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
+                           <GraduationCap size={24} />
+                        </div>
+                        <div>
+                           <p className="text-2xl font-bold text-slate-800">PhD</p>
+                           <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Education Level</p>
+                        </div>
+                     </div>
+                     <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                        <div className="p-3 bg-pink-50 text-pink-600 rounded-xl">
+                           <Star size={24} />
+                        </div>
+                        <div>
+                           <p className="text-2xl font-bold text-slate-800">4.8</p>
+                           <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Avg Rating</p>
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Main Content Areas */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                     
+                     {/* Left Column: Subjects & Credentials */}
+                     <div className="space-y-6">
+                        {/* Subjects Taught */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                           <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                              <Briefcase size={18} className="text-cyan-500" />
+                              Subjects & Specializations
+                           </h3>
+                           <div className="flex flex-wrap gap-2">
+                              {['Mathematics (Adv)', 'Physics', 'Statistics', 'Computer Science'].map((sub, i) => (
+                                 <span key={i} className="px-3 py-1 bg-cyan-50 text-cyan-700 rounded-lg text-sm font-medium border border-cyan-100">
+                                    {sub}
+                                 </span>
+                              ))}
+                              <button className="px-3 py-1 border border-dashed border-slate-300 text-slate-500 rounded-lg text-sm hover:bg-slate-50 flex items-center gap-1 transition-colors">
+                                 + Add Subject
+                              </button>
+                           </div>
+                        </div>
+
+                        {/* Credentials & Certificates */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                           <div className="flex justify-between items-center mb-4">
+                              <h3 className="font-bold text-slate-800 flex items-center gap-2">
+                                 <Medal size={18} className="text-blue-500" />
+                                 Credentials
+                              </h3>
+                              <button className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                                 <Upload size={14} /> Upload New
+                              </button>
+                           </div>
+                           <div className="space-y-3">
+                              {[
+                                 { title: "Master of Education", issuer: "Harvard University", year: "2018", type: "Degree" },
+                                 { title: "Advanced Teaching Certificate", issuer: "National Board", year: "2020", type: "Certificate" },
+                                 { title: "STEM Workshop Leader", issuer: "TechEd Summit", year: "2023", type: "Workshop" }
+                              ].map((cred, i) => (
+                                 <div key={i} className="p-3 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                    <div className="flex items-center gap-3">
+                                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${i === 0 ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}>
+                                          <FileText size={18} />
+                                       </div>
+                                       <div>
+                                          <p className="font-bold text-slate-800 text-sm">{cred.title}</p>
+                                          <p className="text-xs text-slate-500">{cred.issuer} • {cred.year}</p>
+                                       </div>
+                                    </div>
+                                    <button className="opacity-0 group-hover:opacity-100 p-2 text-slate-400 hover:text-blue-600 transition-all">
+                                       <Download size={16} />
+                                    </button>
+                                 </div>
+                              ))}
+                           </div>
+                        </div>
+                     </div>
+
+                     {/* Right Column: Growth & Endorsements */}
+                     <div className="space-y-6">
+                        {/* Professional Growth */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                           <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                              <LineChart size={18} className="text-green-500" />
+                              Professional Growth
+                           </h3>
+                           <div className="space-y-4">
+                              <div className="relative pl-4 border-l-2 border-slate-200 space-y-4">
+                                 {[
+                                    { title: "Attended Innovation in EdTech", date: "Dec 15, 2025", type: "Workshop" },
+                                    { title: "Published Research on STEM", date: "Oct 10, 2025", type: "Publication" },
+                                    { title: "Mentored Junior Staff", date: "Sep 01, 2025", type: "Mentorship" }
+                                 ].map((item, i) => (
+                                    <div key={i} className="relative">
+                                       <div className="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-slate-300 ring-4 ring-white"></div>
+                                       <p className="text-sm font-bold text-slate-800">{item.title}</p>
+                                       <p className="text-xs text-slate-500">{item.date} • {item.type}</p>
+                                    </div>
+                                 ))}
+                              </div>
+                           </div>
+                        </div>
+
+                        {/* Endorsements */}
+                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 shadow-sm border border-purple-100">
+                           <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                              <Star size={18} className="text-purple-500" />
+                              Endorsements
+                           </h3>
+                           <div className="space-y-3">
+                              <div className="bg-white p-3 rounded-xl shadow-sm border border-purple-100">
+                                 <p className="text-xs italic text-slate-600 mb-2">"Excellent dedication to student outcomes and innovative teaching methods."</p>
+                                 <div className="flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded-full bg-slate-200"></div>
+                                    <p className="text-xs font-bold text-slate-800">Principal Williams</p>
+                                 </div>
+                              </div>
+                              <div className="bg-white p-3 rounded-xl shadow-sm border border-purple-100">
+                                 <p className="text-xs italic text-slate-600 mb-2">"A collaborative team player who always supports peer growth."</p>
+                                 <div className="flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded-full bg-slate-200"></div>
+                                    <p className="text-xs font-bold text-slate-800">Sarah Jenkins (Dept Head)</p>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Integration Footer */}
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center justify-between">
+                     <div className="flex items-center gap-3">
+                        <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
+                           <Users size={18} className="text-slate-500" />
+                        </div>
+                        <p className="text-xs text-slate-500 font-medium">
+                           Synced with <span className="font-bold text-slate-700">HR Module</span> & <span className="font-bold text-slate-700">Staff Database</span>
+                        </p>
+                     </div>
+                     <span className="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-md font-bold">
+                        Live Sync On
+                     </span>
+                  </div>
+               </div>
+            )}
+
 
            {/* ACTIVITY LOG TAB */}
            {activeTab === 'activity' && (

@@ -536,32 +536,7 @@ const CommunicationConsole = () => {
         </div>
       </div>
 
-      {/* Integration Info */}
-      <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-100">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-purple-500 rounded-xl">
-            <Shield className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h4 className="font-bold text-purple-900 mb-2">Notification Engine Integration & PDPA Compliance</h4>
-            <p className="text-sm text-purple-800 mb-3">
-              All communications are routed through the Notification Engine and Messaging API with real-time delivery tracking. 
-              Every message is digitally signed with a cryptographic hash, timestamped, and archived in secure storage for 
-              compliance with PDPA regulations. Audit logs track all approvals and modifications.
-            </p>
-            <div className="flex gap-3">
-              <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-bold transition-colors flex items-center gap-2">
-                View Compliance Log
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-              <button className="px-4 py-2 bg-white hover:bg-slate-50 text-purple-700 rounded-lg text-sm font-bold transition-colors border border-purple-200 flex items-center gap-2">
-                Download Archive
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };

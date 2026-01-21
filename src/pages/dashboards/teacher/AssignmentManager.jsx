@@ -158,6 +158,7 @@ const AssignmentManager = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${viewMode === 'all' ? 'text-white' : 'text-slate-800'}`}>
             {stats.total}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -177,6 +178,7 @@ const AssignmentManager = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${viewMode === 'active' ? 'text-white' : 'text-blue-600'}`}>
             {stats.active}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -196,6 +198,7 @@ const AssignmentManager = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${viewMode === 'overdue' ? 'text-white' : 'text-red-600'}`}>
             {stats.overdue}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -215,6 +218,7 @@ const AssignmentManager = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${viewMode === 'completed' ? 'text-white' : 'text-green-600'}`}>
             {stats.completed}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
       </div>
 

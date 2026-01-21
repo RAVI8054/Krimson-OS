@@ -170,6 +170,18 @@ const ReflectionJournal = () => {
             </div>
           </div>
 
+          {/* Average Lesson Rating */}
+          <div className="p-5 bg-white rounded-2xl border border-purple-100">
+            <div className="flex items-center gap-2 mb-3">
+              <Award className="text-yellow-500" size={20} />
+              <h4 className="font-bold text-slate-800">Avg Lesson Rating</h4>
+            </div>
+            <p className="text-3xl font-bold text-yellow-600 mb-2">
+              {analytics.avgLessonRating}/5
+            </p>
+            <p className="text-[10px] text-slate-400 mt-1">get in app</p>
+          </div>
+
           {/* Participation Rate */}
           <div className="p-5 bg-white rounded-2xl border border-purple-100">
             <div className="flex items-center gap-2 mb-3">
@@ -221,16 +233,18 @@ const ReflectionJournal = () => {
             <PenTool className="text-blue-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-slate-800">{reflections.length}</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-green-200 bg-white hover:shadow-md transition-all">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Shared</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Positive Feedback</p>
             <Share2 className="text-green-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-green-600">
-            {reflections.filter(r => r.shared).length}
+            {(reflections.filter(r => r.rating >= 4).length / reflections.length * 100).toFixed(0)}%
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-purple-200 bg-white hover:shadow-md transition-all">
@@ -249,6 +263,7 @@ const ReflectionJournal = () => {
             <Award className="text-yellow-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-yellow-600">{analytics.studentFeedbackScore}/5</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
       </div>
 

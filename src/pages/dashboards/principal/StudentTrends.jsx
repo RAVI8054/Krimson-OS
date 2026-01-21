@@ -460,32 +460,7 @@ const StudentTrends = () => {
         </div>
       </div>
 
-      {/* Integration Info */}
-      <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-100">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-blue-500 rounded-xl">
-            <Calendar className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h4 className="font-bold text-blue-900 mb-2">Automated Integration & Early Intervention</h4>
-            <p className="text-sm text-blue-800 mb-3">
-              Attendance data is synced in real-time from the Attendance Module and cross-referenced with the Behavior Log API. 
-              Chronic absenteeism alerts trigger automated notifications to counselors and enable early intervention strategies 
-              to support student success and well-being.
-            </p>
-            <div className="flex gap-3">
-              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition-colors flex items-center gap-2">
-                Configure Alerts
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-              <button className="px-4 py-2 bg-white hover:bg-slate-50 text-blue-700 rounded-lg text-sm font-bold transition-colors border border-blue-200 flex items-center gap-2">
-                Counseling Dashboard
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };

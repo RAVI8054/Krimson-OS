@@ -355,6 +355,7 @@ const Gradebook = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${filterMode === 'atRisk' ? 'text-white' : 'text-red-600'}`}>
             {stats.atRisk}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -374,6 +375,7 @@ const Gradebook = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${filterMode === 'improving' ? 'text-white' : 'text-green-600'}`}>
             {stats.improving}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-blue-200 bg-white hover:border-blue-300 hover:shadow-lg hover:scale-105 transition-all duration-300">
@@ -382,6 +384,7 @@ const Gradebook = () => {
             <BarChart2 className="text-blue-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-blue-600">{stats.avgScore}%</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-purple-200 bg-white hover:border-purple-300 hover:shadow-lg hover:scale-105 transition-all duration-300">
@@ -390,6 +393,7 @@ const Gradebook = () => {
             <CheckCircle className="text-purple-400 opacity-60" size={20} />
           </div>
           <h3 className="text-2xl md:text-3xl font-bold text-purple-600">{stats.avgAttendance}%</h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
       </div>
 

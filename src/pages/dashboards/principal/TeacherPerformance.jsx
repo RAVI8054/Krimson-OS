@@ -138,6 +138,8 @@ const CorrelationCard = ({ grade, attendance, performance, correlation }) => (
 
 const TeacherPerformance = () => {
   const [selectedDept, setSelectedDept] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // Static data - to be replaced with API calls
   const teachers = [
@@ -147,7 +149,24 @@ const TeacherPerformance = () => {
     { name: 'Mr. David Chen', department: 'Computer Science', lessonPlan: 94, feedback: 2.2, engagement: 92, overall: 91 },
     { name: 'Ms. Jennifer Parker', department: 'Geography', lessonPlan: 78, feedback: 3.5, engagement: 75, overall: 76 },
     { name: 'Mr. Michael Brown', department: 'History', lessonPlan: 85, feedback: 2.8, engagement: 82, overall: 83 },
+    { name: 'Ms. Lisa Taylor', department: 'Physics', lessonPlan: 91, feedback: 1.9, engagement: 90, overall: 90 },
+    { name: 'Mr. Robert Martin', department: 'Chemistry', lessonPlan: 88, feedback: 2.4, engagement: 85, overall: 86 },
+    { name: 'Ms. Jessica White', department: 'Biology', lessonPlan: 95, feedback: 1.7, engagement: 93, overall: 94 },
+    { name: 'Mr. Thomas Moore', department: 'Literature', lessonPlan: 82, feedback: 3.1, engagement: 78, overall: 80 },
+    { name: 'Ms. Karen Davis', department: 'Art', lessonPlan: 97, feedback: 1.2, engagement: 98, overall: 96 },
+    { name: 'Mr. James Wilson', department: 'Physical Ed', lessonPlan: 100, feedback: 0.5, engagement: 99, overall: 99 },
+    { name: 'Ms. Patricia Miller', department: 'Music', lessonPlan: 93, feedback: 2.0, engagement: 91, overall: 92 },
+    { name: 'Mr. William Taylor', department: 'Economics', lessonPlan: 87, feedback: 2.5, engagement: 84, overall: 86 },
+    { name: 'Ms. Elizabeth Anderson', department: 'Psychology', lessonPlan: 89, feedback: 2.3, engagement: 86, overall: 88 },
   ];
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTeachers = teachers.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(teachers.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const correlationData = [
     { grade: '10', attendance: 92, performance: 85, correlation: 0.87 },
@@ -411,39 +430,61 @@ const TeacherPerformance = () => {
               </tr>
             </thead>
             <tbody>
-              {teachers.map((teacher, idx) => (
+              {currentTeachers.map((teacher, idx) => (
                 <TeacherPerformanceRow key={idx} {...teacher} />
               ))}
             </tbody>
           </table>
         </div>
-      </div>
 
-      {/* Analytics Summary */}
-      <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-6 border border-cyan-100">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-cyan-500 rounded-xl">
-            <Calendar className="w-6 h-6 text-white" />
+        {/* Pagination Controls */}
+        <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="text-xs text-slate-500">
+            Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, teachers.length)} of {teachers.length} entries
           </div>
-          <div className="flex-1">
-            <h4 className="font-bold text-cyan-900 mb-2">Automated Integration</h4>
-            <p className="text-sm text-cyan-800 mb-3">
-              Teacher performance data is automatically synced from the Lesson Plan Module and analyzed by the Analytics Engine. 
-              Reports are generated weekly and sent to the management dashboard for strategic planning.
-            </p>
-            <div className="flex gap-3">
-              <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg text-sm font-bold transition-colors flex items-center gap-2">
-                Configure Alerts
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-              <button className="px-4 py-2 bg-white hover:bg-slate-50 text-cyan-700 rounded-lg text-sm font-bold transition-colors border border-cyan-200 flex items-center gap-2">
-                Integration Settings
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors border ${
+                currentPage === 1 
+                  ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed' 
+                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:text-blue-600'
+              }`}
+            >
+              Previous
+            </button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => paginate(i + 1)}
+                  className={`w-8 h-8 rounded-lg text-xs font-bold transition-colors flex items-center justify-center border ${
+                    currentPage === i + 1
+                      ? 'bg-gradient-to-r from-cyan-400 to-blue-400 text-white border-transparent shadow-sm'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
             </div>
+            <button 
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors border ${
+                currentPage === totalPages 
+                  ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed' 
+                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:text-blue-600'
+              }`}
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
+
+
     </div>
   );
 };

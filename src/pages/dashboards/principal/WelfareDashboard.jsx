@@ -406,34 +406,7 @@ const WelfareDashboard = () => {
         </div>
       </div>
 
-      {/* Integration Info */}
-      <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-purple-100">
-        <div className="flex items-start gap-3 sm:gap-4">
-          <div className="p-2 sm:p-3 bg-purple-500 rounded-lg sm:rounded-xl">
-            <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h4 className="font-bold text-sm sm:text-base text-purple-900 mb-2">Behavior Management Module & Counselor Portal Integration</h4>
-            <p className="text-xs sm:text-sm text-purple-800 mb-3">
-              All behavior incidents and counseling referrals are synchronized with the Behavior Management Module and 
-              Counselor Portal API in real-time. Data is automatically analyzed to identify patterns and trigger early 
-              intervention alerts. The system enables balanced disciplinary and pastoral oversight through comprehensive 
-              tracking of both incidents and positive recognitions.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-              <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs sm:text-sm font-bold transition-colors flex items-center justify-center gap-1.5 sm:gap-2">
-                <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                Contact Counselor
-                <span className="text-[8px] sm:text-[9px] opacity-80">(get in app)</span>
-              </button>
-              <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white hover:bg-slate-50 text-purple-700 rounded-lg text-xs sm:text-sm font-bold transition-colors border border-purple-200 flex items-center justify-center gap-1.5 sm:gap-2">
-                Behavior Settings
-                <span className="text-[8px] sm:text-[9px] opacity-80">(get in app)</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };

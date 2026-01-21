@@ -149,6 +149,7 @@ const AttendanceLog = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${viewMode === 'all' ? 'text-white' : 'text-slate-800'}`}>
             {stats.total}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -168,6 +169,7 @@ const AttendanceLog = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${viewMode === 'present' ? 'text-white' : 'text-green-600'}`}>
             {stats.present}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -187,6 +189,7 @@ const AttendanceLog = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${viewMode === 'absent' ? 'text-white' : 'text-red-600'}`}>
             {stats.absent}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -206,6 +209,7 @@ const AttendanceLog = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${viewMode === 'late' ? 'text-white' : 'text-orange-600'}`}>
             {stats.late}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
       </div>
 
@@ -252,19 +256,23 @@ const AttendanceLog = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="text-center">
                 <p className="text-xs text-slate-500 mb-1">Attendance Rate</p>
-                <p className="text-lg font-bold text-blue-600">{stats.percentage}%</p>
+                <h3 className="text-2xl md:text-3xl font-bold text-blue-600">{stats.percentage}%</h3>
+                <p className="text-[10px] text-slate-400 mt-1">get in app</p>
               </div>
               <div className="text-center">
                 <p className="text-xs text-slate-500 mb-1">Present</p>
-                <p className="text-lg font-bold text-green-600">{stats.present}/{stats.total}</p>
+                <h3 className="text-2xl md:text-3xl font-bold text-green-600">{stats.present}</h3>
+                <p className="text-[10px] text-slate-400 mt-1">get in app</p>
               </div>
               <div className="text-center">
                 <p className="text-xs text-slate-500 mb-1">Absent</p>
-                <p className="text-lg font-bold text-red-600">{stats.absent}</p>
+                <h3 className="text-2xl md:text-3xl font-bold text-orange-600">{stats.absent}</h3>
+                <p className="text-[10px] text-slate-400 mt-1">get in app</p>
               </div>
               <div className="text-center">
                 <p className="text-xs text-slate-500 mb-1">Late Arrivals</p>
-                <p className="text-lg font-bold text-orange-600">{stats.late}</p>
+                <h3 className="text-2xl md:text-3xl font-bold text-orange-600">{stats.late}</h3>
+                <p className="text-[10px] text-slate-400 mt-1">get in app</p>
               </div>
             </div>
           </div>

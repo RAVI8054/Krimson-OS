@@ -418,32 +418,7 @@ const ExamOversight = () => {
         </div>
       </div>
 
-      {/* Integration Info */}
-      <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border border-indigo-100">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-indigo-500 rounded-xl">
-            <FileText className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h4 className="font-bold text-indigo-900 mb-2">Exam Module & Academic Workflow Integration</h4>
-            <p className="text-sm text-indigo-800 mb-3">
-              All examination processes are integrated with the Exam Module and Academic Workflow API. Timetables, 
-              question papers, and results are automatically synchronized. Every approval action is logged in the audit 
-              trail with timestamps and digital signatures for accountability and compliance.
-            </p>
-            <div className="flex gap-3">
-              <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-bold transition-colors flex items-center gap-2">
-                View System Logs
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-              <button className="px-4 py-2 bg-white hover:bg-slate-50 text-indigo-700 rounded-lg text-sm font-bold transition-colors border border-indigo-200 flex items-center gap-2">
-                Download Audit Report
-                <span className="text-[9px] opacity-80">(get in app)</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };

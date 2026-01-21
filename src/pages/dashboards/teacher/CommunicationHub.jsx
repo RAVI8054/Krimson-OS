@@ -232,6 +232,7 @@ const CommunicationHub = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${filterType === 'all' ? 'text-white' : 'text-slate-800'}`}>
             {stats.total}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -251,6 +252,7 @@ const CommunicationHub = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${filterType === 'unread' ? 'text-white' : 'text-orange-600'}`}>
             {stats.unread}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -270,6 +272,7 @@ const CommunicationHub = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${filterType === 'direct' ? 'text-white' : 'text-purple-600'}`}>
             {stats.direct}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
         <div 
@@ -289,6 +292,7 @@ const CommunicationHub = () => {
           <h3 className={`text-2xl md:text-3xl font-bold ${filterType === 'broadcast' ? 'text-white' : 'text-green-600'}`}>
             {stats.broadcast}
           </h3>
+          <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
       </div>
 

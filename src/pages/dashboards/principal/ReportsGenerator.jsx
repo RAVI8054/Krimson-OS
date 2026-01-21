@@ -383,35 +383,7 @@ const ReportsGenerator = () => {
         </div>
       </div>
 
-      {/* Integration Notice */}
-      <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-slate-200">
-        <div className="flex items-start gap-3 sm:gap-4">
-          <div className="p-2 sm:p-3 bg-slate-700 rounded-lg sm:rounded-xl">
-            <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h4 className="font-bold text-sm sm:text-base text-slate-900 mb-2">
-              Reporting Engine Integration
-            </h4>
-            <p className="text-xs sm:text-sm text-slate-700 mb-3">
-              All reports are generated using the Reporting Engine API with real-time data aggregation from 
-              various modules including Academic Management, Finance, HR, and Student Information Systems. 
-              Reports comply with regulatory requirements and include timestamped generation details.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-              <button className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-lg text-xs sm:text-sm font-bold transition-colors">
-                <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                Configure Settings
-                <span className="text-[8px] sm:text-[9px] opacity-80">(get in app)</span>
-              </button>
-              <button className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-xs sm:text-sm font-bold transition-colors border-2 border-slate-200">
-                View Documentation
-                <span className="text-[8px] sm:text-[9px] opacity-80">(get in app)</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };
