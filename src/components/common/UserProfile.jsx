@@ -45,7 +45,7 @@ const UserProfile = ({ role, user, detailedInfo }) => {
                   <h1 className={`text-3xl font-bold ${isStudent ? 'text-white' : 'text-slate-800'}`}>{user.name}</h1>
                   <p className={`${isStudent ? 'text-blue-100' : 'text-indigo-600'} font-bold uppercase text-sm tracking-wide mt-1`}>{user.role} {user.section && `• ${user.section}`}</p>
                </div>
-               <button className={`mt-4 md:mt-0 px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 backdrop-blur-sm transition-colors ${isStudent ? 'bg-white/20 border border-white/30 text-white hover:bg-white/30' : 'border border-slate-200 text-slate-600 hover:bg-slate-50 bg-white/80'}`}>
+               <button onClick={detailedInfo?.onEditProfile} className={`mt-4 md:mt-0 px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 backdrop-blur-sm transition-colors ${isStudent ? 'bg-white/20 border border-white/30 text-white hover:bg-white/30' : 'border border-slate-200 text-slate-600 hover:bg-slate-50 bg-white/80'}`}>
                   <Edit2 size={16} /> Edit Profile
                </button>
             </div>
@@ -76,6 +76,57 @@ const UserProfile = ({ role, user, detailedInfo }) => {
          </div>
       </div>
 
+      {/* Achievements & Leaderboard Section (Student Only) */}
+      {isStudent && (
+         <div className="bg-white rounded-3xl p-8 shadow-lg relative overflow-hidden">
+             <div className="flex items-center justify-between mb-6">
+                <h3 className="font-bold text-lg flex items-center gap-2">
+                   <Award className="text-yellow-500" size={20} />
+                   <span className="bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">Achievements & Leaderboard</span>
+                </h3>
+             </div>
+
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Leaderboard Stats */}
+                <div className="bg-gradient-to-br from-slate-50 to-blue-50/50 rounded-2xl p-6 border border-slate-100">
+                   <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-sm font-bold text-slate-500 uppercase">Class Ranking</h4>
+                      <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">{detailedInfo?.leaderboard?.weeklyChange} this week</span>
+                   </div>
+                   <div className="flex items-end gap-2 mb-2">
+                      <span className="text-4xl font-bold text-slate-800">#{detailedInfo?.leaderboard?.rank}</span>
+                      <span className="text-sm font-bold text-slate-400 mb-2">/ {detailedInfo?.leaderboard?.totalStudents} Students</span>
+                   </div>
+                   <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                      <div className="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full" style={{ width: `${(1 - (detailedInfo?.leaderboard?.rank / detailedInfo?.leaderboard?.totalStudents)) * 100}%` }}></div>
+                   </div>
+                   <div className="mt-4 flex justify-between text-xs font-bold text-slate-500">
+                      <span>Total Points: {detailedInfo?.leaderboard?.points}</span>
+                      <span>{detailedInfo?.leaderboard?.percentile}</span>
+                   </div>
+                </div>
+
+                {/* Recent Badges */}
+                <div>
+                   <h4 className="text-sm font-bold text-slate-500 uppercase mb-4">Recent Badges</h4>
+                   <div className="space-y-3">
+                      {detailedInfo?.achievements?.map(badge => (
+                         <div key={badge.id} className="flex items-center gap-4 p-3 rounded-xl border border-slate-100 bg-white shadow-sm hover:shadow-md transition-all">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-${badge.color}-100 text-${badge.color}-600`}>
+                               <span className="material-icons-outlined text-xl">★</span> {/* Using a generic star as icon placeholder since we don't have the icon library for strings */ }
+                            </div>
+                            <div>
+                               <h5 className="text-sm font-bold text-slate-700">{badge.title}</h5>
+                               <p className="text-xs text-slate-400">{badge.date}</p>
+                            </div>
+                         </div>
+                      ))}
+                   </div>
+                </div>
+             </div>
+         </div>
+      )}
+
       {/* Role Specific Content */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
          
@@ -87,8 +138,8 @@ const UserProfile = ({ role, user, detailedInfo }) => {
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-pink-200 opacity-20 rounded-full blur-2xl"></div>
                </>
             )}
-            <div className="relative z-10">
-               <h3 className={`font-bold text-lg pb-4 mb-4 flex items-center gap-2 ${isStudent ? 'border-b-2 border-gradient-to-r from-cyan-300 to-pink-300' : 'border-b border-slate-100'}`}>
+            <div className="relative z-10 flex justify-between items-center">
+               <h3 className={`font-bold text-lg pb-4 mb-4 flex-1 flex items-center gap-2 ${isStudent ? 'border-b-2 border-gradient-to-r from-cyan-300 to-pink-300' : 'border-b border-slate-100'}`}>
                   {isTeacher ? (
                      <span className="text-slate-800">Professional Details</span>
                   ) : (
@@ -98,6 +149,11 @@ const UserProfile = ({ role, user, detailedInfo }) => {
                      </>
                   )}
                </h3>
+               {isStudent && (
+                   <button onClick={detailedInfo?.onEditGoals} className="p-2 bg-white/50 hover:bg-white rounded-full text-slate-500 hover:text-blue-500 transition-all">
+                       <Edit2 size={16} />
+                   </button>
+               )}
             </div>
             
             {isTeacher && (
@@ -144,8 +200,8 @@ const UserProfile = ({ role, user, detailedInfo }) => {
                   <div className="absolute bottom-0 right-0 w-24 h-24 bg-cyan-200 opacity-20 rounded-full blur-2xl"></div>
                </>
             )}
-            <div className="relative z-10">
-               <h3 className={`font-bold text-lg pb-4 mb-4 flex items-center gap-2 ${isStudent ? 'border-b-2 border-gradient-to-r from-pink-300 to-cyan-300' : 'border-b border-slate-100'}`}>
+            <div className="relative z-10 flex justify-between items-center">
+               <h3 className={`font-bold text-lg pb-4 mb-4 flex-1 flex items-center gap-2 ${isStudent ? 'border-b-2 border-gradient-to-r from-pink-300 to-cyan-300' : 'border-b border-slate-100'}`}>
                   {isTeacher ? (
                      <>
                         <Award className="text-yellow-500"/>
@@ -158,6 +214,11 @@ const UserProfile = ({ role, user, detailedInfo }) => {
                      </>
                   )}
                </h3>
+               {isStudent && (
+                   <button onClick={detailedInfo?.onEditInterests} className="p-2 bg-white/50 hover:bg-white rounded-full text-slate-500 hover:text-pink-500 transition-all">
+                       <Edit2 size={16} />
+                   </button>
+               )}
             </div>
 
             {isTeacher && (
@@ -197,10 +258,15 @@ const UserProfile = ({ role, user, detailedInfo }) => {
                             </span>
                         ))}
                     </div>
-                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-4 flex items-center gap-2">
-                       <div className="w-1 h-4 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-full"></div>
-                       Active Clubs
-                    </h4>
+                    <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase flex items-center gap-2">
+                            <div className="w-1 h-4 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-full"></div>
+                            Active Clubs
+                        </h4>
+                       <button onClick={detailedInfo?.onEditClubs} className="p-1 bg-white/50 hover:bg-white rounded-full text-slate-400 hover:text-blue-500 transition-all">
+                           <Edit2 size={12} />
+                       </button>
+                    </div>
                     <div className="space-y-2">
                         {detailedInfo?.clubs?.map(club => (
                             <div key={club} className="group flex items-center gap-3 text-sm font-bold text-slate-700 p-3 bg-white/80 backdrop-blur-sm rounded-xl border-2 border-slate-100 hover:border-cyan-200 hover:shadow-md transition-all">

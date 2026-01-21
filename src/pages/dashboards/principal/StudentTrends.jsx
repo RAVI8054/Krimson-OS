@@ -11,7 +11,9 @@ import {
   Calendar,
   BarChart2,
   Flag,
-  Eye
+  Eye,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 // Heatmap Cell Component
@@ -148,6 +150,8 @@ const CorrelationPoint = ({ attendance, academic, grade }) => (
 const StudentTrends = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [selectedGender, setSelectedGender] = useState('all');
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 6;
 
   // Static data - to be replaced with API calls
   const heatmapData = [
@@ -325,7 +329,7 @@ const StudentTrends = () => {
               
               {/* Heatmap Rows */}
               <div className="space-y-2">
-                {heatmapData.map((data, idx) => (
+                {heatmapData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((data, idx) => (
                   <div key={idx} className="grid grid-cols-3 gap-3 items-center">
                     <div className="text-sm font-bold text-slate-700">
                       Grade {data.grade}
@@ -335,6 +339,29 @@ const StudentTrends = () => {
                   </div>
                 ))}
               </div>
+
+              {/* Pagination Controls */}
+              {heatmapData.length > itemsPerPage && (
+                <div className="flex justify-center items-center gap-4 mt-4">
+                  <button 
+                    onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+                    disabled={currentPage === 0}
+                    className="p-1 rounded-full hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-slate-600" />
+                  </button>
+                  <span className="text-xs font-semibold text-slate-600">
+                    Page {currentPage + 1} of {Math.ceil(heatmapData.length / itemsPerPage)}
+                  </span>
+                  <button 
+                    onClick={() => setCurrentPage(p => Math.min(Math.ceil(heatmapData.length / itemsPerPage) - 1, p + 1))}
+                    disabled={currentPage >= Math.ceil(heatmapData.length / itemsPerPage) - 1}
+                    className="p-1 rounded-full hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5 text-slate-600" />
+                  </button>
+                </div>
+              )}
 
               {/* Legend */}
               <div className="flex items-center justify-center gap-4 mt-6 pt-4 border-t border-slate-100">

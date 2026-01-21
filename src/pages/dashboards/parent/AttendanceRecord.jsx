@@ -34,9 +34,9 @@ const AttendanceRecord = () => {
       percentage: 86.4
     },
     absenceReasons: [
-      { date: '2026-01-08', reason: 'Sick Leave (Doctor\'s certificate submitted)', submittedBy: 'Parent' },
-      { date: '2026-01-15', reason: 'Medical appointment', submittedBy: 'Parent' },
-      { date: '2026-01-22', reason: 'Family emergency', submittedBy: 'Parent' }
+      { date: '2026-01-08', reason: 'Sick Leave - Medical certificate verified by nurse', submittedBy: 'Class Teacher' },
+      { date: '2026-01-15', reason: 'Medical appointment - Early dismissal approved', submittedBy: 'Class Teacher' },
+      { date: '2026-01-22', reason: 'Family emergency - Parent informed administration', submittedBy: 'Class Teacher' }
     ],
     monthlyTrend: [
       { month: 'Sep', percentage: 95.2, classAvg: 93.8 },

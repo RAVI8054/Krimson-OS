@@ -14,6 +14,19 @@ import {
 const CoCurricularActivities = () => {
   const { cocurricularActivities } = STUDENT_DATA;
   const [selectedCategory, setSelectedCategory] = useState('All');
+  
+  // Pagination State for Timeline
+  const [timelinePage, setTimelinePage] = useState(1);
+  const itemsPerPage = 6;
+  
+  const totalPages = Math.ceil(cocurricularActivities.timeline.length / itemsPerPage);
+  const displayedTimeline = cocurricularActivities.timeline.slice(
+    (timelinePage - 1) * itemsPerPage,
+    timelinePage * itemsPerPage
+  );
+
+  const handlePrevPage = () => setTimelinePage(prev => Math.max(prev - 1, 1));
+  const handleNextPage = () => setTimelinePage(prev => Math.min(prev + 1, totalPages));
 
   // Category colors
   const getCategoryColor = (category) => {
@@ -196,8 +209,8 @@ const CoCurricularActivities = () => {
         </div>
 
         <div className="space-y-4">
-          {cocurricularActivities.timeline.map((month, index) => (
-            <div key={index}>
+          {displayedTimeline.map((month, index) => (
+            <div key={index} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex items-center gap-3 mb-3">
                 <div className="bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-4 py-2 rounded-xl font-bold text-sm">
                   {month.month} {month.year}
@@ -223,6 +236,37 @@ const CoCurricularActivities = () => {
             </div>
           ))}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-4 mt-8 pt-4 border-t border-slate-100">
+                <button 
+                  onClick={handlePrevPage} 
+                  disabled={timelinePage === 1}
+                  className={`px-4 py-2 rounded-xl font-bold text-sm transition-all ${
+                    timelinePage === 1 
+                      ? 'text-slate-300 cursor-not-allowed' 
+                      : 'text-blue-600 hover:bg-blue-50'
+                  }`}
+                >
+                  Previous
+                </button>
+                <span className="text-sm font-bold text-slate-500">
+                  Page {timelinePage} of {totalPages}
+                </span>
+                <button 
+                  onClick={handleNextPage} 
+                  disabled={timelinePage === totalPages}
+                  className={`px-4 py-2 rounded-xl font-bold text-sm transition-all ${
+                    timelinePage === totalPages 
+                      ? 'text-slate-300 cursor-not-allowed' 
+                      : 'text-blue-600 hover:bg-blue-50'
+                  }`}
+                >
+                  Next
+                </button>
+            </div>
+        )}
       </div>
 
       {/* Digital Portfolio / Certificate Upload */}

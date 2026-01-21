@@ -6,7 +6,7 @@ import {
   FileText, MessageSquare, CreditCard, Clock,
   User, ExternalLink, ChevronRight, BookMarked
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 
 /**
  * Parent Home Dashboard - Screen 1
@@ -17,7 +17,8 @@ import { Link } from 'react-router-dom';
 const HomeDashboard = () => {
   const { user: authUser } = useSelector((state) => state.auth);
   const { children, widgets } = PARENT_DATA;
-  const activeChild = children[0]; // Defaulting to first child for summary view
+  const { selectedChildIndex } = useOutletContext();
+  const activeChild = children[selectedChildIndex] || children[0];
 
   // Fallback to static data if authUser is not available (dev mode/unauthenticated preview)
   const userName = authUser?.name || PARENT_DATA.user.name;

@@ -700,9 +700,39 @@ export const STUDENT_DATA = {
 
   // Screen 12: Profile
   profile: {
-    goals: ["Score 95% in Math", "Join Debate Club"],
-    interests: ["Robotics", "Football"],
-    clubs: ["Science Club", "Football Team"],
+    goals: ["Score 95% in Math", "Join Debate Club", "Complete Python Course"],
+    interests: ["Robotics", "Football", "Creative Writing"],
+    clubs: ["Science Club", "Football Team", "Debate Society"],
+    leaderboard: {
+      rank: 4,
+      totalStudents: 42,
+      points: 1250,
+      percentile: "Top 10%",
+      weeklyChange: "+2",
+    },
+    achievements: [
+      {
+        id: 1,
+        title: "Math Wizard",
+        icon: "calculate",
+        color: "blue",
+        date: "2025-12-15",
+      },
+      {
+        id: 2,
+        title: "Science Fair Winner",
+        icon: "science",
+        color: "purple",
+        date: "2025-11-20",
+      },
+      {
+        id: 3,
+        title: "Perfect Attendance",
+        icon: "event_available",
+        color: "green",
+        date: "2025-10-01",
+      },
+    ],
   },
 
   // Screen 13: Parent Link Dashboard
@@ -1052,6 +1082,33 @@ export const STUDENT_DATA = {
           { name: "Cricket Tournament", category: "Sports", points: 5 },
           { name: "Photography Workshop", category: "Arts", points: 5 },
           { name: "Athletics Meet", category: "Sports", points: 5 },
+        ],
+      },
+      {
+        month: "August",
+        year: "2025",
+        achievements: [
+          { name: "Independence Day Parade", category: "Sports", points: 10 },
+          { name: "Patriotic Song Competition", category: "Arts", points: 15 },
+        ],
+      },
+      {
+        month: "July",
+        year: "2025",
+        achievements: [
+          { name: "Chess Championship", category: "Sports", points: 20 },
+          { name: "Creative Writing Workshop", category: "Arts", points: 5 },
+        ],
+      },
+      {
+        month: "June",
+        year: "2025",
+        achievements: [
+          {
+            name: "Summer Camp Leadership",
+            category: "Leadership",
+            points: 30,
+          },
         ],
       },
     ],

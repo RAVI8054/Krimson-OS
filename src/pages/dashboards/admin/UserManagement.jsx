@@ -5,6 +5,7 @@
  */
 import React, { useState } from 'react';
 import { ADMIN_DATA } from '../../../data/adminData';
+import { ROLE_LABELS } from '../../../utils/constants';
 import {
   Users, UserPlus, Shield, Activity, Lock, Unlock, Eye, EyeOff,
   Mail, Phone, Calendar, Clock, MapPin, Monitor, AlertTriangle,
@@ -13,30 +14,48 @@ import {
   UserCheck, Building
 } from 'lucide-react';
 
+
+
+
+const USER_ACTIONS = [
+  { key: "add", label: "Add User", icon: UserPlus },
+  { key: "edit", label: "Edit User", icon: Edit },
+  { key: "reset", label: "Reset Password", icon: Key },
+  { key: "suspend", label: "Suspend User", icon: Lock },
+];
+
 const UserManagement = () => {
   const data = ADMIN_DATA.userManagement;
   const [selectedTab, setSelectedTab] = useState('users'); // users, activity, groups, security
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({ status: 'all', role: 'all', department: 'all', search: '' });
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [showUserModal, setShowUserModal] = useState(false);
+
   const [expandedGroups, setExpandedGroups] = useState({});
+
 
   // CRUD State Management
   const [users, setUsers] = useState(data.users);
+
+  
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [selectedAction, setSelectedAction] = useState(USER_ACTIONS[0]);
+  const [showActionMenu, setShowActionMenu] = useState(false);
+
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [showAssignRoleModal, setShowAssignRoleModal] = useState(false);
   const [showSuspendModal, setShowSuspendModal] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
   const [userToSuspend, setUserToSuspend] = useState(null);
-  
-  // Form State
+
   const [newUser, setNewUser] = useState({
     name: '', email: '', phone: '', department: 'Academic', 
     grade: '', roles: [], status: 'Active'
   });
   const [suspendReason, setSuspendReason] = useState('');
+
 
   // Filter users based on active filters
   const filteredUsers = users.filter(user => {
@@ -50,8 +69,9 @@ const UserManagement = () => {
 
   // CRUD Operations
   const handleAddUser = () => {
-    if (!newUser.name || !newUser.email || !newUser.phone || newUser.roles.length === 0) {
-      alert('Please fill all required fields');
+    // Relaxed validation for quick add - Phone is optional here
+    if (!newUser.name || !newUser.email || newUser.roles.length === 0) {
+      alert('Please fill all required fields (Name, Email, Role)');
       return;
     }
     
@@ -60,7 +80,7 @@ const UserManagement = () => {
       userId: `USR${new Date().getFullYear()}${String(users.length + 1).padStart(3, '0')}`,
       name: newUser.name,
       email: newUser.email,
-      phone: newUser.phone,
+      phone: newUser.phone || 'N/A',
       roles: newUser.roles,
       status: 'Active',
       department: newUser.department,
@@ -131,6 +151,13 @@ const UserManagement = () => {
     alert('User activated successfully!');
   };
 
+  const handleResetPassword = () => {
+    // In a real app, this would trigger a backend password reset API
+    alert(`Password reset link sent to ${userToEdit.email}`);
+    setShowResetPasswordModal(false);
+    setUserToEdit(null);
+  };
+
   const toggleRole = (role, isAdding = true, formData, setFormData) => {
     if (isAdding) {
       if (!formData.roles.includes(role)) {
@@ -140,6 +167,32 @@ const UserManagement = () => {
       setFormData({ ...formData, roles: formData.roles.filter(r => r !== role) });
     }
   };
+
+  const handlePrimaryAction = () => {
+    switch (selectedAction.key) {
+      case 'add':
+        handleAddUser();
+        break;
+      case 'edit':
+        if (filteredUsers.length === 0) { alert('No users available'); return; }
+        setUserToEdit({ ...filteredUsers[0] });
+        setShowEditUserModal(true);
+        break;
+      case 'reset':
+         if (filteredUsers.length === 0) { alert('No users available'); return; }
+         setUserToEdit({...filteredUsers[0]});
+         setShowResetPasswordModal(true);
+         break;
+      case 'suspend':
+         if (filteredUsers.length === 0) { alert('No users available'); return; }
+         setUserToSuspend({...filteredUsers[0]});
+         setShowSuspendModal(true);
+         break;
+      default:
+        break;
+    }
+  };
+
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -174,6 +227,8 @@ const UserManagement = () => {
     setExpandedGroups(prev => ({ ...prev, [groupId]: !prev[groupId] }));
   };
 
+
+
   return (
     <div className="space-y-8 animate-fadeIn pb-10">
       
@@ -202,7 +257,7 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* ======================================== STATISTICS CARDS ======================================== */}
+   {/* ======================================== STATISTICS CARDS ======================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
           <div className="flex items-center gap-3">
@@ -270,58 +325,97 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* ======================================== ACTION BUTTONS & FILTERS ======================================== */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
-        <div className="flex flex-wrap gap-3 w-full md:w-auto">
-          <button 
-            onClick={() => setShowAddUserModal(true)}
-            className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white px-5 py-3 rounded-xl font-bold hover:shadow-lg transition-all flex items-center gap-2 text-sm shadow-md shadow-blue-500/20"
-          >
-            <UserPlus size={18} />
-            Add User
-          </button>
-          <button 
-            onClick={() => {
-              if (filteredUsers.length === 0) {
-                alert('No users available');
-                return;
-              }
-              setUserToEdit({ ...filteredUsers[0] });
-              setShowAssignRoleModal(true);
-            }}
-            className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white px-5 py-3 rounded-xl font-bold hover:shadow-lg transition-all flex items-center gap-2 text-sm shadow-md shadow-indigo-500/20"
-          >
-            <Shield size={18} />
-            Assign Roles
-          </button>
-          <button className="bg-white border-2 border-blue-100 text-blue-600 px-5 py-3 rounded-xl font-bold hover:bg-blue-50 hover:border-blue-200 transition-all flex flex-col items-center gap-0.5 text-sm">
-            <div className="flex items-center gap-2">
-              <Plus size={18} />
-              Create Group
-            </div>
-            <span className="text-[10px] text-slate-400 font-normal">(get in app)</span>
-          </button>
-        </div>
 
-        <div className="flex gap-3 w-full md:w-auto">
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={`flex-1 md:flex-none px-5 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm ${
-              showFilters ? 'bg-slate-800 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <Filter size={18} />
-            Filters
-          </button>
-          <button className="flex-1 md:flex-none bg-slate-50 text-slate-600 px-5 py-3 rounded-xl font-bold hover:bg-slate-100 transition-all flex flex-col items-center justify-center gap-0.5 text-sm">
-            <div className="flex items-center gap-2">
-              <Download size={18} />
-              Export
+  {/* ======================================== Idropdown user management ======================================== */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-fadeIn">
+        <div className="flex flex-col md:flex-row gap-4 items-end">
+          {selectedAction.key === 'add' && (
+            <div className="flex-1 w-full">
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Full Name</label>
+              <input
+                type="text"
+                value={newUser.name}
+                onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                placeholder="e.g. John Doe"
+                className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+              />
             </div>
-            <span className="text-[10px] text-slate-400 font-normal">(get in app)</span>
-          </button>
+          )}
+          <div className="flex-1 w-full">
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Email (SSO ID)</label>
+            <input
+              type="email"
+              value={newUser.email}
+              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+              placeholder="user@krimson.edu"
+              className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+            />
+          </div>
+          {selectedAction.key === 'add' && (
+            <div className="w-full md:w-64">
+               <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Role</label>
+               <div className="w-full">
+                  <select
+                      value={newUser.roles[0] || ""} 
+                      onChange={(e) => {
+                           const roleName = e.target.value;
+                           setNewUser({...newUser, roles: [roleName]});
+                      }}
+                      className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all bg-white"
+                   >
+                     <option value="" disabled>Select Role...</option>
+                     {Object.values(ROLE_LABELS).map((role) => (
+                       <option key={role} value={role}>{role}</option>
+                     ))}
+                   </select>
+                </div>
+            </div>
+          )}
+            <div className="flex relative">
+              {/* MAIN ACTION BUTTON */}
+              <button
+                onClick={handlePrimaryAction}
+                className="bg-blue-600 text-white px-6 py-3.5 rounded-l-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30 flex items-center gap-2"
+              >
+                <selectedAction.icon size={18} />
+                {selectedAction.label}
+              </button>
+
+              {/* DROPDOWN TOGGLE */}
+              <button
+                onClick={() => setShowActionMenu(!showActionMenu)}
+                className="bg-blue-700 text-white px-4 py-3.5 rounded-r-xl hover:bg-blue-800 transition-all flex items-center"
+              >
+                <ChevronDown size={18} />
+              </button>
+
+              {/* DROPDOWN MENU */}
+              {showActionMenu && (
+                <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden animate-slideDown">
+                  {USER_ACTIONS.map((action) => (
+                    <button
+                      key={action.key}
+                      onClick={() => {
+                        setSelectedAction(action);
+                        setShowActionMenu(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 text-sm font-semibold transition-colors flex items-center gap-2
+                        ${
+                          selectedAction.key === action.key
+                            ? "bg-blue-50 text-blue-600"
+                            : "text-slate-600 hover:bg-slate-50"
+                        }`}
+                    >
+                      <action.icon size={16} />
+                      {action.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
         </div>
       </div>
+
 
       {/* Filters Panel */}
       {showFilters && (
@@ -414,7 +508,7 @@ const UserManagement = () => {
                     <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Department</th>
                     <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Last Login</th>
                     <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Status</th>
-                    <th className="px-4 py-3 text-right text-xs font-extrabold text-slate-500 uppercase tracking-wider">Actions</th>
+
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -469,50 +563,7 @@ const UserManagement = () => {
                           {user.status}
                         </span>
                       </td>
-                      <td className="px-4 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => {
-                              setSelectedUser(user);
-                              setShowUserModal(true);
-                            }}
-                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
-                            title="View Details"
-                          >
-                            <Eye size={18} />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setUserToEdit({ ...user });
-                              setShowEditUserModal(true);
-                            }}
-                            className="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all"
-                            title="Edit User"
-                          >
-                            <Edit size={18} />
-                          </button>
-                          {user.status === 'Active' ? (
-                            <button
-                              onClick={() => {
-                                setUserToSuspend(user);
-                                setShowSuspendModal(true);
-                              }}
-                              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
-                              title="Suspend User"
-                            >
-                              <Lock size={18} />
-                            </button>
-                          ) : user.status === 'Suspended' ? (
-                            <button
-                              onClick={() => handleActivateUser(user)}
-                              className="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all"
-                              title="Activate User"
-                            >
-                              <Unlock size={18} />
-                            </button>
-                          ) : null}
-                        </div>
-                      </td>
+
                     </tr>
                   ))}
                 </tbody>
@@ -870,6 +921,8 @@ const UserManagement = () => {
         )}
       </div>
 
+
+
       {/* ======================================== ADD USER MODAL ======================================== */}
       {showAddUserModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
@@ -1159,24 +1212,22 @@ const UserManagement = () => {
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-3">Select Roles (Multiple Allowed)</label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {data.roles.slice(0, 5).map(role => (
-                      <button
-                        key={role.id}
-                        onClick={() => toggleRole(role.name, true, userToEdit, setUserToEdit)}
-                        className={`p-4 rounded-xl text-sm font-bold border-2 transition-all ${
-                          userToEdit.roles.includes(role.name)
-                            ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-500 text-blue-700'
-                            : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300'
-                        }`}
-                      >
-                        <div className="flex flex-col items-center gap-2">
-                          <Shield size={20} />
-                          <span>{role.name}</span>
-                          <span className="text-xs text-slate-500">{role.permissions} perms</span>
-                        </div>
-                      </button>
-                    ))}
+                  <div className="w-full">
+                    <select
+                        value="" 
+                        onChange={(e) => {
+                             const roleName = e.target.value;
+                             if (!userToEdit.roles.includes(roleName)) {
+                                 setUserToEdit({...userToEdit, roles: [...userToEdit.roles, roleName]});
+                             }
+                        }}
+                        className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all bg-white"
+                     >
+                       <option value="" disabled>Add Role...</option>
+                       {data.roles.map(role => (
+                         <option key={role.id} value={role.name}>{role.name}</option>
+                       ))}
+                     </select>
                   </div>
                 </div>
 
@@ -1289,6 +1340,62 @@ const UserManagement = () => {
                 className="px-5 py-2.5 rounded-xl font-bold bg-red-600 text-white hover:bg-red-700 transition-colors text-sm shadow-lg shadow-red-500/30"
               >
                 Suspend User
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================== RESET PASSWORD MODAL ======================================== */}
+      {showResetPasswordModal && userToEdit && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden animate-scaleUp">
+            <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-8 py-6 flex justify-between items-start">
+              <div>
+                <h3 className="font-bold text-2xl">Reset Password</h3>
+                <p className="text-sm text-white/90 mt-1">{userToEdit.name}</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowResetPasswordModal(false);
+                  setUserToEdit(null);
+                }}
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="p-8">
+              <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
+                 <div className="flex items-start gap-3">
+                   <AlertTriangle className="text-yellow-600 flex-shrink-0 mt-0.5" size={20} />
+                   <div>
+                     <p className="font-bold text-yellow-800 text-sm mb-1">Confirm Reset</p>
+                     <p className="text-xs text-yellow-700">
+                       A password reset link will be sent to <strong>{userToEdit.email}</strong>. The user will be prompted to create a new password on their next login.
+                     </p>
+                   </div>
+                 </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowResetPasswordModal(false);
+                  setUserToEdit(null);
+                }}
+                className="px-5 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleResetPassword}
+                className="px-5 py-2.5 rounded-xl font-bold bg-yellow-500 text-white hover:bg-yellow-600 transition-colors text-sm shadow-lg shadow-yellow-500/30 flex items-center gap-2"
+              >
+                <Key size={18} />
+                Send Reset Link
               </button>
             </div>
           </div>

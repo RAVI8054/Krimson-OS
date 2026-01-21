@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import Sidebar from '../components/navigation/parent/Sidebar';
 import { Search, Bell, Menu } from 'lucide-react';
+import { PARENT_DATA } from '../data/parentData';
 
 const ParentLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 800);
+  const [selectedChildIndex, setSelectedChildIndex] = useState(0); // Global state for selected child
 
   useEffect(() => {
     const handleResize = () => {
@@ -76,7 +78,7 @@ const ParentLayout = () => {
 
         {/* Dynamic Page Content */}
         <div className="min-h-[80vh]">
-          <Outlet />
+          <Outlet context={{ selectedChildIndex, setSelectedChildIndex }} />
         </div>
       </div>
     </div>

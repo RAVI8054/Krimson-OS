@@ -15,7 +15,7 @@ import ParentNoticesCirculars from "../pages/dashboards/parent/NoticesCirculars"
 import ParentCoCurricularTracker from "../pages/dashboards/parent/CoCurricularTracker";
 import ParentFeedbackSurvey from "../pages/dashboards/parent/FeedbackSurvey";
 import ParentSupportCenter from "../pages/dashboards/parent/SupportCenter";
-import ProfilePage from '../pages/common/ProfilePage';
+import ParentProfile from "../pages/dashboards/parent/ParentProfile";
 
 const ParentRoutes = () => {
   return (
@@ -36,7 +36,7 @@ const ParentRoutes = () => {
            <Route path="cca" element={<ParentCoCurricularTracker />} />
            <Route path="feedback" element={<ParentFeedbackSurvey />} />
            <Route path="support" element={<ParentSupportCenter />} />
-           <Route path="profile" element={<ProfilePage roleOverride="Parent" />} />
+           <Route path="profile" element={<ParentProfile />} />
         </Route>
     </Routes>
   );

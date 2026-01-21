@@ -16,6 +16,7 @@ import ParentLinkDashboard from "../pages/dashboards/student/ParentLinkDashboard
 import CoCurricularActivities from "../pages/dashboards/student/CoCurricularActivities";
 import HelpAndSupport from "../pages/dashboards/student/HelpAndSupport";
 import ProfilePage from '../pages/common/ProfilePage';
+import ProfileAndGoals from '../pages/dashboards/student/ProfileAndGoals';
 
 const StudentRoutes = () => {
   return (
@@ -32,7 +33,7 @@ const StudentRoutes = () => {
            <Route path="analytics" element={<PerformanceAnalytics />} />
            <Route path="fees" element={<FeeStatus />} />
            <Route path="behavior" element={<BehaviorLog />} />
-           <Route path="profile" element={<ProfilePage roleOverride="Student" />} />
+           <Route path="profile" element={<ProfileAndGoals />} />
            <Route path="parentlink" element={<ParentLinkDashboard />} />
            <Route path="activities" element={<CoCurricularActivities />} />
            <Route path="support" element={<HelpAndSupport />} />

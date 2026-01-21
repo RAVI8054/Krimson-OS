@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Calendar as CalendarIcon, 
   MapPin, 
@@ -25,6 +25,8 @@ const CalendarEvents = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'calendar'
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   // Mock Data - Will be replaced with API
   const events = [
@@ -117,7 +119,10 @@ const CalendarEvents = () => {
       attendees: 250,
       brochureUrl: '#',
       color: 'from-pink-500 to-rose-500'
-    }
+    },
+    // Adding mock events to demonstrate pagination
+    { id: 7, title: 'Math Olympiad', date: '2026-02-22', time: '10:00 AM - 12:00 PM', location: 'Hall A', category: 'Academic', type: 'academic', description: 'National level math competition.', rsvpRequired: false, attendees: 100, color: 'from-blue-500 to-cyan-500' },
+    { id: 8, title: 'Football Match vs St. Mary', date: '2026-02-25', time: '04:00 PM - 06:00 PM', location: 'Main Field', category: 'Sports', type: 'sports', description: 'Friendly football match.', rsvpRequired: false, attendees: 300, color: 'from-green-500 to-emerald-500' },
   ];
 
   const categories = [
@@ -134,6 +139,21 @@ const CalendarEvents = () => {
                          event.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  // Calculate Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredEvents.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchQuery]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleRSVP = (eventId) => {
     console.log('RSVP for event:', eventId);
@@ -252,7 +272,7 @@ const CalendarEvents = () => {
 
       {/* Events List */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 relative z-10">
-        {filteredEvents.map((event) => {
+        {currentItems.map((event) => {
           const CategoryIcon = getCategoryIcon(event.type);
           return (
             <div
@@ -359,6 +379,57 @@ const CalendarEvents = () => {
           );
         })}
       </div>
+
+       {/* Pagination Controls */}
+      {filteredEvents.length > itemsPerPage && (
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10 px-2 pb-8">
+           <div className="text-sm text-slate-500 font-medium order-2 sm:order-1">
+             Showing <span className="font-bold text-slate-800">{indexOfFirstItem + 1}</span> to <span className="font-bold text-slate-800">{Math.min(indexOfLastItem, filteredEvents.length)}</span> of <span className="font-bold text-slate-800">{filteredEvents.length}</span> events
+           </div>
+           
+           <div className="flex items-center gap-2 order-1 sm:order-2">
+             <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`p-2 rounded-xl transition-all ${
+                  currentPage === 1 
+                    ? 'text-slate-300 cursor-not-allowed bg-white/50' 
+                    : 'text-slate-600 hover:bg-white hover:shadow-sm hover:text-cyan-600 bg-white/50 border border-slate-200'
+                }`}
+             >
+               <ChevronLeft size={20} />
+             </button>
+             
+             <div className="flex items-center gap-1.5">
+               {[...Array(totalPages)].map((_, index) => (
+                 <button
+                   key={index}
+                   onClick={() => handlePageChange(index + 1)}
+                   className={`w-8 h-8 rounded-lg text-sm font-bold flex items-center justify-center transition-all ${
+                     currentPage === index + 1
+                       ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md'
+                       : 'bg-white/50 text-slate-600 hover:bg-white hover:shadow-sm border border-slate-200'
+                   }`}
+                 >
+                   {index + 1}
+                 </button>
+               ))}
+             </div>
+
+             <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                 disabled={currentPage === totalPages}
+                className={`p-2 rounded-xl transition-all ${
+                  currentPage === totalPages 
+                    ? 'text-slate-300 cursor-not-allowed bg-white/50' 
+                    : 'text-slate-600 hover:bg-white hover:shadow-sm hover:text-cyan-600 bg-white/50 border border-slate-200'
+                }`}
+             >
+               <ChevronRight size={20} />
+             </button>
+           </div>
+        </div>
+      )}
 
       {/* Empty State */}
       {filteredEvents.length === 0 && (

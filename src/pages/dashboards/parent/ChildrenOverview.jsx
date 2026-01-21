@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { PARENT_DATA } from '../../../data/parentData';
 import { User, TrendingUp, Award, ArrowRight, BookOpen, Target, ExternalLink } from 'lucide-react';
 
@@ -10,8 +11,8 @@ import { User, TrendingUp, Award, ArrowRight, BookOpen, Target, ExternalLink } f
  */
 const ChildrenOverview = () => {
   const { children } = PARENT_DATA;
-  const [activeChildIndex, setActiveChildIndex] = useState(0);
-  const activeChild = children[activeChildIndex];
+  const { selectedChildIndex, setSelectedChildIndex } = useOutletContext();
+  const activeChild = children[selectedChildIndex];
 
   // Future API: Fetch children data via parent ID
   const fetchChildrenData = () => {
@@ -51,9 +52,9 @@ const ChildrenOverview = () => {
           {children.map((child, index) => (
             <button
               key={index}
-              onClick={() => setActiveChildIndex(index)}
+              onClick={() => setSelectedChildIndex(index)}
               className={`flex items-center gap-3 px-5 py-3 rounded-xl border-2 transition-all ${
-                activeChildIndex === index
+                selectedChildIndex === index
                   ? 'bg-gradient-to-r from-cyan-50 to-blue-50 border-blue-400 shadow-md'
                   : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
               }`}
@@ -65,7 +66,7 @@ const ChildrenOverview = () => {
               />
               <div className="text-left">
                 <p className={`text-sm font-bold ${
-                  activeChildIndex === index ? 'text-blue-700' : 'text-slate-800'
+                  selectedChildIndex === index ? 'text-blue-700' : 'text-slate-800'
                 }`}>
                   {child.name}
                 </p>

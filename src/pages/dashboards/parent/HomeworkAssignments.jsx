@@ -445,10 +445,6 @@ const HomeworkAssignments = () => {
         )}
       </div>
 
-      {/* Footer Note */}
-      <div className="mt-8 text-center text-sm text-slate-500">
-        <p>💡 Click on Preview to view assignment details or Download to save PDF documents</p>
-      </div>
     </div>
   );
 };
