@@ -60,7 +60,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                         <span className="font-bold text-lg text-white">K</span>
                     </div>
                     <div>
-                        <h1 className="font-bold text-lg text-white tracking-wide">Krimson OS</h1>
+                        <h1 className="font-bold text-lg text-white tracking-wide">Krimson SSO</h1>
                         <p className="text-xs text-white/80">Registrar Console</p>
                     </div>
                 </div>

@@ -89,7 +89,7 @@ const PrincipalSidebar = ({ isOpen, onClose }) => {
              <Shield className="h-5 w-5 md:h-6 md:w-6 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-base md:text-lg tracking-wide text-white">Krimson OS</h1>
+            <h1 className="font-bold text-base md:text-lg tracking-wide text-white">Krimson SSO</h1>
             <p className="text-[10px] md:text-xs text-white/80 font-medium">Principal Console</p>
           </div>
         </div>

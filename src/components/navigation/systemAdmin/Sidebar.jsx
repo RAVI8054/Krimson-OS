@@ -55,7 +55,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             <Server size={24} className="text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-lg tracking-wide">Krimson OS</h1>
+            <h1 className="font-bold text-lg tracking-wide">Krimson SSO</h1>
             <p className="text-xs text-white/80">System Admin</p>
           </div>
         </div>

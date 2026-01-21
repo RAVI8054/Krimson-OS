@@ -54,7 +54,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 {/* Top Logo Area */}
                 <div className="flex items-center gap-3 mb-8 shrink-0 pl-2">
                     <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shadow-sm"><Shield className="h-6 w-6 text-white" /></div>
-                    <div><h1 className="font-bold text-lg tracking-wide text-white">Krimson OS</h1><p className="text-xs text-white/80 font-medium">Singapore</p></div>
+                    <div><h1 className="font-bold text-lg tracking-wide text-white">Krimson SSO</h1><p className="text-xs text-white/80 font-medium">Singapore</p></div>
                 </div>
 
                 {/* Coordinator Menu List */}

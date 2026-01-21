@@ -69,7 +69,7 @@ const Sidebar = ({ isOpen, onClose }) => {
              <Trophy className="h-5 w-5 md:h-6 md:w-6 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-base md:text-lg tracking-wide">Krimson OS</h1>
+            <h1 className="font-bold text-base md:text-lg tracking-wide">Krimson SSO</h1>
             <p className="text-[10px] md:text-xs text-white/80">Student Portal</p>
           </div>
         </div>
