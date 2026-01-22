@@ -54,7 +54,7 @@ const InterventionCaseDashboard = () => {
     const hasUpcomingReminder = data.nextFollowUp && new Date(data.nextFollowUp) - new Date() < 3 * 24 * 60 * 60 * 1000;
 
     return (
-      <div className="bg-white p-6 rounded-3xl shadow-sm border-2 border-slate-100 hover:shadow-lg transition-all relative overflow-hidden group">
+      <div className="bg-white p-6 rounded-3xl shadow-md border border-slate-200 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group cursor-pointer">
         {/* Severity Corner */}
         {data.severity === 'High' && (
           <div className="absolute top-0 right-0 w-0 h-0 border-l-[60px] border-l-transparent border-t-[60px] border-t-red-500 opacity-20"></div>
@@ -177,39 +177,43 @@ const InterventionCaseDashboard = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-3xl shadow-lg">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
           <div className="flex items-center justify-between mb-2">
-            <Shield size={24} className="opacity-80" />
+            <Shield size={24} className="opacity-90" />
           </div>
           <h3 className="text-3xl font-bold mb-1">5</h3>
-          <p className="text-sm opacity-90">Active Cases</p>
+          <p className="text-sm opacity-90 font-medium">Active Cases</p>
+          <p className="text-xs opacity-60 mt-2">get in app</p>
         </div>
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+        <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
           <div className="flex items-center justify-between mb-2">
-            <Bell size={24} className="text-orange-500" />
+            <Bell size={24} className="opacity-90" />
           </div>
-          <h3 className="text-3xl font-bold text-slate-800 mb-1">12</h3>
-          <p className="text-sm text-slate-500">Follow-ups Due</p>
+          <h3 className="text-3xl font-bold mb-1">12</h3>
+          <p className="text-sm opacity-90 font-medium">Follow-ups Due</p>
+          <p className="text-xs opacity-60 mt-2">get in app</p>
         </div>
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+        <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
           <div className="flex items-center justify-between mb-2">
-            <CheckCircle size={24} className="text-green-500" />
+            <CheckCircle size={24} className="opacity-90" />
           </div>
-          <h3 className="text-3xl font-bold text-slate-800 mb-1">28</h3>
-          <p className="text-sm text-slate-500">Resolved YTD</p>
+          <h3 className="text-3xl font-bold mb-1">28</h3>
+          <p className="text-sm opacity-90 font-medium">Resolved YTD</p>
+          <p className="text-xs opacity-60 mt-2">get in app</p>
         </div>
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
           <div className="flex items-center justify-between mb-2">
-            <TrendingUp size={24} className="text-purple-500" />
+            <TrendingUp size={24} className="opacity-90" />
           </div>
-          <h3 className="text-3xl font-bold text-slate-800 mb-1">87%</h3>
-          <p className="text-sm text-slate-500">Success Rate</p>
+          <h3 className="text-3xl font-bold mb-1">87%</h3>
+          <p className="text-sm opacity-90 font-medium">Success Rate</p>
+          <p className="text-xs opacity-60 mt-2">get in app</p>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-wrap gap-2 items-center">
-        <div className="flex items-center gap-2 text-sm font-bold text-slate-600">
+      <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-slate-200 flex flex-wrap gap-3 items-center">
+        <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
           <Filter size={16} />
           Filter:
         </div>
@@ -217,10 +221,10 @@ const InterventionCaseDashboard = () => {
           <button
             key={status}
             onClick={() => setFilterStatus(status)}
-            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+            className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${
               filterStatus === status
-                ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg scale-105'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:scale-105'
             }`}>
             {status}
           </button>

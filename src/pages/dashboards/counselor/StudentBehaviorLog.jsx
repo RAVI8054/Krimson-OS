@@ -81,21 +81,42 @@ const StudentBehaviorLog = () => {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {stats.map((stat, index) => (
-          <div key={index} className={`${stat.bg} p-6 rounded-3xl border ${stat.border} flex items-center gap-4 hover:shadow-md transition-all`}>
-            <div className={`p-4 bg-white rounded-2xl ${stat.color} shadow-sm`}>
-              <stat.icon size={28} />
-            </div>
-            <div>
-              <p className={`text-3xl font-extrabold ${stat.color.replace('text-', 'text-opacity-80 text-').replace('500', '700')}`}>
-                {stat.value}
-              </p>
-              <p className={`text-xs font-bold uppercase tracking-wider ${stat.color.replace('500', '600')}`}>
-                {stat.title}
-              </p>
+        <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <Smile size={24} />
             </div>
           </div>
-        ))}
+          <div>
+            <p className="text-3xl font-extrabold mb-1">12</p>
+            <p className="text-xs font-bold uppercase tracking-wider opacity-90">Positive Merits</p>
+            <p className="text-xs opacity-60 mt-2">get in app</p>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <Frown size={24} />
+            </div>
+          </div>
+          <div>
+            <p className="text-3xl font-extrabold mb-1">5</p>
+            <p className="text-xs font-bold uppercase tracking-wider opacity-90">Incidents / Concerns</p>
+            <p className="text-xs opacity-60 mt-2">get in app</p>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <FileText size={24} />
+            </div>
+          </div>
+          <div>
+            <p className="text-3xl font-extrabold mb-1">8</p>
+            <p className="text-xs font-bold uppercase tracking-wider opacity-90">Parent Reports</p>
+            <p className="text-xs opacity-60 mt-2">get in app</p>
+          </div>
+        </div>
       </div>
 
       {/* Main Content Area */}

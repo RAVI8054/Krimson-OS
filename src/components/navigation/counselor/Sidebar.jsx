@@ -60,7 +60,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 overflow-y-auto space-y-1 relative z-10 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-1 relative z-10 custom-scrollbar">
           {menuItems.map((item, index) => (
             <NavLink
               key={index}

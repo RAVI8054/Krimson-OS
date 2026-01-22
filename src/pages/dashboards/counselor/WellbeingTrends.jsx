@@ -90,48 +90,52 @@ const WellbeingTrends = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <div className="flex items-center gap-3 mb-2">
-            <Users size={20} className="text-blue-500" />
-            <span className="text-xs font-bold text-slate-500 uppercase">Total Students</span>
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <Users size={20} />
+            </div>
           </div>
-          <div className="text-3xl font-bold text-slate-800 mb-2">245</div>
-          <div className="flex items-center gap-1 text-[10px] text-slate-400 italic">
-            <span>Go to App</span>
-            <ExternalLink size={10} />
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-green-100">
-          <div className="flex items-center gap-3 mb-2">
-            <TrendingUp size={20} className="text-green-500" />
-            <span className="text-xs font-bold text-slate-500 uppercase">Improved</span>
-          </div>
-          <div className="text-3xl font-bold text-green-600 mb-2">32</div>
-          <div className="flex items-center gap-1 text-[10px] text-slate-400 italic">
-            <span>Go to App</span>
-            <ExternalLink size={10} />
+          <div>
+            <p className="text-3xl font-extrabold mb-1">245</p>
+            <p className="text-xs font-bold uppercase tracking-wider opacity-90">Total Students</p>
+            <p className="text-xs opacity-60 mt-2">get in app</p>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-orange-100">
-          <div className="flex items-center gap-3 mb-2">
-            <Target size={20} className="text-orange-500" />
-            <span className="text-xs font-bold text-slate-500 uppercase">Monitoring</span>
+        <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <TrendingUp size={20} />
+            </div>
           </div>
-          <div className="text-3xl font-bold text-orange-600 mb-2">18</div>
-          <div className="flex items-center gap-1 text-[10px] text-slate-400 italic">
-            <span>Go to App</span>
-            <ExternalLink size={10} />
+          <div>
+            <p className="text-3xl font-extrabold mb-1">32</p>
+            <p className="text-xs font-bold uppercase tracking-wider opacity-90">Improved</p>
+            <p className="text-xs opacity-60 mt-2">get in app</p>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-red-100">
-          <div className="flex items-center gap-3 mb-2">
-            <AlertOctagon size={20} className="text-red-500" />
-            <span className="text-xs font-bold text-slate-500 uppercase">High Risk</span>
+        <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-4 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <Target size={20} />
+            </div>
           </div>
-          <div className="text-3xl font-bold text-red-600 mb-2">{wellbeing.highRiskStudents}</div>
-          <div className="flex items-center gap-1 text-[10px] text-slate-400 italic">
-            <span>Go to App</span>
-            <ExternalLink size={10} />
+          <div>
+            <p className="text-3xl font-extrabold mb-1">18</p>
+            <p className="text-xs font-bold uppercase tracking-wider opacity-90">Monitoring</p>
+            <p className="text-xs opacity-60 mt-2">get in app</p>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
+          <div className="flex items-center justify-between mb-3">
+            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <AlertOctagon size={20} />
+            </div>
+          </div>
+          <div>
+            <p className="text-3xl font-extrabold mb-1">{wellbeing.highRiskStudents}</p>
+            <p className="text-xs font-bold uppercase tracking-wider opacity-90">High Risk</p>
+            <p className="text-xs opacity-60 mt-2">get in app</p>
           </div>
         </div>
       </div>
