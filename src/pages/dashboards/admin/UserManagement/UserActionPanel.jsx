@@ -94,12 +94,12 @@ const UserActionPanel = ({
                                     onClick={() => handleActionChange(action)}
                                     className={`w-full text-left px-4 py-3 text-sm font-bold rounded-xl transition-all flex items-center gap-3
                                     ${selectedAction.key === action.key 
-                                        ? "bg-slate-50 text-blue-700 border border-slate-100" 
-                                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent"}`}
+                                        ? `${action.bg} ${action.color} border border-slate-100` 
+                                        : `text-slate-600 hover:bg-slate-50 hover:${action.color.replace('text-', 'text-')} border border-transparent`}`} // ensuring simple hover text color application
                                 >
-                                    <action.icon size={18} className={selectedAction.key === action.key ? "text-blue-600" : "text-slate-400"} />
+                                    <action.icon size={18} className={action.color} />
                                     {action.label}
-                                    {selectedAction.key === action.key && <Check size={16} className="ml-auto text-blue-600" />}
+                                    {selectedAction.key === action.key && <Check size={16} className={`ml-auto ${action.color}`} />}
                                 </button>
                                 ))}
                             </div>

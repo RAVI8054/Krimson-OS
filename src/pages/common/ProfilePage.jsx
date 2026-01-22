@@ -48,12 +48,12 @@ const ROLE_THEMES = {
 const ProfilePage = ({ roleOverride }) => {
   const [activeTab, setActiveTab] = useState('profile');
   
-  // Initialize with default values, will be populated by effect
+  // Initialize with default values, using roleOverride if available
   const [user, setUser] = useState({
-    name: '',
-    email: '',
+    name: 'Dr. Sarah Mitchell',
+    email: 'sarah.mitchell@krimson.edu',
     phone: '',
-    role: '',
+    role: roleOverride || '',
     avatar: '',
     bio: ''
   });
@@ -68,18 +68,26 @@ const ProfilePage = ({ roleOverride }) => {
         if (currentUser) {
             setUser(prev => ({
                 ...prev,
-                name: currentUser.name || 'User',
-                email: currentUser.email || '',
-                phone: currentUser.phone || '', // Might not be in initial auth data
+                name: currentUser.name || prev.name,
+                email: currentUser.email || prev.email,
+                phone: currentUser.phone || '',
                 role: roleOverride || currentRole || currentUser.role || 'User',
                 avatar: currentUser.avatar || '',
-                bio: currentUser.bio || `Principal / ${roleOverride || currentRole || 'User'}` // Default bio based on role
+                bio: currentUser.bio || `Principal / ${roleOverride || currentRole || 'User'}`
+            }));
+        } else if (roleOverride) {
+            // Mock data fallback for dev/preview
+             setUser(prev => ({
+                ...prev,
+                role: roleOverride,
+                bio: `${roleOverride} :: Faculty`,
+                email: 'teacher@krimson.edu'
             }));
         }
     };
     
     fetchUserData();
-  }, []);
+  }, [roleOverride]);
 
   const [preferences, setPreferences] = useState({
     emailNotifications: true,

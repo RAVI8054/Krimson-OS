@@ -248,61 +248,40 @@ const TestManager = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
-            filterStatus === 'scheduled' 
-              ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white border-blue-500 shadow-lg' 
-              : 'bg-white border-blue-200 hover:border-blue-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
-          }`}
-          onClick={() => setFilterStatus(filterStatus === 'scheduled' ? 'all' : 'scheduled')}
-        >
+        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-blue-200 bg-white hover:border-blue-300 hover:shadow-lg hover:scale-105 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
-            <p className={`text-xs font-bold uppercase tracking-wider ${filterStatus === 'scheduled' ? 'text-white/80' : 'text-slate-400'}`}>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               Scheduled
             </p>
-            <Calendar className={filterStatus === 'scheduled' ? 'text-white opacity-60' : 'text-blue-400 opacity-60'} size={20} />
+            <Calendar className="text-blue-400 opacity-60" size={20} />
           </div>
-          <h3 className={`text-2xl md:text-3xl font-bold ${filterStatus === 'scheduled' ? 'text-white' : 'text-slate-800'}`}>
+          <h3 className="text-2xl md:text-3xl font-bold text-slate-800">
             {stats.scheduled}
           </h3>
           <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
-        <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
-            filterStatus === 'live' 
-              ? 'bg-gradient-to-br from-green-500 to-emerald-500 text-white border-green-500 shadow-lg' 
-              : 'bg-white border-green-200 hover:border-green-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
-          }`}
-          onClick={() => setFilterStatus(filterStatus === 'live' ? 'all' : 'live')}
-        >
+        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-green-200 bg-white hover:border-green-300 hover:shadow-lg hover:scale-105 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
-            <p className={`text-xs font-bold uppercase tracking-wider ${filterStatus === 'live' ? 'text-white/80' : 'text-slate-400'}`}>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               Live Now
             </p>
-            <Zap className={filterStatus === 'live' ? 'text-white opacity-60' : 'text-green-400 opacity-60'} size={20} />
+            <Zap className="text-green-400 opacity-60" size={20} />
           </div>
-          <h3 className={`text-2xl md:text-3xl font-bold ${filterStatus === 'live' ? 'text-white' : 'text-green-600'}`}>
+          <h3 className="text-2xl md:text-3xl font-bold text-green-600">
             {stats.live}
           </h3>
           <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
-        <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
-            filterStatus === 'grading' 
-              ? 'bg-gradient-to-br from-orange-500 to-amber-500 text-white border-orange-500 shadow-lg' 
-              : 'bg-white border-orange-200 hover:border-orange-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
-          }`}
-          onClick={() => setFilterStatus(filterStatus === 'grading' ? 'all' : 'grading')}
-        >
+        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-orange-200 bg-white hover:border-orange-300 hover:shadow-lg hover:scale-105 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
-            <p className={`text-xs font-bold uppercase tracking-wider ${filterStatus === 'grading' ? 'text-white/80' : 'text-slate-400'}`}>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               Pending Grading
             </p>
-            <Edit className={filterStatus === 'grading' ? 'text-white opacity-60' : 'text-orange-400 opacity-60'} size={20} />
+            <Edit className="text-orange-400 opacity-60" size={20} />
           </div>
-          <h3 className={`text-2xl md:text-3xl font-bold ${filterStatus === 'grading' ? 'text-white' : 'text-orange-600'}`}>
+          <h3 className="text-2xl md:text-3xl font-bold text-orange-600">
             {stats.grading}
           </h3>
           <p className="text-[10px] text-slate-400 mt-1">get in app</p>

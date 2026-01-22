@@ -190,21 +190,14 @@ const StudentInsights = () => {
           <p className="text-[10px] text-slate-400 mt-1">get in app</p>
         </div>
 
-        <div 
-          className={`p-4 md:p-6 rounded-3xl shadow-sm border-2 transition-all cursor-pointer ${
-            filterRisk === 'atRisk' 
-              ? 'bg-gradient-to-br from-red-500 to-pink-500 text-white border-red-500 shadow-lg' 
-              : 'bg-white border-red-200 hover:border-red-300 hover:shadow-lg hover:scale-105 transition-all duration-300'
-          }`}
-          onClick={() => setFilterRisk(filterRisk === 'atRisk' ? 'all' : 'atRisk')}
-        >
+        <div className="p-4 md:p-6 rounded-3xl shadow-sm border-2 border-red-200 bg-white hover:shadow-lg hover:scale-105 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
-            <p className={`text-xs font-bold uppercase tracking-wider ${filterRisk === 'atRisk' ? 'text-white/80' : 'text-slate-400'}`}>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               At Risk
             </p>
-            <AlertTriangle className={filterRisk === 'atRisk' ? 'text-white opacity-60' : 'text-red-400 opacity-60'} size={20} />
+            <AlertTriangle className="text-red-400 opacity-60" size={20} />
           </div>
-          <h3 className={`text-2xl md:text-3xl font-bold ${filterRisk === 'atRisk' ? 'text-white' : 'text-red-600'}`}>
+          <h3 className="text-2xl md:text-3xl font-bold text-red-600">
             {stats.atRisk}
           </h3>
           <p className="text-[10px] text-slate-400 mt-1">get in app</p>

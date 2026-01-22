@@ -225,7 +225,10 @@ const AcademicCalendar = () => {
                 className="px-6 py-3 bg-white/20 backdrop-blur-md text-white rounded-xl font-bold shadow-lg hover:bg-white/30 transition-all flex items-center gap-2"
               >
                 <Target size={20} />
-                <span>Plan Ahead</span>
+                <div className="text-left">
+                  <div>Plan Ahead</div>
+                  <div className="text-[10px] text-black">click here</div>
+                </div>
               </button>
               <button className="px-6 py-3 bg-white text-blue-600 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center gap-2 active:scale-95">
                 <Plus size={20} />
