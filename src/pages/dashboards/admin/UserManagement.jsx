@@ -329,12 +329,10 @@ const UserManagement = () => {
               <table className="w-full">
                 <thead className="bg-slate-50 border-b border-slate-200">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">User</th>
-                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Roles</th>
-                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Department</th>
-                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Last Login</th>
+                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">User (Full Name)</th>
+                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Email</th>
+                    <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Role</th>
                     <th className="px-4 py-3 text-left text-xs font-extrabold text-slate-500 uppercase tracking-wider">Status</th>
-
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -347,12 +345,14 @@ const UserManagement = () => {
                           </div>
                           <div>
                             <p className="font-bold text-slate-800 text-sm">{user.name}</p>
-                            <p className="text-xs text-slate-500 flex items-center gap-1">
-                              <Mail size={10} />
-                              {user.email}
-                            </p>
                           </div>
                         </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <p className="text-sm text-slate-600 flex items-center gap-1">
+                          <Mail size={14} />
+                          {user.email}
+                        </p>
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex flex-wrap gap-1.5">
@@ -364,15 +364,6 @@ const UserManagement = () => {
                               {role}
                             </span>
                           ))}
-                        </div>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className="text-sm font-semibold text-slate-600">{user.department}</span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex flex-col">
-                          <span className="text-sm font-bold text-slate-700">{formatDate(user.lastLogin)}</span>
-                          <span className="text-xs text-slate-400 font-medium">IP: {user.lastLoginIp || 'N/A'}</span>
                         </div>
                       </td>
                       <td className="px-4 py-4">

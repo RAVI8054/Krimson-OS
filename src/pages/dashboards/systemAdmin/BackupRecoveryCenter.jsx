@@ -598,24 +598,7 @@ const BackupRecoveryCenter = () => {
           </div>
         </div>
 
-        {/* Integration Note */}
-        <div className="bg-gradient-to-r from-cyan-50 via-blue-50 to-pink-50 rounded-3xl p-6 border border-cyan-100">
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-2xl">
-              <Cloud className="text-white" size={24} />
-            </div>
-            <div className="flex-1">
-              <h4 className="font-bold text-slate-800 mb-2">Backup API & Cloud Storage Integration</h4>
-              <p className="text-sm text-slate-600 mb-3">
-                This dashboard integrates with the <span className="font-semibold">Backup API</span> and <span className="font-semibold">{backupStats.cloudStorage}</span> for automated data protection. 
-                All backups use <span className="font-semibold">{backupStats.encryption} encryption</span> with a <span className="font-semibold">{backupStats.retentionPeriod} retention period</span>.
-              </p>
-              <div className="text-xs text-slate-500">
-                Configure backup policies, retention rules, and disaster recovery procedures via the mobile app.
-              </div>
-            </div>
-          </div>
-        </div>
+       
       </div>
 
       {/* Custom Styles */}

@@ -535,24 +535,7 @@ const SecurityAccessControl = () => {
           </div>
         </div>
 
-        {/* SSO & Security Integration */}
-        <div className="bg-gradient-to-r from-cyan-50 via-blue-50 to-pink-50 rounded-3xl p-6 border border-cyan-100">
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-2xl">
-              <Globe className="text-white" size={24} />
-            </div>
-            <div className="flex-1">
-              <h4 className="font-bold text-slate-800 mb-2">SSO Authentication & Security Policy Engine</h4>
-              <p className="text-sm text-slate-600">
-                This dashboard integrates with <span className="font-semibold">{securityMetrics.ssoProvider} SSO</span> for seamless authentication and the <span className="font-semibold">Security Policy Engine</span> for automated threat detection and access control. 
-                Configure advanced security policies and authentication methods in the mobile app.
-              </p>
-              <div className="mt-3 text-xs text-slate-500">
-                Last Security Audit: <span className="font-bold text-slate-700">{securityMetrics.lastSecurityAudit}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+       
       </div>
 
       {/* Custom Styles */}

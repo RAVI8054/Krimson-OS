@@ -362,12 +362,12 @@ const AuditMaintenanceLog = () => {
             </div>
 
             {/* Integration Note */}
-            <div className="p-4 rounded-3xl bg-blue-50/50 border border-blue-100">
+            {/* <div className="p-4 rounded-3xl bg-blue-50/50 border border-blue-100">
                <p className="text-[10px] text-slate-500 leading-relaxed text-center">
                  <span className="font-bold text-blue-600 block mb-1">System Integration Active</span>
                  Connected to <span className="font-semibold">Audit Database</span> and <span className="font-semibold">Admin Configuration API</span> based on system settings.
                </p>
-            </div>
+            </div> */}
 
           </div>
         </div>

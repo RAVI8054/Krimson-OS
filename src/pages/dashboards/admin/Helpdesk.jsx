@@ -519,21 +519,15 @@ const Helpdesk = () => {
                             <div className="flex items-center justify-end gap-2">
                               <button 
                                  onClick={() => setSelectedTicket(ticket)}
-                                 className="flex flex-col items-center justify-center px-4 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold rounded-xl transition-all shadow-md shadow-blue-500/20 text-sm"
+                                 className="flex items-center justify-center gap-1 px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold rounded-xl transition-all shadow-md shadow-blue-500/20 text-sm"
                                >
-                                  <div className="flex items-center gap-1">
-                                    <Eye size={16} />
-                                    <span>View</span>
-                                  </div>
-                                  <span className="text-[10px] opacity-80 font-normal leading-none mt-0.5">get in app</span>
+                                 <Eye size={16} />
+                                 <span>View</span>
                                </button>
                                {ticket.status !== 'Resolved' && (
-                                 <button className="flex flex-col items-center justify-center px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-colors shadow-md shadow-green-500/20 text-sm">
-                                    <div className="flex items-center gap-1">
-                                      <CheckSquare size={16} />
-                                      <span>Resolve</span>
-                                    </div>
-                                    <span className="text-[10px] opacity-80 font-normal leading-none mt-0.5">get in app</span>
+                                 <button className="flex items-center justify-center gap-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-colors shadow-md shadow-green-500/20 text-sm">
+                                   <CheckSquare size={16} />
+                                   <span>Resolve</span>
                                  </button>
                                )}
                             </div>
@@ -606,9 +600,9 @@ const Helpdesk = () => {
           ======================================== */}
       {selectedTicket && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-pink-500 p-6 flex items-center justify-between">
+            <div className="bg-gradient-to-r from-cyan-500 via-blue-500 to-pink-500 p-6 flex items-center justify-between flex-shrink-0">
               <div>
                 <h2 className="text-2xl font-bold text-white mb-1">Ticket Details</h2>
                 <p className="text-white/80 text-sm font-mono">#{selectedTicket.id}</p>
@@ -622,7 +616,7 @@ const Helpdesk = () => {
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6 overflow-y-auto flex-1">
               {/* Subject */}
               <div>
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Subject</h3>

@@ -543,21 +543,7 @@ const SystemHealthMonitoring = () => {
           </div>
         </div>
 
-        {/* Integration Note */}
-        <div className="bg-gradient-to-r from-cyan-50 via-blue-50 to-pink-50 rounded-3xl p-6 border border-cyan-100">
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-2xl">
-              <Wifi className="text-white" size={24} />
-            </div>
-            <div className="flex-1">
-              <h4 className="font-bold text-slate-800 mb-2">DevOps Integration</h4>
-              <p className="text-sm text-slate-600">
-                This dashboard integrates with <span className="font-semibold">DevOps Monitoring API</span> and <span className="font-semibold">Cloud Service Logs</span> to provide real-time system health insights. 
-                Configure your monitoring endpoints in the system settings to enable live data streaming.
-              </p>
-            </div>
-          </div>
-        </div>
+       
       </div>
 
       {/* Custom Scrollbar Styles */}
