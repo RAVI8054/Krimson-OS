@@ -305,10 +305,12 @@ const LessonApprovalCenter = () => {
                     <div className="text-[10px] opacity-70">get in app</div>
                   </button>
                   
-                  <button className="px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-blue-400 transition-all flex items-center gap-2">
-                    <Eye className="w-4 h-4" />
-                    <span>View Details</span>
-                    <div className="text-[10px] text-gray-400">get in app</div>
+                  <button className="px-6 py-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all flex flex-col items-center gap-1">
+                    <div className="flex items-center gap-2">
+                      <Eye className="w-4 h-4" />
+                      <span>View Details</span>
+                    </div>
+                    <div className="text-[10px] opacity-70">get in app</div>
                   </button>
                 </div>
 
