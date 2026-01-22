@@ -8,13 +8,17 @@ import {
   FolderOpen, Search, Filter, Calendar, User, Edit, Trash2, Eye,
   Archive, RefreshCcw, File, FileCheck, AlertTriangle, TrendingUp,
   Database, Settings, Star, Lock, Unlock, Grid, List, Plus, Copy,
-  Award, BookOpen, DollarSign, Users, BarChart3, Package
+  Award, BookOpen, DollarSign, Users, BarChart3, Package, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
 const ComplianceVault = () => {
   const [viewMode, setViewMode] = useState('grid'); // grid or list
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   // Compliance Categories
   const categories = [
@@ -233,6 +237,20 @@ const ComplianceVault = () => {
     return matchesCategory && matchesSearch;
   });
 
+  // Pagination Logic
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchQuery]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDocuments = filteredDocuments.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
+
   return (
     <div className="space-y-8 animate-fadeIn pb-10">
       
@@ -271,13 +289,13 @@ const ComplianceVault = () => {
           SUMMARY STATISTICS CARDS
           ======================================== */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
+        <div className="bg-gradient-to-br from-cyan-500 to-blue-500 rounded-2xl p-4 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 hover:scale-105 transition-all group text-white">
           <div className="flex items-center gap-2 mb-2">
-            <div className="p-1.5 bg-blue-100 text-blue-600 rounded-lg group-hover:scale-110 transition-transform"><FolderOpen size={16} /></div>
+            <div className="p-1.5 bg-white/20 text-white rounded-lg group-hover:scale-110 transition-transform backdrop-blur-sm shadow-inner"><FolderOpen size={16} /></div>
           </div>
-          <p className="text-xl font-bold text-slate-800">{stats.totalDocuments}</p>
-          <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">Total Documents</p>
-          <p className="text-[10px] text-slate-400 mt-1">(get in app)</p>
+          <p className="text-xl font-bold text-white">{stats.totalDocuments}</p>
+          <p className="text-xs text-cyan-100 font-medium uppercase tracking-wide">Total Documents</p>
+          <p className="text-[10px] text-cyan-200 mt-1 opacity-80">(get in app)</p>
         </div>
 
         <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md hover:scale-105 transition-all group">
@@ -400,23 +418,25 @@ const ComplianceVault = () => {
           ======================================== */}
       <div>
         <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-          <Shield className="text-blue-500" size={24} />
-          Compliance Categories
+          <Filter className="text-blue-500" size={24} />
+          Compliance Categories Filter
         </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <button
             onClick={() => setSelectedCategory('all')}
-            className={`p-4 rounded-2xl border-2 transition-all ${
+            className={`relative p-4 rounded-2xl border transition-all duration-300 hover:-translate-y-1 ${
               selectedCategory === 'all'
-                ? 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white border-blue-500 shadow-lg'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300 hover:shadow-md'
+                ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white border-cyan-500 shadow-lg shadow-cyan-500/30'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-cyan-300 hover:shadow-md'
             }`}
           >
-            <div className="flex flex-col items-center gap-2">
-              <Package size={24} />
+            <div className="flex flex-col items-center gap-2 relative z-10">
+              <div className={`p-3 rounded-xl transition-colors ${selectedCategory === 'all' ? 'bg-white/10' : 'bg-slate-100 group-hover:bg-slate-200'}`}>
+                <Package size={24} />
+              </div>
               <p className="font-bold text-sm">All Documents</p>
-              <p className="text-xs">{documents.length} files</p>
+              <p className="text-xs opacity-80">{documents.length} files</p>
             </div>
           </button>
 
@@ -424,16 +444,26 @@ const ComplianceVault = () => {
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`p-4 rounded-2xl border-2 transition-all ${
+              className={`relative p-4 rounded-2xl border transition-all duration-300 hover:-translate-y-1 group ${
                 selectedCategory === category.id
-                  ? `bg-gradient-to-br from-${category.color}-500 to-${category.color}-600 text-white border-${category.color}-500 shadow-lg`
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300 hover:shadow-md'
+                  ? `bg-gradient-to-br from-${category.color}-500 to-${category.color}-600 text-white border-${category.color}-500 shadow-lg shadow-${category.color}-500/30`
+                  : `bg-white text-slate-600 border-slate-200 hover:border-${category.color}-300 hover:shadow-md`
               }`}
             >
-              <div className="flex flex-col items-center gap-2">
-                {category.icon}
-                <p className="font-bold text-sm text-center">{category.name}</p>
-                <p className="text-xs">{category.count} files</p>
+              <div className="flex flex-col items-center gap-3 relative z-10">
+                <div className={`p-3 rounded-xl transition-all duration-300 ${
+                  selectedCategory === category.id 
+                    ? 'bg-white/20 backdrop-blur-sm' 
+                    : `bg-${category.color}-50 text-${category.color}-600 group-hover:scale-110`
+                }`}>
+                  {category.icon}
+                </div>
+                <div className="text-center">
+                  <p className="font-bold text-sm mb-0.5">{category.name}</p>
+                  <p className={`text-xs ${selectedCategory === category.id ? 'text-white/80' : 'text-slate-400'}`}>
+                    {category.count} files
+                  </p>
+                </div>
               </div>
             </button>
           ))}
@@ -512,7 +542,7 @@ const ComplianceVault = () => {
 
         {viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredDocuments.map((doc) => {
+            {currentDocuments.map((doc) => {
               const colors = getCategoryColor(doc.category);
               return (
                 <div key={doc.id} className={`p-6 rounded-2xl border-2 ${colors.border} hover:shadow-xl transition-all group bg-gradient-to-br from-white to-slate-50`}>
@@ -608,7 +638,7 @@ const ComplianceVault = () => {
           </div>
         ) : (
           <div className="space-y-3">
-            {filteredDocuments.map((doc) => {
+            {currentDocuments.map((doc) => {
               const colors = getCategoryColor(doc.category);
               return (
                 <div key={doc.id} className="p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all bg-white group">
@@ -667,6 +697,57 @@ const ComplianceVault = () => {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* Pagination Controls */}
+        {filteredDocuments.length > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between mt-8 border-t border-slate-100 pt-6 gap-4">
+            <div className="text-sm text-slate-500">
+              Showing <span className="font-bold text-slate-700">{indexOfFirstItem + 1}</span> to <span className="font-bold text-slate-700">{Math.min(indexOfLastItem, filteredDocuments.length)}</span> of <span className="font-bold text-slate-700">{filteredDocuments.length}</span> entries
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={prevPage}
+                disabled={currentPage === 1}
+                className={`p-2.5 rounded-xl border transition-all ${
+                  currentPage === 1
+                    ? 'bg-slate-50 text-slate-300 border-slate-100 cursor-not-allowed'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-blue-300 hover:text-blue-600'
+                }`}
+              >
+                <ChevronLeft size={18} />
+              </button>
+
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => paginate(i + 1)}
+                    className={`w-9 h-9 rounded-xl text-sm font-bold transition-all ${
+                      currentPage === i + 1
+                        ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/30'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:border-blue-300'
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+                className={`p-2.5 rounded-xl border transition-all ${
+                  currentPage === totalPages
+                    ? 'bg-slate-50 text-slate-300 border-slate-100 cursor-not-allowed'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-blue-300 hover:text-blue-600'
+                }`}
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
           </div>
         )}
       </div>

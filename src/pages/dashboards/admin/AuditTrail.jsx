@@ -8,14 +8,19 @@ import {
   Edit, Trash2, Plus, Eye, CheckCircle, XCircle, AlertTriangle,
   Calendar, Users, Database, Settings, Lock, Unlock, RefreshCcw,
   BarChart3, TrendingUp, Package, Book, DollarSign, UserCheck,
-  Mail, Smartphone, Bell, FileCheck, Award, AlertCircle, Zap
+  Mail, Smartphone, Bell, FileCheck, Award, AlertCircle, Zap, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
 const AuditTrail = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [selectedUser, setSelectedUser] = useState('all');
   const [selectedDepartment, setSelectedDepartment] = useState('all');
+
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   // Activity Log Data
   const activityLogs = [
@@ -251,7 +256,22 @@ const AuditTrail = () => {
                          log.module.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          log.user.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesFilter && matchesUser && matchesDepartment && matchesSearch;
+    return matchesFilter && matchesUser && matchesDepartment && matchesSearch;
   });
+
+  // Pagination Logic
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedFilter, selectedUser, selectedDepartment, searchQuery]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredLogs.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
 
   return (
     <div className="space-y-8 animate-fadeIn pb-10">
@@ -550,7 +570,9 @@ const AuditTrail = () => {
                 <Database className="text-blue-500" size={24} />
                 Activity Log
               </h2>
-              <p className="text-sm text-slate-500">{filteredLogs.length} events displayed</p>
+              <p className="text-sm text-slate-500">
+                Showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredLogs.length)} of {filteredLogs.length} events
+              </p>
             </div>
             <div className="flex items-center gap-2 text-xs">
               <Clock size={14} className="text-green-500" />
@@ -559,8 +581,8 @@ const AuditTrail = () => {
           </div>
         </div>
 
-        <div className="p-8 space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar-hidden">
-          {filteredLogs.map((log) => (
+        <div className="p-8 space-y-4">
+          {currentItems.map((log) => (
             <div key={log.id} className="p-6 rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all group bg-gradient-to-br from-white to-slate-50">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-4">
@@ -627,6 +649,57 @@ const AuditTrail = () => {
             </div>
           ))}
         </div>
+
+        {/* Pagination Controls */}
+        {filteredLogs.length > 0 && (
+          <div className="px-8 py-6 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-slate-500">
+              Page <span className="font-bold text-slate-700">{currentPage}</span> of <span className="font-bold text-slate-700">{totalPages}</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={prevPage}
+                disabled={currentPage === 1}
+                className={`p-2.5 rounded-xl border transition-all ${
+                  currentPage === 1
+                    ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-white hover:border-blue-300 hover:text-blue-600 hover:shadow-md'
+                }`}
+              >
+                <ChevronLeft size={18} />
+              </button>
+
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => paginate(i + 1)}
+                    className={`w-9 h-9 rounded-xl text-sm font-bold transition-all ${
+                      currentPage === i + 1
+                        ? 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/30'
+                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:border-blue-300'
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+                className={`p-2.5 rounded-xl border transition-all ${
+                  currentPage === totalPages
+                    ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-white hover:border-blue-300 hover:text-blue-600 hover:shadow-md'
+                }`}
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
    

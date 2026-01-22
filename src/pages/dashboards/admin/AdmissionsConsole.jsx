@@ -563,9 +563,9 @@ const AdmissionsConsole = () => {
           ======================================== */}
       {selectedApplication && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-pink-500 p-6 flex items-center justify-between">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Modal Header - Full Width */}
+            <div className="bg-gradient-to-r from-cyan-500 via-blue-500 to-pink-500 p-6 flex items-center justify-between flex-shrink-0">
               <div>
                 <h2 className="text-2xl font-bold text-white mb-1">Application Details</h2>
                 <p className="text-white/80 text-sm font-mono">{selectedApplication.studentId}</p>
@@ -578,8 +578,13 @@ const AdmissionsConsole = () => {
               </button>
             </div>
 
-            {/* Modal Body */}
-            <div className="p-6 space-y-6">
+            {/* Modal Body - Scrollable with Colored Scrollbar */}
+            <div className="p-6 space-y-6 overflow-y-auto flex-1 custom-scrollbar-cyan"
+              style={{
+                scrollbarWidth: 'thin',
+                scrollbarColor: '#06b6d4 #e0f2fe'
+              }}
+            >
               {/* Student Info */}
               <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">Student Information</h3>
