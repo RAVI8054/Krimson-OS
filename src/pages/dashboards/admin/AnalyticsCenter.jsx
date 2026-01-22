@@ -501,12 +501,6 @@ const AnalyticsCenter = () => {
         </div>
       </div>
 
-      {/* ========================================
-          FOOTER INFO
-          ======================================== */}
-      <div className="text-center text-slate-400 text-xs py-4">
-        Analytics data powered by Analytics Engine + Reporting API (Static demonstration)
-      </div>
     </div>
   );
 };

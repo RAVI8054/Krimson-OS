@@ -598,12 +598,7 @@ const HRAdmin = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="text-center py-4">
-        <p className="text-xs text-slate-400 font-medium">
-          Showing {filteredStaff.length} of {staffData.length} staff records • Data synced with HR Module & Attendance Database
-        </p>
-      </div>
+     
 
     </div>
   );

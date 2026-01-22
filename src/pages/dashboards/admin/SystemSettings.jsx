@@ -654,11 +654,6 @@ const SystemSettings = () => {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <div className="text-center text-slate-400 text-xs py-4">
-        Configuration powered by Admin Configuration API (Static demonstration)
-      </div>
     </div>
   );
 };

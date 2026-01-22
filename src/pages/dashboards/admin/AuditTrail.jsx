@@ -629,12 +629,7 @@ const AuditTrail = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="text-center py-4">
-        <p className="text-xs text-slate-400 font-medium">
-          Integrated with System Logger API & Audit Database • PDPA Compliant • Non-Repudiation Enabled
-        </p>
-      </div>
+   
 
     </div>
   );

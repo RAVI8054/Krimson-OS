@@ -69,6 +69,7 @@ const ProfileAndGoals = () => {
 
   const combinedProfileData = {
     ...profileData,
+    overallGrade: STUDENT_DATA.analytics.grade,
     onEditProfile: handleEditProfile,
     onEditGoals: handleEditGoals,
     onEditInterests: handleEditInterests,

@@ -90,19 +90,19 @@ const UserProfile = ({ role, user, detailedInfo }) => {
                 {/* Leaderboard Stats */}
                 <div className="bg-gradient-to-br from-slate-50 to-blue-50/50 rounded-2xl p-6 border border-slate-100">
                    <div className="flex items-center justify-between mb-4">
-                      <h4 className="text-sm font-bold text-slate-500 uppercase">Class Ranking</h4>
-                      <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">{detailedInfo?.leaderboard?.weeklyChange} this week</span>
+                      <h4 className="text-sm font-bold text-slate-500 uppercase">Overall Grade</h4>
+                      <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">{detailedInfo?.leaderboard?.percentile}</span>
                    </div>
                    <div className="flex items-end gap-2 mb-2">
-                      <span className="text-4xl font-bold text-slate-800">#{detailedInfo?.leaderboard?.rank}</span>
-                      <span className="text-sm font-bold text-slate-400 mb-2">/ {detailedInfo?.leaderboard?.totalStudents} Students</span>
+                      <span className="text-4xl font-bold text-slate-800">{detailedInfo?.overallGrade || 'A'}</span>
+                      <span className="text-sm font-bold text-slate-400 mb-2">Average</span>
                    </div>
                    <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                      <div className="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full" style={{ width: `${(1 - (detailedInfo?.leaderboard?.rank / detailedInfo?.leaderboard?.totalStudents)) * 100}%` }}></div>
+                      <div className="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full" style={{ width: '90%' }}></div>
                    </div>
                    <div className="mt-4 flex justify-between text-xs font-bold text-slate-500">
                       <span>Total Points: {detailedInfo?.leaderboard?.points}</span>
-                      <span>{detailedInfo?.leaderboard?.percentile}</span>
+                      <span>{detailedInfo?.leaderboard?.weeklyChange} this week</span>
                    </div>
                 </div>
 

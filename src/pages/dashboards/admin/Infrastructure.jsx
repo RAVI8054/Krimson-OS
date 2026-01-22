@@ -872,13 +872,6 @@ const Infrastructure = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="text-center py-4">
-        <p className="text-xs text-slate-400 font-medium">
-          Integrated with Inventory Module & Facility API • Real-time Asset Tracking • Automated Maintenance Scheduling
-        </p>
-      </div>
-
     </div>
   );
 };

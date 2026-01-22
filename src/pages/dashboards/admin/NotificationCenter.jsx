@@ -616,12 +616,6 @@ const NotificationCenter = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="text-center py-4">
-        <p className="text-xs text-slate-400 font-medium">
-          Integrated with Notification Engine & Firebase API • SMS & Email Gateway Active
-        </p>
-      </div>
 
     </div>
   );

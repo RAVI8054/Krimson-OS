@@ -671,13 +671,6 @@ const ComplianceVault = () => {
         )}
       </div>
 
-      {/* Footer */}
-      <div className="text-center py-4">
-        <p className="text-xs text-slate-400 font-medium">
-          Integrated with Compliance Database & File Management API • Version Control Enabled • Secure Encrypted Storage
-        </p>
-      </div>
-
     </div>
   );
 };

@@ -492,12 +492,7 @@ const AttendanceOversight = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="text-center py-4">
-        <p className="text-xs text-slate-400 font-medium">
-          Data synced with Attendance Service & Academic Module • Last updated: {new Date().toLocaleTimeString()}
-        </p>
-      </div>
+    
 
     </div>
   );

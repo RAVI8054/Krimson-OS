@@ -14,7 +14,7 @@ import PerformanceAnalytics from "../pages/dashboards/student/PerformanceAnalyti
 import BehaviorLog from "../pages/dashboards/student/BehaviorLog";
 import ParentLinkDashboard from "../pages/dashboards/student/ParentLinkDashboard";
 import CoCurricularActivities from "../pages/dashboards/student/CoCurricularActivities";
-import HelpAndSupport from "../pages/dashboards/student/HelpAndSupport";
+import Support from "../pages/dashboards/student/Support";
 import ProfilePage from '../pages/common/ProfilePage';
 import ProfileAndGoals from '../pages/dashboards/student/ProfileAndGoals';
 
@@ -36,7 +36,7 @@ const StudentRoutes = () => {
            <Route path="profile" element={<ProfileAndGoals />} />
            <Route path="parentlink" element={<ParentLinkDashboard />} />
            <Route path="activities" element={<CoCurricularActivities />} />
-           <Route path="support" element={<HelpAndSupport />} />
+           <Route path="support" element={<Support />} />
         </Route>
     </Routes>
   );

@@ -386,9 +386,7 @@ const AdminOverview = () => {
         </div>
       </div>
       
-      <div className="text-center text-slate-400 text-xs py-4">
-         Krimson OS v2.0 • Admin Dashboard
-      </div>
+     
     </div>
   );
 };

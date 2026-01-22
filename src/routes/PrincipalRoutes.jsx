@@ -31,7 +31,7 @@ const PrincipalRoutes = () => {
           <Route path="exams" element={<ExamOversight />} />
           <Route path="finance" element={<FinanceSnapshot />} />
           <Route path="staff" element={<StaffManagement />} />
-          <Route path="profile" element={<ProfilePage roleOverride="Principal" />} />
+          <Route path="profile" element={<PrincipalProfile />} />
           <Route path="*" element={<Navigate to="/dashboard/principal" replace />} />
           <Route path="welfare" element={<WelfareDashboard />} />
           <Route path="events" element={<EventControl />} />
