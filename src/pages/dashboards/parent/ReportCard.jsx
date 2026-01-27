@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { 
   Download, FileText, Eye, TrendingUp, TrendingDown, 
   Award, BookOpen, Calendar, CheckCircle, Clock,
-  ChevronDown, Filter, ShieldCheck, FileCheck
+  ChevronDown, Filter, ShieldCheck, FileCheck, Target,
+  Lightbulb, ArrowUpRight
 } from 'lucide-react';
 
 const ReportCard = () => {
@@ -37,6 +38,62 @@ const ReportCard = () => {
     { subject: 'History', t1: 'B+', t2: 'A-', t3: 'A-', final: 'A-', credits: 3 },
     { subject: 'Computer Sci', t1: 'A', t2: 'A+', t3: 'A+', final: 'A+', credits: 3 },
     { subject: 'Art', t1: 'A-', t2: 'A', t3: 'A', final: 'A', credits: 2 },
+  ];
+
+  // Parent-Readable AI Summaries
+  const parentSummaries = [
+    {
+      id: 1,
+      category: 'Overall Performance',
+      icon: <Award className="text-yellow-500" size={20} />,
+      color: 'bg-yellow-50 border-yellow-200',
+      summary: 'Your child is performing exceptionally well across all subjects',
+      details: 'Alex has shown consistent improvement throughout the academic year, maintaining a GPA of 3.8 which places them in the top 5% of their grade. This demonstrates strong academic abilities and excellent work ethic.',
+      highlights: [
+        'Excellent overall GPA of 3.8/4.0',
+        'Consistent upward trend across all terms',
+        'Exceptional performance in Science and Mathematics'
+      ]
+    },
+    {
+      id: 2,
+      category: 'Strengths',
+      icon: <TrendingUp className="text-green-500" size={20} />,
+      color: 'bg-green-50 border-green-200',
+      summary: 'Strong performance in STEM subjects with room for continued growth',
+      details: 'Alex excels particularly in Science (A+) and Mathematics (A+), showing advanced problem-solving skills and analytical thinking. Computer Science performance has also been outstanding.',
+      highlights: [
+        'Science: Consistently scored A+ in all terms',
+        'Mathematics: Improved from A to A+ in final term',
+        'Computer Science: Advanced proficiency demonstrated'
+      ]
+    },
+    {
+      id: 3,
+      category: 'Areas for Growth',
+      icon: <Target className="text-blue-500" size={20} />,
+      color: 'bg-blue-50 border-blue-200',
+      summary: 'History shows good improvement, continuing this momentum would be beneficial',
+      details: 'While History started at B+, Alex has shown steady improvement to A- by the final term. Continued focus on analytical writing and historical context interpretation will help maintain this positive trajectory.',
+      highlights: [
+        'History: Improved from B+ to A- (significant growth)',
+        'English: Stable at A grade with strong writing skills',
+        'Opportunity to enhance humanities performance further'
+      ]
+    },
+    {
+      id: 4,
+      category: 'Attendance & Behavior',
+      icon: <CheckCircle className="text-purple-500" size={20} />,
+      color: 'bg-purple-50 border-purple-200',
+      summary: 'Excellent attendance record and positive classroom engagement',
+      details: 'Alex maintains a 96% attendance rate, demonstrating reliability and commitment to learning. Teachers report active participation in class discussions and collaborative work.',
+      highlights: [
+        '96% attendance rate (well above average)',
+        'Regularly participates in class activities',
+        'Shows good collaboration with peers'
+      ]
+    }
   ];
 
   const reportCards = [
@@ -241,6 +298,68 @@ const ReportCard = () => {
                  </tbody>
                </table>
              </div>
+          </div>
+
+          {/* Parent-Readable AI Summaries Section */}
+          <div className="bg-white rounded-3xl p-6 md:p-8 shadow-lg border border-slate-100">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl">
+                <Lightbulb className="text-indigo-600" size={24} />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-slate-800">Understanding Your Child's Progress</h3>
+                <p className="text-sm text-slate-500">AI-generated insights in plain language</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {parentSummaries.map((item) => (
+                <div 
+                  key={item.id}
+                  className={`rounded-2xl border-2 ${item.color} p-5 hover:shadow-md transition-all group`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="p-2.5 bg-white rounded-xl shadow-sm flex-shrink-0">
+                      {item.icon}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className="font-bold text-slate-800 text-sm uppercase tracking-wide">
+                          {item.category}
+                        </h4>
+                        <ArrowUpRight size={14} className="text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                      <p className="text-slate-700 font-semibold text-base mb-3">
+                        {item.summary}
+                      </p>
+                      <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                        {item.details}
+                      </p>
+                      <div className="space-y-1.5">
+                        {item.highlights.map((highlight, idx) => (
+                          <div key={idx} className="flex items-start gap-2">
+                            <CheckCircle size={14} className="text-green-500 flex-shrink-0 mt-0.5" />
+                            <span className="text-xs text-slate-600 leading-relaxed">{highlight}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100">
+              <div className="flex items-start gap-3">
+                <Lightbulb className="text-indigo-600 flex-shrink-0 mt-0.5" size={18} />
+                <div>
+                  <h4 className="text-xs font-bold text-indigo-700 mb-1">What This Means</h4>
+                  <p className="text-[10px] text-indigo-600/80 leading-relaxed">
+                    These summaries translate complex academic metrics into actionable insights. They help you understand not just the grades, but what they mean for your child's learning journey and where support might be most beneficial.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

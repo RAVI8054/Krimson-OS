@@ -5,7 +5,7 @@ import {
   TrendingUp, Clock, CheckCircle, Lock, Award, BookOpen, 
   Target, Flame, Calendar, ChevronRight, Trophy, Star,
   Play, BarChart3, Filter, X, FileText, AlertCircle,
-  Brain, Sparkles, RefreshCw, Lightbulb, Zap, Microscope, Target
+  Brain, Sparkles, RefreshCw, Lightbulb, Zap, Microscope
 } from 'lucide-react';
 
 const MyProgress = () => {
