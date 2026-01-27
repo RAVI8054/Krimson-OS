@@ -6,7 +6,7 @@ import {
 import { STUDENT_DATA } from '../../../data/studentData';
 
 const Support = () => {
-  const [activeTab, setActiveTab] = useState('FAQs'); // FAQs | Raise Ticket | Wellness
+  const [activeTab, setActiveTab] = useState('FAQs'); // FAQs | Request Help | Wellness
   const [searchQuery, setSearchQuery] = useState('');
   const [ticketForm, setTicketForm] = useState({ subject: '', category: 'Academic', description: '', priority: 'Medium' });
   const [ticketSubmitted, setTicketSubmitted] = useState(false);
@@ -30,7 +30,7 @@ const Support = () => {
     // Wellness
     { id: 9, question: "I feel overwhelmed with exam stress.", category: "Wellness", answer: "It's okay to feel this way. Visit the Wellness Corner to book a session with our counselor or try our breathing exercises." },
     { id: 10, question: "How to manage study time better?", category: "Wellness", answer: "Check out the 'Study Tips' in your Analytics dashboard or speak to a student mentor for a personalized schedule." },
-    { id: 11, question: "Who can I talk to about bullying?", category: "Wellness", answer: "We have a zero-tolerance policy. Please reach out to the Counselor directly or submit an anonymous report via the 'Raise Ticket' tab." },
+    { id: 11, question: "Who can I talk to about bullying?", category: "Wellness", answer: "We have a zero-tolerance policy. Please reach out to the Counselor directly or submit an anonymous report via the 'Request Help' tab." },
     { id: 12, question: "I'm having trouble sleeping due to anxiety.", category: "Wellness", answer: "Our Wellness Corner has guided sleep meditations. If it persists, please book a chat with the school counselor." },
   ];
 
@@ -72,7 +72,7 @@ const Support = () => {
 
        {/* Navigation Tabs */}
        <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-          {['FAQs', 'Raise Ticket', 'Wellness Corner', 'Govt & Regulations'].map(tab => (
+          {['FAQs', 'Request Help', 'Connect with Wellbeing', 'Govt & Regulations'].map(tab => (
               <button
                  key={tab}
                  onClick={() => setActiveTab(tab)}
@@ -83,8 +83,8 @@ const Support = () => {
                  }`}
               >
                  {tab === 'FAQs' && <HelpCircle size={18} />}
-                 {tab === 'Raise Ticket' && <MessageSquare size={18} />}
-                 {tab === 'Wellness Corner' && <Heart size={18} />}
+                 {tab === 'Request Help' && <MessageSquare size={18} />}
+                 {tab === 'Connect with Wellbeing' && <Heart size={18} />}
                  {tab === 'Govt & Regulations' && <Shield size={18} />}
                  {tab}
               </button>
@@ -118,8 +118,8 @@ const Support = () => {
            </div>
        )}
 
-       {/* 2. Raise Ticket Section */}
-       {activeTab === 'Raise Ticket' && (
+       {/* 2. Request Help Section */}
+       {activeTab === 'Request Help' && (
            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-slideDown">
               <div className="lg:col-span-2">
                  <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
@@ -224,8 +224,8 @@ const Support = () => {
            </div>
        )}
 
-        {/* 3. Wellness Corner */}
-       {activeTab === 'Wellness Corner' && (
+        {/* 3. Connect with Wellbeing */}
+       {activeTab === 'Connect with Wellbeing' && (
            <div className="animate-slideDown space-y-8">
               <div className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-lg">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
