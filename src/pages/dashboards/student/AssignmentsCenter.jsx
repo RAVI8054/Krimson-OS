@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { STUDENT_DATA } from '../../../data/studentData';
-import { Upload, FileText, CheckCircle, Clock, XCircle, TrendingUp, AlertTriangle, Info, ChevronDown, ChevronUp, Lock, Unlock } from 'lucide-react';
+import { Upload, FileText, CheckCircle, Clock, XCircle, TrendingUp, AlertTriangle, Info, ChevronDown, ChevronUp, Lock, Unlock, Microscope, Target } from 'lucide-react';
 
 const AssignmentsCenter = () => {
   const [tab, setTab] = useState('Pending');
@@ -137,6 +137,51 @@ const AssignmentsCenter = () => {
       canProgress: true,
       reinforcementTask: 'Historical Analysis Practice (2 events)'
     }
+  };
+
+  // Add Detailed Concept Weakness Analysis (Mock)
+  const conceptWeaknessAnalysis = {
+    6: [ // English Essay (Weak)
+      {
+        concept: 'Thesis Development',
+        gap: 'Lack of Specificity',
+        observation: 'Thesis statements tend to be broad generalizations rather than arguable claims.',
+        recommendation: 'Use the "Though/However" formula to create tension in your argument.',
+        action: 'Practice: Refine 3 broad thesis statements'
+      },
+      {
+        concept: 'Essay Structure',
+        gap: 'Topic Sentence Alignment',
+        observation: 'Paragraphs often drift from the main point introduced in the topic sentence.',
+        recommendation: 'Ensure every sentence in the body paragraph directly supports the topic sentence.',
+        action: 'Review: Paragraph Unity Guide'
+      }
+    ],
+    7: [ // Trigonometry (Not Mastered)
+      {
+        concept: 'Unit Circle',
+        gap: 'Quadrant-Sign Confusion',
+        observation: 'Consistently misidentifying +/- signs for Sine and Cosine in Quadrants II and III.',
+        recommendation: 'Remember "All Students Take Calculus" (ASTC) mnemonic for signs.',
+        action: 'Drill: 20 Quadrant Sign Identification problems'
+      },
+      {
+        concept: 'Angle Calculation',
+        gap: 'Reference Angle Calculation',
+        observation: 'Difficulty converting obtuse angles to acute reference angles.',
+        recommendation: 'Visualize the angle to the nearest x-axis (180° or 360°).',
+        action: 'Practice: Find reference angles for 10 given angles'
+      }
+    ],
+    5: [ // Biology (Strong Pass - but has partial concept)
+       {
+        concept: 'Cell Structure',
+        gap: 'Organelle Function Differentiation',
+        observation: 'Confusing functions of Golgi Apparatus and Endoplasmic Reticulum.',
+        recommendation: 'Create a comparison table highlighting synthesis vs. packaging roles.',
+        action: 'Task: Complete Organelle Match-up Activity'
+       }
+    ]
   };
 
   // Filter logic

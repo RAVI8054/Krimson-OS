@@ -6,6 +6,7 @@ import TimetableSchedule from "../pages/dashboards/student/TimetableSchedule";
 import AttendanceTracker from "../pages/dashboards/student/AttendanceTracker";
 import AssignmentsCenter from "../pages/dashboards/student/AssignmentsCenter";
 import LessonResources from "../pages/dashboards/student/LessonResources";
+import LibraryAccount from "../pages/dashboards/student/LibraryAccount";
 import ExamDashboard from "../pages/dashboards/student/ExamDashboard";
 import GradesReport from "../pages/dashboards/student/GradesReport";
 import CommunicationHub from "../pages/dashboards/student/CommunicationHub";
@@ -28,6 +29,7 @@ const StudentRoutes = () => {
            <Route path="attendance" element={<AttendanceTracker />} />
            <Route path="assignments" element={<AssignmentsCenter />} />
            <Route path="resources" element={<LessonResources />} />
+           <Route path="library-account" element={<LibraryAccount />} />
            <Route path="exams" element={<ExamDashboard />} />
            <Route path="grades" element={<GradesReport />} />
            <Route path="communication" element={<CommunicationHub />} />

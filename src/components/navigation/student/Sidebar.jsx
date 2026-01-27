@@ -23,6 +23,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: "Attendance", path: "/dashboard/student/attendance", icon: <CalendarCheck size={20} /> }, // Screen 3
     { name: "Assignments", path: "/dashboard/student/assignments", icon: <FileText size={20} /> }, // Screen 4
     { name: "Resources", path: "/dashboard/student/resources", icon: <BookOpen size={20} /> }, // Screen 5
+    { name: "Library Account", path: "/dashboard/student/library-account", icon: <BookOpen size={20} /> }, // Library Screen
     { name: "Exams", path: "/dashboard/student/exams", icon: <CheckSquare size={20} /> }, // Screen 6
     { name: "Grades", path: "/dashboard/student/grades", icon: <Award size={20} /> }, // Screen 7
     { name: "Messages", path: "/dashboard/student/communication", icon: <MessageSquare size={20} /> }, // Screen 8
