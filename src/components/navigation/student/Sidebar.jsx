@@ -18,6 +18,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const menuItems = [
     { name: "Dashboard", path: "/dashboard/student/", icon: <LayoutDashboard size={20} /> }, // Screen 1
+     { name: "My Progress", path: "/dashboard/student/progress", icon: <Activity size={20} /> }, // Screen 10
     { name: "Timetable", path: "/dashboard/student/timetable", icon: <Calendar size={20} /> }, // Screen 2
     { name: "Attendance", path: "/dashboard/student/attendance", icon: <CalendarCheck size={20} /> }, // Screen 3
     { name: "Assignments", path: "/dashboard/student/assignments", icon: <FileText size={20} /> }, // Screen 4
@@ -26,7 +27,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: "Grades", path: "/dashboard/student/grades", icon: <Award size={20} /> }, // Screen 7
     { name: "Messages", path: "/dashboard/student/communication", icon: <MessageSquare size={20} /> }, // Screen 8
     { name: "Analytics", path: "/dashboard/student/analytics", icon: <BarChart2 size={20} /> }, // Screen 9
-
+   
     { name: "Behavior", path: "/dashboard/student/behavior", icon: <Activity size={20} /> }, // Screen 11
     { name: "Profile", path: "/dashboard/student/profile", icon: <UserCircle size={20} /> }, // Screen 12
     { name: "Parent Link", path: "/dashboard/student/parentlink", icon: <Users size={20} /> }, // Screen 13

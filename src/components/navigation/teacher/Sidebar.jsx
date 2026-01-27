@@ -18,7 +18,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: "Dashboard", path: "/dashboard/teacher/home", icon: <LayoutDashboard size={20} /> }, // Screen 1
     { name: "My Classes & subjects", path: "/dashboard/teacher/classes", icon: <Users size={20} /> }, // Screen 2
     { name: "Lesson Plans", path: "/dashboard/teacher/lessons", icon: <BookOpen size={20} /> }, // Screen 3
-    { name: "Attendance & class log", path: "/dashboard/teacher/attendance", icon: <CalendarCheck size={20} /> }, // Screen 4
+    { name: "Attendance Log", path: "/dashboard/teacher/attendance", icon: <CalendarCheck size={20} /> }, // Screen 4
     { name: "Assignments", path: "/dashboard/teacher/assignments", icon: <FileText size={20} /> }, // Screen 5
     { name: "Gradebook", path: "/dashboard/teacher/grades", icon: <BarChart2 size={20} /> }, // Screen 6
     { name: "Messages Hub", path: "/dashboard/teacher/communication", icon: <MessageSquare size={20} /> }, // Screen 7
