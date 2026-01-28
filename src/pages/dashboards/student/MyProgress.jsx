@@ -5,12 +5,13 @@ import {
   TrendingUp, Clock, CheckCircle, Lock, Award, BookOpen, 
   Target, Flame, Calendar, ChevronRight, Trophy, Star,
   Play, BarChart3, Filter, X, FileText, AlertCircle,
-  Brain, Sparkles, RefreshCw, Lightbulb, Zap, Microscope
+  Brain, Sparkles, RefreshCw, Lightbulb, Zap, Microscope,
+  Video, Beaker
 } from 'lucide-react';
 
 const MyProgress = () => {
   const navigate = useNavigate();
-  const { myProgress, user } = STUDENT_DATA;
+  const { myProgress, resources } = STUDENT_DATA; // Destructure resources
   const [selectedSubject, setSelectedSubject] = useState('All');
   const [selectedChapter, setSelectedChapter] = useState(null);
   
@@ -18,6 +19,44 @@ const MyProgress = () => {
   const filteredChapters = selectedSubject === 'All' 
     ? myProgress.chapters 
     : myProgress.chapters.filter(ch => ch.subject === selectedSubject);
+
+  // Helper to get resources for a specific chapter
+  const getChapterResources = (chapter) => {
+    if (!resources) return [];
+    
+    // Normalize subject (e.g., Mathematics -> MATH if needed, based on data analysis most match or use acronyms)
+    // Checking data: STUDENT_DATA.resources uses "MATH", "PHYSICS", "CHEMISTRY" (uppercase)
+    // STUDENT_DATA.chapters uses "Mathematics", "Physics", "Chemistry" (Title Case)
+    
+    const subjectMap = {
+      'Mathematics': 'MATH',
+      'Physics': 'PHYSICS',
+      'Chemistry': 'CHEMISTRY',
+      'Biology': 'BIOLOGY',
+      'History': 'HISTORY',
+      'English': 'ENGLISH'
+    };
+
+    const targetSubject = subjectMap[chapter.subject] || chapter.subject.toUpperCase();
+    const targetChapter = `Chapter ${chapter.chapterNumber}`;
+
+    const realResources = resources.filter(res => 
+      res.subject === targetSubject && 
+      res.chapter === targetChapter
+    );
+
+    // Mock data for visualization if no real resources exist
+    if (realResources.length === 0) {
+      return [
+        { id: 'mock-1', title: `Intro to ${chapter.title}`, type: 'Video', subject: targetSubject, chapter: targetChapter },
+        { id: 'mock-2', title: `${chapter.title} Notes`, type: 'Document', subject: targetSubject, chapter: targetChapter },
+        { id: 'mock-3', title: 'Practical Experiment', type: 'Experiment', subject: targetSubject, chapter: targetChapter },
+        { id: 'mock-4', title: 'Advanced Problems PDF', type: 'Document', subject: targetSubject, chapter: targetChapter }
+      ];
+    }
+
+    return realResources;
+  };
 
   // Get mastery badge color
   const getMasteryColor = (mastery) => {
@@ -537,6 +576,52 @@ const MyProgress = () => {
                       )}
                     </div>
                   ))}
+                </div>
+              </div>
+
+               {/* Reference Materials */}
+               <div>
+                <h3 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                  <BookOpen size={18} className="text-indigo-500" />
+                  Reference Materials
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {['Video', 'Document', 'Experiment'].map(type => {
+                     const resources = getChapterResources(selectedChapter).filter(r => r.type === type);
+                     if (resources.length === 0) return null;
+                     
+                     return (
+                      <div key={type} className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                        <div className="flex items-center gap-2 mb-3">
+                          {type === 'Video' && <Video size={16} className="text-red-500" />}
+                          {type === 'Document' && <FileText size={16} className="text-blue-500" />}
+                          {type === 'Experiment' && <Beaker size={16} className="text-purple-500" />}
+                          <h4 className="font-bold text-slate-700 text-sm">
+                            {type}s <span className="text-slate-400 font-medium text-xs ml-1">({resources.length})</span>
+                          </h4>
+                        </div>
+                        <div className="space-y-2">
+                          {resources.map(res => (
+                            <div 
+                              key={res.id} 
+                              onClick={() => navigate('/dashboard/student/resources')}
+                              className="group flex items-center justify-between p-2 hover:bg-white rounded-lg transition-colors cursor-pointer"
+                            >
+                              <p className="text-xs font-medium text-slate-600 group-hover:text-blue-600 transition-colors line-clamp-1">
+                                {res.title}
+                              </p>
+                              <ChevronRight size={12} className="text-slate-300 group-hover:text-blue-400 opacity-0 group-hover:opacity-100 transition-all" />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                     );
+                  })}
+                  {getChapterResources(selectedChapter).length === 0 && (
+                     <div className="col-span-full p-6 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                       <p className="text-sm">No specific reference materials linked to this chapter yet.</p>
+                     </div>
+                  )}
                 </div>
               </div>
 
