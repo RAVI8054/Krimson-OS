@@ -455,7 +455,7 @@ const AssignmentsCenter = () => {
                </div>
 
                <h3 className="text-xl font-bold text-slate-800 mb-2">{assign.title}</h3>
-               <p className="text-sm font-semibold text-slate-500 mb-6 flex-grow">{assign.subject}</p>
+               <p className="text-sm font-semibold text-slate-500 mb-6">{assign.subject}</p>
 
                {/* PENDING VIEW */}
                {(tab === 'Pending') && (
