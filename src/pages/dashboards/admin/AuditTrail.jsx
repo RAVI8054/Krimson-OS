@@ -2,6 +2,12 @@
  * @component AuditTrail
  * @description Audit Trail & Activity Log - Complete system activity tracking
  */
+import React, { useState } from 'react';
+import { 
+  Plus, Edit, Trash2, Activity, Shield, AlertCircle, CheckCircle, 
+  Users, Download, BarChart3, Package, TrendingUp, Filter, Search, 
+  Database, Clock, ChevronLeft, ChevronRight, Eye, User, Lock 
+} from 'lucide-react';
 import { ADMIN_DATA } from '../../../data/adminData';
 
 const AuditTrail = () => {
