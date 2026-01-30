@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { STUDENT_DATA } from '../../../data/studentData';
-import { TrendingUp, Target, Award, Lightbulb } from 'lucide-react';
+import { TrendingUp, Target, Award, Lightbulb, FileText, Filter, X } from 'lucide-react';
 
 const PerformanceAnalytics = () => {
   const { analytics, analyticsFocusArea } = STUDENT_DATA;
+  
+  // State for anecdotal reports filtering and modal
+  const [reportFilter, setReportFilter] = useState('all');
+  const [selectedReport, setSelectedReport] = useState(null);
 
   // --- SVG Radar Chart Helpers ---
   const radarRadius = 100;
@@ -33,6 +37,13 @@ const PerformanceAnalytics = () => {
     })
     .join(' ');
 
+  // Filter anecdotal reports by category (subject-wise)
+  const filteredReports = reportFilter === 'all' 
+    ? analytics.anecdotalReports 
+    : analytics.anecdotalReports.filter(report => report.category === reportFilter);
+
+  // Get unique categories for filter options
+  const categories = ['all', ...new Set(analytics.anecdotalReports.map(r => r.category))];
 
   // --- SVG Line Chart Helpers ---
   const chartHeight = 200;
@@ -191,6 +202,186 @@ const PerformanceAnalytics = () => {
             </div>
          </div>
       </div>
+
+      {/* 4. Enhanced Anecdotal Reports Section */}
+      <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-8 rounded-3xl shadow-lg border border-indigo-100">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-3 bg-gradient-to-br from-violet-500 to-fuchsia-600 rounded-2xl shadow-lg">
+                <FileText className="text-white" size={24} />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
+                  Anecdotal Reports
+                </h3>
+                <p className="text-sm text-slate-600 font-medium">Teacher observations & insights</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Subject-wise Filter Dropdown */}
+          <div className="relative">
+            <div className="flex items-center gap-2 bg-white rounded-2xl px-5 py-3 shadow-md border border-indigo-200 hover:border-violet-400 transition-colors">
+              <Filter size={18} className="text-violet-600" />
+              <select 
+                value={reportFilter}
+                onChange={(e) => setReportFilter(e.target.value)}
+                className="bg-transparent text-sm font-bold text-slate-800 outline-none cursor-pointer pr-2"
+              >
+                <option value="all">All Subjects ({analytics.anecdotalReports.length})</option>
+                {categories.filter(c => c !== 'all').map(category => (
+                  <option key={category} value={category}>
+                    {category} ({analytics.anecdotalReports.filter(r => r.category === category).length})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Compact Reports Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {filteredReports.map(report => {
+            const typeColors = {
+              subject: 'from-blue-500 to-cyan-500',
+              lab: 'from-purple-500 to-pink-500',
+              behavior: 'from-indigo-500 to-violet-500'
+            };
+
+            return (
+              <div 
+                key={report.id} 
+                className="group bg-white rounded-2xl p-5 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-slate-100 hover:border-violet-200"
+              >
+                {/* Report Title */}
+                <div className="mb-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={`h-1 w-12 rounded-full bg-gradient-to-r ${typeColors[report.type]}`}></div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      {report.type}
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-slate-800 text-base leading-tight mb-2 line-clamp-2 group-hover:text-violet-600 transition-colors">
+                    {report.title}
+                  </h4>
+                  <p className="text-xs text-slate-500 font-semibold">{report.category}</p>
+                </div>
+
+                {/* View Details Button */}
+                <button 
+                  onClick={() => setSelectedReport(report)}
+                  className="w-full bg-gradient-to-r from-violet-500 to-fuchsia-600 text-white font-bold py-3 px-4 rounded-xl hover:from-violet-600 hover:to-fuchsia-700 transition-all shadow-md hover:shadow-lg relative overflow-hidden group"
+                >
+                  <div className="relative z-10">
+                    <div className="text-sm">View Details</div>
+                    <div className="text-[9px] opacity-75 font-normal mt-0.5">get in app</div>
+                  </div>
+                  <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Empty State */}
+        {filteredReports.length === 0 && (
+          <div className="text-center py-16 bg-white rounded-2xl">
+            <div className="w-20 h-20 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FileText size={40} className="text-violet-400" />
+            </div>
+            <p className="text-slate-600 font-bold text-lg">No reports found</p>
+            <p className="text-sm text-slate-400 mt-2">Try selecting a different subject</p>
+          </div>
+        )}
+      </div>
+
+      {/* Details Modal */}
+      {selectedReport && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-gradient-to-br from-violet-500 to-fuchsia-600 p-6 rounded-t-3xl">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-lg bg-white/20 text-white backdrop-blur-sm">
+                      {selectedReport.type}
+                    </span>
+                    <span className="text-xs font-bold px-3 py-1 rounded-lg bg-white/20 text-white backdrop-blur-sm">
+                      {selectedReport.category}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white leading-tight">
+                    {selectedReport.title}
+                  </h3>
+                </div>
+                <button 
+                  onClick={() => setSelectedReport(null)}
+                  className="p-2 hover:bg-white/20 rounded-xl transition-colors"
+                >
+                  <X className="text-white" size={24} />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-6">
+              {/* Observation */}
+              <div>
+                <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Observation</h4>
+                <p className="text-slate-700 leading-relaxed">
+                  {selectedReport.observation}
+                </p>
+              </div>
+
+              {/* Tags */}
+              <div>
+                <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Key Points</h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedReport.tags.map((tag, idx) => (
+                    <span 
+                      key={idx}
+                      className="text-xs font-semibold bg-gradient-to-r from-violet-100 to-fuchsia-100 text-violet-700 px-3 py-1.5 rounded-full border border-violet-200"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Meta Info */}
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+                <div>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Teacher</h4>
+                  <p className="text-slate-800 font-semibold">{selectedReport.teacher}</p>
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Date</h4>
+                  <p className="text-slate-800 font-semibold">
+                    {new Date(selectedReport.date).toLocaleDateString('en-US', { 
+                      month: 'long', 
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              {/* Sentiment Badge */}
+              <div className="flex items-center justify-center pt-2">
+                <div className={`px-4 py-2 rounded-full text-sm font-bold ${
+                  selectedReport.sentiment === 'positive' ? 'bg-green-100 text-green-700' :
+                  selectedReport.sentiment === 'neutral' ? 'bg-amber-100 text-amber-700' :
+                  'bg-red-100 text-red-700'
+                }`}>
+                  {selectedReport.sentiment.charAt(0).toUpperCase() + selectedReport.sentiment.slice(1)} Feedback
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
