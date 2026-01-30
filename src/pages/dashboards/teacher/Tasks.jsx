@@ -8,13 +8,12 @@ import { TEACHER_DATA } from '../../../data/teacherData';
  * Screen 9: Notifications & To-Do Center
  */
 const Tasks = () => {
-  // Assuming TEACHER_DATA might have tasks in future, using mock for now via component default or passing specific data
-  // Passing empty arrays will trigger internal mocks in common component for visual demo
+  const { tasks, notifications } = TEACHER_DATA;
   return (
     <TasksAndNotifications 
       role="teacher"
-      tasks={[]} 
-      notifications={[]}
+      tasks={tasks} 
+      notifications={notifications}
     />
   );
 };

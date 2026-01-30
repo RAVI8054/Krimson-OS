@@ -97,13 +97,19 @@ const AssignmentManager = () => {
   };
 
   // Assignment templates
-  const templates = [
-    { id: 1, name: 'Lab Report Template', type: 'Lab Report', icon: <FileText size={20} /> },
-    { id: 2, name: 'Multiple Choice Quiz', type: 'Quiz', icon: <CheckSquare size={20} /> },
-    { id: 3, name: 'Standard Worksheet', type: 'Worksheet', icon: <FileCheck size={20} /> },
-    { id: 4, name: 'Problem Set Template', type: 'Problem Set', icon: <Target size={20} /> },
-    { id: 5, name: 'Essay Assignment', type: 'Essay', icon: <FileText size={20} /> },
-  ];
+  const templates = TEACHER_DATA.assignmentTemplates.map(t => {
+    let Icon = FileText;
+    if (t.type === 'Quiz') Icon = CheckSquare;
+    if (t.type === 'Worksheet') Icon = FileCheck;
+    if (t.type === 'Problem Set') Icon = Target;
+    
+    return {
+      id: t.id,
+      name: t.title,
+      type: t.type,
+      icon: <Icon size={20} />
+    };
+  });
 
   return (
     <div className="space-y-6 md:space-y-8">

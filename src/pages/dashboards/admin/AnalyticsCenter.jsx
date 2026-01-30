@@ -27,77 +27,12 @@ import {
 // ========================================
 // MOCK DATA - Ready for Analytics Engine + Reporting API Integration
 // ========================================
-const mockAnalyticsData = {
-  // Widget 1: Admissions Conversion Rate
-  admissionsConversion: {
-    currentRate: 42.5,
-    previousRate: 38.2,
-    trend: 'up',
-    inquiries: 450,
-    enrolled: 191,
-    byTerm: [
-      { term: 'Q1 2026', rate: 38.2 },
-      { term: 'Q2 2026', rate: 40.1 },
-      { term: 'Q3 2026', rate: 41.8 },
-      { term: 'Q4 2026', rate: 42.5 }
-    ]
-  },
+import { ADMIN_DATA } from '../../../data/adminData';
 
-  // Widget 2: Fee Collection
-  feeCollection: {
-    totalCollected: 8750000,
-    totalDue: 12000000,
-    collectionRate: 72.9,
-    monthlyTrend: [
-      { month: 'Jan', collected: 950000, due: 1200000 },
-      { month: 'Feb', collected: 880000, due: 1200000 },
-      { month: 'Mar', collected: 920000, due: 1200000 },
-      { month: 'Apr', collected: 1050000, due: 1200000 },
-      { month: 'May', collected: 980000, due: 1200000 },
-      { month: 'Jun', collected: 1100000, due: 1200000 }
-    ],
-    byDepartment: [
-      { dept: 'Primary', collected: 3200000, percentage: 36.6 },
-      { dept: 'Secondary', collected: 2900000, percentage: 33.1 },
-      { dept: 'Senior', collected: 2650000, percentage: 30.3 }
-    ]
-  },
-
-  // Widget 3: Staff Utilization Ratio
-  staffUtilization: {
-    overallRate: 87.3,
-    teaching: 92.5,
-    administrative: 78.4,
-    support: 85.2,
-    byDepartment: [
-      { dept: 'Mathematics', rate: 94.2, staff: 12 },
-      { dept: 'Science', rate: 91.8, staff: 15 },
-      { dept: 'Languages', rate: 89.5, staff: 10 },
-      { dept: 'Arts', rate: 82.1, staff: 8 },
-      { dept: 'Administration', rate: 78.4, staff: 18 }
-    ]
-  },
-
-  // Widget 4: Parent Communication Frequency Index
-  parentCommunication: {
-    frequencyIndex: 8.7, // out of 10
-    totalCommunications: 3542,
-    responseRate: 94.2,
-    avgResponseTime: '4.2 hours',
-    byChannel: [
-      { channel: 'SMS', count: 1420, percentage: 40.1, responseRate: 96.5 },
-      { channel: 'Email', count: 1180, percentage: 33.3, responseRate: 92.3 },
-      { channel: 'App', count: 680, percentage: 19.2, responseRate: 95.8 },
-      { channel: 'Phone', count: 262, percentage: 7.4, responseRate: 89.1 }
-    ],
-    weeklyTrend: [
-      { week: 'Week 1', count: 820 },
-      { week: 'Week 2', count: 890 },
-      { week: 'Week 3', count: 920 },
-      { week: 'Week 4', count: 912 }
-    ]
-  }
-};
+// ========================================
+// MOCK DATA - Ready for Analytics Engine + Reporting API Integration
+// ========================================
+const mockAnalyticsData = ADMIN_DATA.analytics;
 
 const AnalyticsCenter = () => {
   const [selectedTerm, setSelectedTerm] = useState('All Terms');

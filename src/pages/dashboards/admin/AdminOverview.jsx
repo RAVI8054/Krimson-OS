@@ -26,26 +26,12 @@ import clsx from 'clsx';
 // ========================================
 // MOCK DATA
 // ========================================
-const mockData = {
-  summary: {
-    totalStudents: 1247,
-    totalStaff: 89,
-    totalClasses: 42,
-    totalCourses: 156
-  },
-  attendance: {
-    students: { present: 1189, absent: 58, total: 1247, percentage: 95.3 },
-    staff: { present: 84, absent: 5, total: 89, percentage: 94.4 }
-  },
-  admissions: { inquiry: 234, applied: 187, verified: 142, enrolled: 98 },
-  finance: { todayCollection: 45680, totalDue: 234500 },
-  alerts: [
-    { id: 1, type: 'compliance', severity: 'high', message: 'Accreditation renewal due in 15 days', timestamp: '2 hours ago' },
-    { id: 2, type: 'system', severity: 'medium', message: 'Server backup completed successfully', timestamp: '3 hours ago' },
-    { id: 3, type: 'compliance', severity: 'high', message: '12 student medical records need update', timestamp: '5 hours ago' },
-    { id: 4, type: 'system', severity: 'low', message: 'System maintenance scheduled for weekend', timestamp: '1 day ago' }
-  ]
-};
+import { ADMIN_DATA } from '../../../data/adminData';
+
+// ========================================
+// MOCK DATA
+// ========================================
+const mockData = ADMIN_DATA.overview;
 
 const AdminOverview = () => {
   // Calculate admission funnel percentages

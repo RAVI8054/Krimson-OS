@@ -18,23 +18,26 @@ import {
   ChevronRight
 } from 'lucide-react';
 
-const SupportHelpCenter = ({ userTickets = [], role = 'user' }) => {
+const SupportHelpCenter = ({ userTickets = [], role = 'user', faqs = [], tutorials = [] }) => {
   const [activeTab, setActiveTab] = useState('Knowledge Base'); // Knowledge Base | My Tickets | Contact Support
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Mock Knowledge Base Data
-  const faqs = [
+  // Mock Knowledge Base Data (Default)
+  const defaultFaqs = [
     { id: 1, question: "How do I reset my password?", category: "Account", answer: "Go to Profile > Settings > Security to update your password." },
     { id: 2, question: "Where can I view my attendance?", category: "Academic", answer: "Attendance reports are available in the 'Reports' section of your dashboard." },
     { id: 3, question: "How to upload an assignment?", category: "Academic", answer: "Navigate to the Assignment Manager, select the assignment, and click 'Upload Submission'." },
     { id: 4, question: "System requirements for exams?", category: "Technical", answer: "A stable internet connection and Chrome browser version 90+ are required." },
   ];
 
-  const tutorials = [
+  const defaultTutorials = [
     { id: 1, title: "Dashboard Tour", duration: "2:30", thumbColor: "bg-blue-100", iconColor: "text-blue-500" },
     { id: 2, title: "Submitting Grades", duration: "4:15", thumbColor: "bg-pink-100", iconColor: "text-pink-500" },
     { id: 3, title: "Managing Profile", duration: "1:45", thumbColor: "bg-cyan-100", iconColor: "text-cyan-500" },
   ];
+
+  const displayFaqs = faqs.length > 0 ? faqs : defaultFaqs;
+  const displayTutorials = tutorials.length > 0 ? tutorials : defaultTutorials;
 
   // Mock Tickets if none provided
   const tickets = userTickets.length > 0 ? userTickets : [
@@ -50,7 +53,7 @@ const SupportHelpCenter = ({ userTickets = [], role = 'user' }) => {
       }
   };
 
-  const filteredFaqs = faqs.filter(f => f.question.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredFaqs = displayFaqs.filter(f => f.question.toLowerCase().includes(searchQuery.toLowerCase()));
 
   // Define gradient based on role (Optional: currently keeping uniform premium style)
   const headerGradient = "from-cyan-500 via-blue-500 to-pink-500";
@@ -154,7 +157,7 @@ const SupportHelpCenter = ({ userTickets = [], role = 'user' }) => {
                           Video Tutorials
                        </h3>
                        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-4">
-                           {tutorials.map(vid => (
+                           {displayTutorials.map(vid => (
                                <div key={vid.id} className="flex gap-4 items-center group cursor-pointer p-2 rounded-xl hover:bg-slate-50 transition-colors">
                                    <div className={`w-20 h-14 rounded-xl ${vid.thumbColor} flex items-center justify-center text-slate-600 group-hover:scale-105 transition-transform shadow-inner`}>
                                        <PlayCircle size={24} className={`${vid.iconColor} opacity-80 group-hover:opacity-100`}/>

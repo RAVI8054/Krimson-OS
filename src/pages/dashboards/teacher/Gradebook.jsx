@@ -8,234 +8,32 @@ import {
 } from 'lucide-react';
 
 const Gradebook = () => {
-  // Sample gradebook data
-  const [students] = useState([
-    {
-      id: 'S1',
-      name: 'Aarav Singh',
-      roll: 1,
-      assessments: { unitTest1: 85, unitTest2: 92, project: 88, midterm: 90 },
-      participation: 'A',
-      attendance: 96,
-      behaviorScore: 92,
-      trend: 'improving',
-      trendValue: 7,
-      overallGrade: 'A',
-      avgScore: 88.75,
-      atRisk: false,
-      remarks: []
-    },
-    {
-      id: 'S2',
-      name: 'Bianca Liu',
-      roll: 2,
-      assessments: { unitTest1: 78, unitTest2: 72, project: 75, midterm: 70 },
-      participation: 'B',
-      attendance: 88,
-      behaviorScore: 85,
-      trend: 'declining',
-      trendValue: -6,
-      overallGrade: 'B',
-      avgScore: 73.75,
-      atRisk: true,
-      remarks: ['Needs improvement in problem-solving']
-    },
-    {
-      id: 'S3',
-      name: 'Charlie Tan',
-      roll: 3,
-      assessments: { unitTest1: 92, unitTest2: 95, project: 98, midterm: 96 },
-      participation: 'A+',
-      attendance: 98,
-      behaviorScore: 95,
-      trend: 'improving',
-      trendValue: 4,
-      overallGrade: 'A+',
-      avgScore: 95.25,
-      atRisk: false,
-      remarks: []
-    },
-    {
-      id: 'S4',
-      name: 'David Kim',
-      roll: 4,
-      assessments: { unitTest1: 68, unitTest2: 65, project: 70, midterm: 62 },
-      participation: 'C',
-      attendance: 82,
-      behaviorScore: 78,
-      trend: 'declining',
-      trendValue: -8,
-      overallGrade: 'C',
-      avgScore: 66.25,
-      atRisk: true,
-      remarks: ['Low participation', 'Attendance concerns']
-    },
-    {
-      id: 'S5',
-      name: 'Elena Rodriguez',
-      roll: 5,
-      assessments: { unitTest1: 88, unitTest2: 90, project: 89, midterm: 92 },
-      participation: 'A',
-      attendance: 94,
-      behaviorScore: 90,
-      trend: 'improving',
-      trendValue: 4,
-      overallGrade: 'A',
-      avgScore: 89.75,
-      atRisk: false,
-      remarks: []
-    },
-    {
-      id: 'S6',
-      name: 'Fatima Khan',
-      roll: 6,
-      assessments: { unitTest1: 82, unitTest2: 85, project: 87, midterm: 84 },
-      participation: 'A',
-      attendance: 96,
-      behaviorScore: 88,
-      trend: 'improving',
-      trendValue: 5,
-      overallGrade: 'A',
-      avgScore: 84.5,
-      atRisk: false,
-      remarks: []
-    },
-    {
-      id: 'S7',
-      name: 'George Wilson',
-      roll: 7,
-      assessments: { unitTest1: 75, unitTest2: 78, project: 72, midterm: 76 },
-      participation: 'B',
-      attendance: 90,
-      behaviorScore: 82,
-      trend: 'improving',
-      trendValue: 3,
-      overallGrade: 'B',
-      avgScore: 75.25,
-      atRisk: false,
-      remarks: []
-    },
-    {
-      id: 'S8',
-      name: 'Hannah Martinez',
-      roll: 8,
-      assessments: { unitTest1: 58, unitTest2: 55, project: 60, midterm: 52 },
-      participation: 'D',
-      attendance: 78,
-      behaviorScore: 70,
-      trend: 'declining',
-      trendValue: -10,
-      overallGrade: 'D',
-      avgScore: 56.25,
-      atRisk: true,
-      remarks: ['Requires immediate intervention', 'Parent meeting scheduled']
-    },
-    {
-      id: 'S9',
-      name: 'Isabella Chen',
-      roll: 9,
-      assessments: { unitTest1: 90, unitTest2: 88, project: 92, midterm: 89 },
-      participation: 'A',
-      attendance: 95,
-      behaviorScore: 91,
-      trend: 'improving',
-      trendValue: 3,
-      overallGrade: 'A',
-      avgScore: 89.75,
-      atRisk: false,
-      remarks: []
-    },
-    {
-      id: 'S10',
-      name: 'James Anderson',
-      roll: 10,
-      assessments: { unitTest1: 72, unitTest2: 76, project: 78, midterm: 74 },
-      participation: 'B',
-      attendance: 88,
-      behaviorScore: 80,
-      trend: 'improving',
-      trendValue: 5,
-      overallGrade: 'B',
-      avgScore: 75,
-      atRisk: false,
-      remarks: []
-    },
-    {
-      id: 'S11',
-      name: 'Keira Patel',
-      roll: 11,
-      assessments: { unitTest1: 95, unitTest2: 93, project: 96, midterm: 94 },
-      participation: 'A+',
-      attendance: 99,
-      behaviorScore: 96,
-      trend: 'improving',
-      trendValue: 2,
-      overallGrade: 'A+',
-      avgScore: 94.5,
-      atRisk: false,
-      remarks: []
-    },
-    {
-      id: 'S12',
-      name: 'Liam O\'Brien',
-      roll: 12,
-      assessments: { unitTest1: 65, unitTest2: 68, project: 70, midterm: 66 },
-      participation: 'C',
-      attendance: 85,
-      behaviorScore: 75,
-      trend: 'improving',
-      trendValue: 4,
-      overallGrade: 'C',
-      avgScore: 67.25,
-      atRisk: false,
-      remarks: []
-    },
-    {
-      id: 'S13',
-      name: 'Maya Thompson',
-      roll: 13,
-      assessments: { unitTest1: 80, unitTest2: 82, project: 85, midterm: 83 },
-      participation: 'A',
-      attendance: 92,
-      behaviorScore: 86,
-      trend: 'improving',
-      trendValue: 6,
-      overallGrade: 'A',
-      avgScore: 82.5,
-      atRisk: false,
-      remarks: []
-    },
-    {
-      id: 'S14',
-      name: 'Noah Garcia',
-      roll: 14,
-      assessments: { unitTest1: 55, unitTest2: 52, project: 58, midterm: 50 },
-      participation: 'D',
-      attendance: 75,
-      behaviorScore: 68,
-      trend: 'declining',
-      trendValue: -12,
-      overallGrade: 'D',
-      avgScore: 53.75,
-      atRisk: true,
-      remarks: ['Critical attention needed', 'Falling behind in coursework']
-    },
-    {
-      id: 'S15',
-      name: 'Olivia Brown',
-      roll: 15,
-      assessments: { unitTest1: 86, unitTest2: 88, project: 90, midterm: 87 },
-      participation: 'A',
-      attendance: 97,
-      behaviorScore: 89,
-      trend: 'improving',
-      trendValue: 4,
-      overallGrade: 'A',
-      avgScore: 87.75,
-      atRisk: false,
-      remarks: []
-    },
-  ]);
+  // Gradebook data mapped from TEACHER_DATA
+  const [students] = useState(TEACHER_DATA.gradebook.map(student => {
+    // Helper to extract assessment marks safely
+    const getMark = (name) => student.scores[name]?.marks || 0;
+
+    return {
+      id: student.id,
+      name: student.name,
+      roll: student.roll,
+      assessments: { 
+        unitTest1: getMark("Unit Test 1"), 
+        unitTest2: 0, // Not in sample data, defaulting
+        project: getMark("Project"), 
+        midterm: getMark("Mid-Term") 
+      },
+      participation: 'A', // Default
+      attendance: student.attendance,
+      behaviorScore: 85, // Default
+      trend: 'improving', // Default
+      trendValue: 0, // Default
+      overallGrade: student.overallGrade,
+      avgScore: 0, // Placeholder, can be calculated if needed
+      atRisk: student.overallGrade === 'D' || student.overallGrade === 'F',
+      remarks: student.remarks ? [student.remarks] : []
+    };
+  }));
 
   const [selectedClass, setSelectedClass] = useState('Grade 9-A');
   const [searchQuery, setSearchQuery] = useState('');

@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 
 const AttendanceLog = () => {
-  const { attendance: initialAttendance, subjects, attendanceCalendar, classes } = TEACHER_DATA;
+  const { attendance: initialAttendance, subjects, attendanceCalendar, classes, attendanceReasons } = TEACHER_DATA;
   
   // State management
   const [attendance, setAttendance] = useState(initialAttendance);
@@ -135,18 +135,11 @@ const AttendanceLog = () => {
 
   // Mock API call
   useEffect(() => {
-    console.log('Attendance Log loaded - Ready for API" integration');
+    console.log('Attendance Log loaded - Ready for API integration');
   }, []);
 
   // Absence reason options (predefined + custom)
-  const predefinedReasons = [
-    'Sick Leave',
-    'Family Emergency',
-    'Medical Appointment',
-    'Personal Leave',
-    'School Event',
-    'Other'
-  ];
+  const predefinedReasons = attendanceReasons;
   const reasonOptions = [...predefinedReasons, ...customReasons];
 
   // Add custom reason

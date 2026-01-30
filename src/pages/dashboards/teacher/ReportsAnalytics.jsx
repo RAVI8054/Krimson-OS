@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { TEACHER_DATA } from '../../../data/teacherData';
 import { 
   Download, BarChart2, TrendingUp, TrendingDown, Users, Award,
   AlertTriangle, FileText, Calendar, Target, Filter, Share2,
@@ -6,42 +7,17 @@ import {
 } from 'lucide-react';
 
 const ReportsAnalytics = () => {
-  // Sample analytics data
-  const [classPerformance] = useState([
-    { class: 'Grade 9-A', termAvg: 82, attendance: 94, students: 32, assignmentCompletion: 88 },
-    { class: 'Grade 9-B', termAvg: 76, attendance: 89, students: 30, assignmentCompletion: 82 },
-    { class: 'Grade 10-A', termAvg: 85, attendance: 96, students: 28, assignmentCompletion: 92 },
-  ]);
+  // Sample analytics data mapped from TEACHER_DATA
+  const [classPerformance] = useState(TEACHER_DATA.reports.classPerformance);
 
-  const [assignmentTrend] = useState([
-    { week: 'Week 1', completion: 75 },
-    { week: 'Week 2', completion: 82 },
-    { week: 'Week 3', completion: 78 },
-    { week: 'Week 4', completion: 85 },
-    { week: 'Week 5', completion: 88 },
-    { week: 'Week 6', completion: 92 },
-  ]);
+  const [assignmentTrend] = useState(TEACHER_DATA.reports.assignmentTrend);
 
-  const [topPerformers] = useState([
-    { name: 'Aarav Singh', class: 'Grade 9-A', avgScore: 95.5, trend: 'improving' },
-    { name: 'Charlie Tan', class: 'Grade 10-A', avgScore: 94.2, trend: 'improving' },
-    { name: 'Elena Rodriguez', class: 'Grade 9-A', avgScore: 92.8, trend: 'improving' },
-    { name: 'Fatima Khan', class: 'Grade 9-B', avgScore: 91.5, trend: 'stable' },
-    { name: 'Sophie Chen', class: 'Grade 10-A', avgScore: 90.3, trend: 'improving' },
-  ]);
+  const [topPerformers] = useState(TEACHER_DATA.reports.topStudents);
 
-  const [bottomPerformers] = useState([
-    { name: 'Hannah Martinez', class: 'Grade 9-A', avgScore: 56.2, trend: 'declining' },
-    { name: 'David Kim', class: 'Grade 9-A', avgScore: 62.5, trend: 'declining' },
-    { name: 'James Wilson', class: 'Grade 9-B', avgScore: 64.8, trend: 'stable' },
-  ]);
+  const [bottomPerformers] = useState(TEACHER_DATA.reports.atRiskStudents);
 
   // School-wide benchmark
-  const [benchmark] = useState({
-    schoolAverage: 78.5,
-    departmentAverage: 81.2,
-    myAverage: 81.0,
-  });
+  const [benchmark] = useState(TEACHER_DATA.reports.benchmark);
 
   const [selectedReport, setSelectedReport] = useState(null);
   const [selectedClass, setSelectedClass] = useState('all');

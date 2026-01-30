@@ -10,149 +10,18 @@ import {
   Zap, Shield, Globe, Filter, Search, RefreshCcw
 } from 'lucide-react';
 
+import { ADMIN_DATA } from '../../../data/adminData';
+
 const NotificationCenter = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [activeTab, setActiveTab] = useState('compose');
 
-  // Notification Templates Library
-  const templates = [
-    {
-      id: 'TEMP001',
-      name: 'Holiday Announcement',
-      category: 'General',
-      subject: 'School Holiday Notice',
-      content: 'Dear Parents & Students, This is to inform you that the school will remain closed on [DATE] on account of [REASON]. Regular classes will resume on [NEXT DATE].',
-      usageCount: 45,
-      lastUsed: '2026-01-15'
-    },
-    {
-      id: 'TEMP002',
-      name: 'Exam Schedule Release',
-      category: 'Academic',
-      subject: 'Important: Examination Schedule Released',
-      content: 'Dear Students & Parents, The examination schedule for [EXAM NAME] has been published. Please check the academic portal for detailed timings and subjects.',
-      usageCount: 28,
-      lastUsed: '2026-01-10'
-    },
-    {
-      id: 'TEMP003',
-      name: 'Fee Payment Reminder',
-      category: 'Finance',
-      subject: 'Fee Payment Due',
-      content: 'Dear Parents, This is a friendly reminder that the fee payment for [TERM] is due on [DATE]. Please ensure timely payment to avoid late fees.',
-      usageCount: 156,
-      lastUsed: '2026-01-18'
-    },
-    {
-      id: 'TEMP004',
-      name: 'Emergency Alert',
-      category: 'Urgent',
-      subject: 'URGENT: Emergency Notice',
-      content: 'IMPORTANT NOTICE: [EMERGENCY DETAILS]. Please follow the instructions provided and stay safe.',
-      usageCount: 3,
-      lastUsed: '2025-12-20'
-    }
-  ];
-
-  // Recent Notifications with Tracking Data
-  const recentNotifications = [
-    {
-      id: 'NOT001',
-      title: 'Annual Sports Day - 2026',
-      content: 'Invitation to Annual Sports Day on 25th January',
-      targetGroup: ['Parents', 'Students (Grades 6-12)'],
-      channels: ['SMS', 'Email', 'App'],
-      sentDate: '2026-01-18 10:30 AM',
-      status: 'Delivered',
-      totalRecipients: 550,
-      delivered: 548,
-      opened: 425,
-      deliveryRate: '99.6%',
-      openRate: '77.5%',
-      smsCount: 550,
-      emailCount: 550,
-      appNotifications: 550
-    },
-    {
-      id: 'NOT002',
-      title: 'Mid-Term Exam Schedule Released',
-      content: 'Examination timetable now available on portal',
-      targetGroup: ['Students', 'Parents', 'Teachers'],
-      channels: ['Email', 'App'],
-      sentDate: '2026-01-17 02:15 PM',
-      status: 'Delivered',
-      totalRecipients: 892,
-      delivered: 890,
-      opened: 712,
-      deliveryRate: '99.8%',
-      openRate: '80.0%',
-      smsCount: 0,
-      emailCount: 892,
-      appNotifications: 892
-    },
-    {
-      id: 'NOT003',
-      title: 'Fee Payment Deadline Reminder',
-      content: 'Q3 fees payment due on 20th January',
-      targetGroup: ['Parents'],
-      channels: ['SMS', 'Email'],
-      sentDate: '2026-01-16 09:00 AM',
-      status: 'Delivered',
-      totalRecipients: 485,
-      delivered: 485,
-      opened: 398,
-      deliveryRate: '100%',
-      openRate: '82.1%',
-      smsCount: 485,
-      emailCount: 485,
-      appNotifications: 0
-    },
-    {
-      id: 'NOT004',
-      title: 'Parent-Teacher Meeting Invitation',
-      content: 'Scheduled for 22nd January, 4:00 PM onwards',
-      targetGroup: ['Parents'],
-      channels: ['Email', 'App'],
-      sentDate: '2026-01-15 11:45 AM',
-      status: 'Delivered',
-      totalRecipients: 485,
-      delivered: 483,
-      opened: 415,
-      deliveryRate: '99.6%',
-      openRate: '85.9%',
-      smsCount: 0,
-      emailCount: 485,
-      appNotifications: 485
-    }
-  ];
-
-  // Gateway Integration Status
-  const gatewayStatus = {
-    sms: {
-      provider: 'Twilio',
-      status: 'Active',
-      lastSync: '2 mins ago',
-      monthlySent: 12458,
-      monthlyLimit: 50000,
-      balance: '₹45,250'
-    },
-    email: {
-      provider: 'SendGrid',
-      status: 'Active',
-      lastSync: '1 min ago',
-      monthlySent: 28945,
-      monthlyLimit: 100000,
-      balance: 'Unlimited'
-    },
-    firebase: {
-      provider: 'Firebase Cloud Messaging',
-      status: 'Active',
-      lastSync: 'Just now',
-      monthlySent: 45678,
-      monthlyLimit: 'Unlimited',
-      balance: 'Active'
-    }
-  };
+  const { notifications } = ADMIN_DATA;
+  const { 
+    templates, 
+    history: recentNotifications, 
+    gatewayStatus 
+  } = notifications;
 
   const getStatusColor = (status) => {
     switch (status) {

@@ -8,11 +8,11 @@ import {
 } from 'lucide-react';
 
 const LessonPlanning = () => {
-  const { lessons, user } = TEACHER_DATA;
+  const { lessons, user, lessonPlanner } = TEACHER_DATA;
   const [selectedDay, setSelectedDay] = useState('monday');
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
-  const [currentWeek, setCurrentWeek] = useState('Week of Jan 20-24, 2026');
+  const [currentWeek, setCurrentWeek] = useState(lessonPlanner.currentWeek);
 
   // Mock API call
   useEffect(() => {
@@ -23,13 +23,7 @@ const LessonPlanning = () => {
     console.log('Lesson Planning loaded - Ready for API integration');
   }, []);
 
-  const weekDays = [
-    { key: 'monday', label: 'Monday', date: '20' },
-    { key: 'tuesday', label: 'Tuesday', date: '21' },
-    { key: 'wednesday', label: 'Wednesday', date: '22' },
-    { key: 'thursday', label: 'Thursday', date: '23' },
-    { key: 'friday', label: 'Friday', date: '24' }
-  ];
+  const weekDays = lessonPlanner.weekDays;
 
   // Get status color
   const getStatusColor = (status) => {
@@ -153,7 +147,7 @@ const LessonPlanning = () => {
               Based on your "Intro to Kinematics" lesson, we suggest: <strong>"Video: Motion in One Dimension"</strong> and <strong>"Worksheet: Velocity-Time Graphs"</strong>
             </p>
             <div className="flex flex-wrap gap-2">
-              {['Video: Motion Demo', 'Past Lesson: Force Analysis', 'Interactive: Vector Simulator'].map((suggestion, idx) => (
+              {lessonPlanner.aiSuggestions.map((suggestion, idx) => (
                 <span key={idx} className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-lg text-xs font-medium border border-white/30">
                   {suggestion}
                 </span>

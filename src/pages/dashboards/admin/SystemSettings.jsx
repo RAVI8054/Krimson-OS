@@ -31,84 +31,12 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 
+import { ADMIN_DATA } from '../../../data/adminData';
+
 // ========================================
 // MOCK DATA - Ready for Admin Configuration API Integration
 // ========================================
-const mockSystemData = {
-  // Summary Statistics
-  stats: {
-    activeAcademicYear: '2025-2026',
-    configuredUsers: 1247,
-    systemUptime: 99.98,
-    lastUpdate: '2 hours ago'
-  },
-
-  // Academic Year Configuration
-  academicYear: {
-    current: '2025-2026',
-    startDate: '2025-04-01',
-    endDate: '2026-03-31',
-    terms: [
-      { name: 'Term 1', start: '2025-04-01', end: '2025-07-15' },
-      { name: 'Term 2', start: '2025-08-01', end: '2025-11-15' },
-      { name: 'Term 3', start: '2025-11-25', end: '2026-03-31' }
-    ],
-    upcomingYear: '2026-2027'
-  },
-
-  // Timezone & Currency
-  regionalization: {
-    timezone: 'Asia/Singapore (GMT+8)',
-    currency: 'SGD ($)',
-    dateFormat: 'DD/MM/YYYY',
-    language: 'English (US)',
-    numberFormat: '1,234.56'
-  },
-
-  // Default Permissions by Role
-  permissions: {
-    roles: [
-      { 
-        name: 'Administrator', 
-        userCount: 5,
-        permissions: { read: true, write: true, delete: true, config: true }
-      },
-      { 
-        name: 'Principal', 
-        userCount: 3,
-        permissions: { read: true, write: true, delete: false, config: true }
-      },
-      { 
-        name: 'Teacher', 
-        userCount: 89,
-        permissions: { read: true, write: true, delete: false, config: false }
-      },
-      { 
-        name: 'Parent', 
-        userCount: 1150,
-        permissions: { read: true, write: false, delete: false, config: false }
-      }
-    ],
-    securityPolicies: {
-      require2FA: true,
-      sessionTimeout: 15,
-      passwordExpiry: 90,
-      loginAttempts: 3
-    }
-  },
-
-  // School Branding
-  branding: {
-    schoolName: 'Krimson International School',
-    tagline: 'Excellence in Education',
-    contactEmail: 'admin@krimsonschool.edu.sg',
-    contactPhone: '+65 6123 4567',
-    address: '123 Education Boulevard, Singapore 123456',
-    website: 'www.krimsonschool.edu.sg',
-    themeColor: '#3B82F6',
-    logoUrl: null // Placeholder for logo upload
-  }
-};
+const mockSystemData = ADMIN_DATA.systemSettings;
 
 const SystemSettings = () => {
   const [activeTab, setActiveTab] = useState('academic');

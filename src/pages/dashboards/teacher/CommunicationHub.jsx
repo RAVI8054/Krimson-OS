@@ -8,100 +8,29 @@ import {
 } from 'lucide-react';
 
 const CommunicationHub = () => {
-  // Sample message data
-  const [messages] = useState([
-    {
-      id: 'M1',
-      type: 'direct',
-      from: 'Parent of Aarav Singh',
-      studentName: 'Aarav Singh',
-      subject: 'Query about assignment submission',
-      preview: 'Could you please clarify the deadline for...',
-      content: 'Could you please clarify the deadline for the Physics lab report? My son mentioned it\'s due tomorrow but I wanted to confirm.',
-      timestamp: '2026-01-19T10:30:00',
-      read: false,
-      replied: false,
-      tag: 'Academic',
-      archived: false
-    },
-    {
-      id: 'M2',
-      type: 'direct',
-      from: 'Parent of Bianca Liu',
-      studentName: 'Bianca Liu',
-      subject: 'Attendance concern',
-      preview: 'I noticed Bianca was marked absent yesterday...',
-      content: 'I noticed Bianca was marked absent yesterday, but she was at school. Could this be a mistake?',
-      timestamp: '2026-01-19T09:15:00',
-      read: true,
-      replied: true,
-      tag: 'Attendance',
-      archived: false
-    },
-    {
-      id: 'M3',
-      type: 'direct',
-      from: 'Parent of Charlie Tan',
-      studentName: 'Charlie Tan',
-      subject: 'Excellent progress!',
-      preview: 'Thank you for your dedication...',
-      content: 'Thank you for your dedication in teaching. Charlie has shown remarkable improvement in Physics this term.',
-      timestamp: '2026-01-18T16:45:00',
-      read: true,
-      replied: true,
-      tag: 'Behavior',
-      archived: false
-    },
-    {
-      id: 'M4',
-      type: 'broadcast',
-      from: 'You',
-      subject: 'Homework Reminder - Unit Test',
-      preview: 'Dear Parents, This is a reminder...',
-      content: 'Dear Parents, This is a reminder that Unit Test 2 is scheduled for Monday, January 22nd. Please ensure your child revises chapters 3-5.',
-      timestamp: '2026-01-18T14:00:00',
-      read: true,
-      replied: false,
-      tag: 'Academic',
-      archived: false,
-      recipients: 32,
-      sent: true
-    },
-  ]);
+  // Sample message data mapped from TEACHER_DATA
+  const [messages] = useState(TEACHER_DATA.messages.map(msg => ({
+    id: msg.id,
+    type: msg.from === 'You' ? 'broadcast' : 'direct',
+    from: msg.from,
+    studentName: msg.from.includes('Parent of') ? msg.from.replace('Parent of ', '') : null,
+    subject: msg.content.substring(0, 30) + '...', // Generate subject from content if missing
+    preview: msg.content.substring(0, 50) + '...',
+    content: msg.content,
+    timestamp: new Date().toISOString(), // Mock timestamp as it's relative in data
+    read: !msg.unread,
+    replied: false,
+    tag: 'Academic', // Default tag
+    archived: false
+  })));
 
-  // Message templates
-  const templates = [
-    {
-      id: 'T1',
-      name: 'Homework Reminder',
-      category: 'Academic',
-      content: 'Dear Parent,\n\nThis is a reminder about the upcoming homework assignment:\n\n[Assignment Details]\n\nDue Date: [Date]\n\nThank you,\n[Teacher Name]'
-    },
-    {
-      id: 'T2',
-      name: 'Attendance Alert',
-      category: 'Attendance',
-      content: 'Dear Parent,\n\nWe noticed that [Student Name] was absent on [Date].\n\nIf this absence was unplanned, please provide a reason for our records.\n\nThank you,\n[Teacher Name]'
-    },
-    {
-      id: 'T3',
-      name: 'Positive Behavior',
-      category: 'Behavior',
-      content: 'Dear Parent,\n\nI wanted to share some positive news about [Student Name].\n\n[Positive behavior/achievement]\n\nKeep up the great work!\n\nBest regards,\n[Teacher Name]'
-    },
-    {
-      id: 'T4',
-      name: 'Parent-Teacher Meeting',
-      category: 'Academic',
-      content: 'Dear Parent,\n\nI would like to schedule a meeting to discuss [Student Name]\'s academic progress.\n\nPlease let me know your availability.\n\nThank you,\n[Teacher Name]'
-    },
-    {
-      id: 'T5',
-      name: 'Low Performance Alert',
-      category: 'Academic',
-      content: 'Dear Parent,\n\nI wanted to bring to your attention that [Student Name] has been struggling with [Subject/Topic].\n\nI recommend additional practice and would be happy to provide extra support.\n\nBest regards,\n[Teacher Name]'
-    },
-  ];
+  // Message templates mapped from TEACHER_DATA
+  const templates = TEACHER_DATA.communicationTemplates.map(t => ({
+    id: t.id,
+    name: t.title,
+    category: 'General', // Default category
+    content: t.content
+  }));
 
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [filterType, setFilterType] = useState('all'); // 'all', 'direct', 'broadcast', 'unread'

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { TEACHER_DATA } from '../../../data/teacherData';
 import { 
   Upload, Download, Search, Filter, Star, Eye, Share2,
   FileText, Video, FileImage, File, BookOpen, Users,
@@ -7,89 +8,8 @@ import {
 } from 'lucide-react';
 
 const ResourceLibrary = () => {
-  // Sample resource data
-  const [resources] = useState([
-    {
-      id: 'R1',
-      title: 'Newton\'s Laws of Motion - Complete Guide',
-      description: 'Comprehensive presentation covering all three laws with real-world examples',
-      subject: 'Physics',
-      topic: 'Mechanics',
-      grade: 'Grade 9',
-      format: 'ppt',
-      size: '5.2 MB',
-      uploadedBy: 'Dr. Sarah Chen',
-      uploadDate: '2026-01-15',
-      downloads: 142,
-      rating: 4.8,
-      reviews: 24,
-      tags: ['Mechanics', 'Force', 'Motion']
-    },
-    {
-      id: 'R2',
-      title: 'Thermodynamics Video Lecture Series',
-      description: '6-part video series explaining thermodynamic principles',
-      subject: 'Physics',
-      topic: 'Thermodynamics',
-      grade: 'Grade 10',
-      format: 'video',
-      size: '245 MB',
-      uploadedBy: 'Prof. Michael Johnson',
-      uploadDate: '2026-01-12',
-      downloads: 98,
-      rating: 4.9,
-      reviews: 18,
-      tags: ['Heat', 'Energy', 'Temperature']
-    },
-    {
-      id: 'R3',
-      title: 'Optics Problem Solving Worksheet',
-      description: 'Practice problems on reflection, refraction, and lenses',
-      subject: 'Physics',
-      topic: 'Optics',
-      grade: 'Grade 10',
-      format: 'pdf',
-      size: '1.8 MB',
-      uploadedBy: 'Ms. Emily Zhang',
-      uploadDate: '2026-01-18',
-      downloads: 67,
-      rating: 4.6,
-      reviews: 12,
-      tags: ['Light', 'Reflection', 'Refraction']
-    },
-    {
-      id: 'R4',
-      title: 'Electricity Circuit Diagrams',
-      description: 'Collection of circuit diagrams for teaching basic electricity',
-      subject: 'Physics',
-      topic: 'Electricity',
-      grade: 'Grade 9',
-      format: 'image',
-      size: '3.4 MB',
-      uploadedBy: 'Mr. David Lee',
-      uploadDate: '2026-01-10',
-      downloads: 156,
-      rating: 4.7,
-      reviews: 31,
-      tags: ['Circuits', 'Current', 'Voltage']
-    },
-    {
-      id: 'R5',
-      title: 'Wave Motion Interactive Simulation',
-      description: 'Interactive worksheet with QR codes to online simulations',
-      subject: 'Physics',
-      topic: 'Waves',
-      grade: 'Grade 10',
-      format: 'worksheet',
-      size: '2.1 MB',
-      uploadedBy: 'Dr. Anna Martinez',
-      uploadDate: '2026-01-19',
-      downloads: 34,
-      rating: 5.0,
-      reviews: 8,
-      tags: ['Waves', 'Sound', 'Frequency']
-    },
-  ]);
+  // Resources data mapped from TEACHER_DATA
+  const [resources] = useState(TEACHER_DATA.resources);
 
   const [selectedResource, setSelectedResource] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');

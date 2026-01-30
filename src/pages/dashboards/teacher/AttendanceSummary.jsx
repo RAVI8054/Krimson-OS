@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { TEACHER_DATA } from '../../../data/teacherData';
 import { 
   Download, TrendingDown, TrendingUp, Users, Calendar,
   AlertTriangle, CheckCircle, BarChart2, FileText, Filter,
@@ -6,37 +7,32 @@ import {
 } from 'lucide-react';
 
 const AttendanceSummary = () => {
-  // Monthly attendance data
-  const [monthlyData] = useState([
-    { month: 'Aug', percentage: 92 },
-    { month: 'Sep', percentage: 94 },
-    { month: 'Oct', percentage: 91 },
-    { month: 'Nov', percentage: 93 },
-    { month: 'Dec', percentage: 89 },
-    { month: 'Jan', percentage: 88 },
-  ]);
+  // Monthly attendance data from TEACHER_DATA
+  const [monthlyData] = useState(TEACHER_DATA.attendanceStats.monthlyData);
 
-  // Term-wise data
+  // Term-wise data (Static local data)
   const [termData] = useState([
     { term: 'Term 1', percentage: 92.5, students: 90, totalDays: 60 },
     { term: 'Term 2', percentage: 90.3, students: 90, totalDays: 55 },
     { term: 'Term 3', percentage: 88.7, students: 90, totalDays: 45 },
   ]);
 
-  // Class-wise attendance
+  // Class-wise attendance (Static local data)
   const [classAttendance] = useState([
     { class: 'Grade 9-A', current: 88, previous: 93, trend: 'down', students: 32, avgAbsences: 3.8 },
     { class: 'Grade 9-B', current: 91, previous: 89, trend: 'up', students: 30, avgAbsences: 2.7 },
     { class: 'Grade 10-A', current: 94, previous: 94, trend: 'stable', students: 28, avgAbsences: 1.7 },
   ]);
 
-  // Student absence frequency
-  const [studentAbsences] = useState([
-    { name: 'David Kim', class: 'Grade 9-A', absences: 8, percentage: 78, trend: 'increasing', lastAbsent: '2026-01-18' },
-    { name: 'Hannah Martinez', class: 'Grade 9-A', absences: 7, percentage: 82, trend: 'stable', lastAbsent: '2026-01-17' },
-    { name: 'James Wilson', class: 'Grade 9-B', absences: 6, percentage: 85, trend: 'decreasing', lastAbsent: '2026-01-15' },
-    { name: 'Olivia Brown', class: 'Grade 10-A', absences: 5, percentage: 87, trend: 'stable', lastAbsent: '2026-01-14' },
-  ]);
+  // Student absence frequency mapped from TEACHER_DATA
+  const [studentAbsences] = useState(TEACHER_DATA.attendanceStats.recentAbsences.map(s => ({
+    name: s.name,
+    class: s.class,
+    absences: s.days * 2, // Mock calculation
+    percentage: 100 - (s.days * 2), // Mock calculation
+    trend: 'stable',
+    lastAbsent: new Date().toISOString()
+  })));
 
   // Automated insights
   const [insights] = useState([

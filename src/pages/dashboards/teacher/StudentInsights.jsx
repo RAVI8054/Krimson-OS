@@ -9,76 +9,8 @@ import {
 } from 'lucide-react';
 
 const StudentInsights = () => {
-  // Sample student data
-  const [students] = useState([
-    {
-      id: 'S1',
-      name: 'Aarav Singh',
-      roll: 1,
-      class: 'Grade 9-A',
-      photo: null,
-      attendance: 96,
-      avgGrade: 88.5,
-      overallGrade: 'A',
-      trend: 'improving',
-      trendValue: 7,
-      atRisk: false,
-      behaviorScore: 92,
-      feedbackHistory: [
-        { date: '2026-01-15', teacher: 'Ms. Johnson', subject: 'Physics', comment: 'Excellent lab work and participation', type: 'positive' },
-        { date: '2026-01-10', teacher: 'Mr. Chen', subject: 'Math', comment: 'Shows great improvement in problem-solving', type: 'positive' },
-      ],
-      behaviorLog: [
-        { date: '2026-01-18', type: 'commendation', note: 'Helped classmate understand complex physics concept', submittedBy: 'Physics Teacher', encrypted: false },
-        { date: '2026-01-12', type: 'commendation', note: 'Outstanding presentation on Newton\'s Laws', submittedBy: 'Physics Teacher', encrypted: false },
-      ]
-    },
-    {
-      id: 'S2',
-      name: 'Bianca Liu',
-      roll: 2,
-      class: 'Grade 9-A',
-      photo: null,
-      attendance: 88,
-      avgGrade: 73.5,
-      overallGrade: 'B',
-      trend: 'declining',
-      trendValue: -6,
-      atRisk: true,
-      behaviorScore: 85,
-      feedbackHistory: [
-        { date: '2026-01-17', teacher: 'Ms. Johnson', subject: 'Physics', comment: 'Needs to improve homework submission consistency', type: 'concern' },
-        { date: '2026-01-14', teacher: 'School Counselor', subject: 'Counseling', comment: 'Discussed time management strategies', type: 'neutral' },
-      ],
-      behaviorLog: [
-        { date: '2026-01-19', type: 'warning', note: 'Late submission of assignment (3rd occurrence)', submittedBy: 'Physics Teacher', encrypted: false },
-        { date: '2026-01-16', type: 'mentorship', note: 'Meeting scheduled with parents to discuss academic challenges. Student shows willingness to improve.', submittedBy: 'Class Teacher', encrypted: true },
-      ]
-    },
-    {
-      id: 'S3',
-      name: 'David Kim',
-      roll: 4,
-      class: 'Grade 9-A',
-      photo: null,
-      attendance: 82,
-      avgGrade: 66.25,
-      overallGrade: 'C',
-      trend: 'declining',
-      trendValue: -8,
-      atRisk: true,
-      behaviorScore: 78,
-      feedbackHistory: [
-        { date: '2026-01-18', teacher: 'Ms. Johnson', subject: 'Physics', comment: 'Struggling with fundamental concepts - additional support needed', type: 'concern' },
-        { date: '2026-01-15', teacher: 'School Counselor', subject: 'Counseling', comment: 'Personal issues affecting academic performance', type: 'concern' },
-      ],
-      behaviorLog: [
-        { date: '2026-01-19', type: 'warning', note: 'Attendance below 85% threshold', submittedBy: 'Attendance System', encrypted: false },
-        { date: '2026-01-17', type: 'mentorship', note: 'Confidential: Student experiencing family difficulties. Additional emotional support provided. Recommended counselor intervention.', submittedBy: 'Class Teacher', encrypted: true },
-        { date: '2026-01-15', type: 'warning', note: 'Low participation in class activities', submittedBy: 'Physics Teacher', encrypted: false },
-      ]
-    },
-  ]);
+  // Student data mapped from TEACHER_DATA.attendance
+  const [students] = useState(TEACHER_DATA.attendance);
 
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -107,7 +39,7 @@ const StudentInsights = () => {
     total: students.length,
     atRisk: students.filter(s => s.atRisk).length,
     avgAttendance: (students.reduce((sum, s) => sum + s.attendance, 0) / students.length).toFixed(1),
-    avgGrade: (students.reduce((sum, s) => sum + s.avgGrade, 0) / students.length).toFixed(1),
+    avgGrade: (students.reduce((sum, s) => sum + (s.avgGrade || 0), 0) / students.length).toFixed(1), // Added safety check for avgGrade
   };
 
   // Mock API call
@@ -465,13 +397,13 @@ const StudentInsights = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-slate-600">Commendations</span>
                     <span className="font-bold text-green-600">
-                      {selectedStudent.behaviorLog.filter(log => log.type === 'commendation').length}
+                      {(selectedStudent.behaviorLog || []).filter(log => log.type === 'commendation').length}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-slate-600">Warnings</span>
                     <span className="font-bold text-orange-600">
-                      {selectedStudent.behaviorLog.filter(log => log.type === 'warning').length}
+                      {(selectedStudent.behaviorLog || []).filter(log => log.type === 'warning').length}
                     </span>
                   </div>
                 </div>
@@ -485,7 +417,7 @@ const StudentInsights = () => {
                 Feedback History
               </h3>
               <div className="space-y-3">
-                {selectedStudent.feedbackHistory.map((feedback, idx) => (
+                {(selectedStudent.feedbackHistory || []).map((feedback, idx) => (
                   <div key={idx} className="p-4 bg-white rounded-xl border border-slate-100">
                     <div className="flex items-start justify-between mb-2">
                       <div>
@@ -513,7 +445,7 @@ const StudentInsights = () => {
                 Behavior Log
               </h3>
               <div className="space-y-3">
-                {selectedStudent.behaviorLog.map((log, idx) => (
+                {(selectedStudent.behaviorLog || []).map((log, idx) => (
                   <div key={idx} className={`p-4 bg-white rounded-xl border ${log.encrypted ? 'border-purple-200' : 'border-slate-100'}`}>
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">

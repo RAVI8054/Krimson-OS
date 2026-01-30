@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { TEACHER_DATA } from '../../../data/teacherData';
 import { 
   PenTool, Share2, Eye, Calendar, TrendingUp, Users,
   BookOpen, MessageSquare, Award, Sparkles, Send, Plus,
@@ -7,50 +8,10 @@ import {
 } from 'lucide-react';
 
 const ReflectionJournal = () => {
-  // Sample reflection entries
-  const [reflections] = useState([
-    {
-      id: 'RF1',
-      date: '2026-01-19',
-      lessonTopic: 'Newton\'s Third Law - Action and Reaction',
-      class: 'Grade 9-A',
-      whatWentWell: 'Students were highly engaged during the practical demonstration with toy cars and springs. The visual representation really helped them understand the concept.',
-      areasForImprovement: 'Could have managed time better for the Q&A session. Need to allocate 10 more minutes for student questions next time.',
-      studentEngagement: 92,
-      participationRate: 88,
-      questionsAsked: 15,
-      shared: false,
-      weekNumber: 3
-    },
-    {
-      id: 'RF2',
-      date: '2026-01-18',
-      lessonTopic: 'Thermodynamics - Heat Transfer Methods',
-      class: 'Grade 10-A',
-      whatWentWell: 'The group activity on identifying heat transfer in everyday life was very effective. Students came up with creative examples.',
-      areasForImprovement: 'Some students struggled with the mathematical calculations. Will create additional practice worksheets with step-by-step solutions.',
-      studentEngagement: 85,
-      participationRate: 76,
-      questionsAsked: 12,
-      shared: true,
-      weekNumber: 3
-    },
-    {
-      id: 'RF3',
-      date: '2026-01-17',
-      lessonTopic: 'Optics - Reflection and Refraction',
-      class: 'Grade 9-B',
-      whatWentWell: 'Mirror and lens experiments went smoothly. Lab equipment was well-organized, saving time.',
-      areasForImprovement: 'Need to prepare clearer safety instructions. Two students were confused about proper handling of glass lenses.',
-      studentEngagement: 78,
-      participationRate: 82,
-      questionsAsked: 10,
-      shared: false,
-      weekNumber: 3
-    },
-  ]);
+  // Reflections data mapped from TEACHER_DATA
+  const [reflections] = useState(TEACHER_DATA.reflections);
 
-  // Auto-suggested analytics
+  // Auto-suggested analytics (Static local data for now, could be computed)
   const [analytics] = useState({
     weeklyAvgEngagement: 85,
     weeklyAvgParticipation: 82,

@@ -12,269 +12,45 @@ import {
   Grid, List, Bell, AlertCircle, PlayCircle, PauseCircle, User
 } from 'lucide-react';
 
+import { ADMIN_DATA } from '../../../data/adminData';
+
 const Infrastructure = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Inventory Categories
-  const categories = [
-    { id: 'lab', name: 'Lab Equipment', icon: <FlaskConical size={20} />, count: 156, color: 'blue' },
-    { id: 'books', name: 'Library Books', icon: <Book size={20} />, count: 8945, color: 'purple' },
-    { id: 'devices', name: 'Digital Devices', icon: <Monitor size={20} />, count: 234, color: 'cyan' },
-    { id: 'furniture', name: 'Furniture', icon: <Building size={20} />, count: 567, color: 'amber' },
-    { id: 'sports', name: 'Sports Equipment', icon: <Award size={20} />, count: 289, color: 'green' },
-    { id: 'transport', name: 'Transportation', icon: <Bus size={20} />, count: 8, color: 'pink' }
-  ];
+  const { infrastructure } = ADMIN_DATA;
+  const { 
+    categories: rawCategories, 
+    inventory: inventoryItems, 
+    reservations, 
+    maintenanceLog, 
+    stats: staticStats 
+  } = infrastructure;
 
-  // Inventory Items
-  const inventoryItems = [
-    {
-      id: 'INV001',
-      name: 'Chemistry Lab Microscope',
-      category: 'lab',
-      quantity: 25,
-      minQuantity: 20,
-      condition: 'Good',
-      location: 'Science Lab A',
-      lastMaintenance: '2025-12-15',
-      nextMaintenance: '2026-06-15',
-      cost: '₹85,000',
-      acquiredDate: '2023-08-20',
-      status: 'Available',
-      assignedTo: null
-    },
-    {
-      id: 'INV002',
-      name: 'Class 10 Physics Textbooks',
-      category: 'books',
-      quantity: 185,
-      minQuantity: 150,
-      condition: 'Good',
-      location: 'Library - Section D',
-      lastMaintenance: null,
-      nextMaintenance: null,
-      cost: '₹92,500',
-      acquiredDate: '2025-06-01',
-      status: 'Available',
-      assignedTo: null
-    },
-    {
-      id: 'INV003',
-      name: 'Dell Latitude Laptops',
-      category: 'devices',
-      quantity: 45,
-      minQuantity: 40,
-      condition: 'Excellent',
-      location: 'IT Lab',
-      lastMaintenance: '2026-01-05',
-      nextMaintenance: '2026-07-05',
-      cost: '₹22,50,000',
-      acquiredDate: '2024-09-15',
-      status: 'Available',
-      assignedTo: null
-    },
-    {
-      id: 'INV004',
-      name: 'Digital Projectors',
-      category: 'devices',
-      quantity: 12,
-      minQuantity: 15,
-      condition: 'Good',
-      location: 'Multi-Purpose Hall',
-      lastMaintenance: '2025-11-20',
-      nextMaintenance: '2026-05-20',
-      cost: '₹6,00,000',
-      acquiredDate: '2022-03-10',
-      status: 'Low Stock',
-      assignedTo: null
-    },
-    {
-      id: 'INV005',
-      name: 'Student Desks & Chairs',
-      category: 'furniture',
-      quantity: 450,
-      minQuantity: 400,
-      condition: 'Good',
-      location: 'Multiple Classrooms',
-      lastMaintenance: '2025-07-10',
-      nextMaintenance: null,
-      cost: '₹18,00,000',
-      acquiredDate: '2023-04-01',
-      status: 'Available',
-      assignedTo: null
-    },
-    {
-      id: 'INV006',
-      name: 'Basketball Courts Equipment',
-      category: 'sports',
-      quantity: 35,
-      minQuantity: 30,
-      condition: 'Good',
-      location: 'Sports Complex',
-      lastMaintenance: '2025-12-01',
-      nextMaintenance: '2026-06-01',
-      cost: '₹1,25,000',
-      acquiredDate: '2024-01-15',
-      status: 'Available',
-      assignedTo: null
-    },
-    {
-      id: 'INV007',
-      name: 'School Bus - KA 01 AB 1234',
-      category: 'transport',
-      quantity: 1,
-      minQuantity: 1,
-      condition: 'Excellent',
-      location: 'School Parking',
-      lastMaintenance: '2026-01-10',
-      nextMaintenance: '2026-04-10',
-      cost: '₹25,00,000',
-      acquiredDate: '2024-05-20',
-      status: 'In Use',
-      assignedTo: 'Route 3 - Indiranagar'
-    },
-    {
-      id: 'INV008',
-      name: 'Chemistry Lab Beakers Set',
-      category: 'lab',
-      quantity: 8,
-      minQuantity: 15,
-      condition: 'Fair',
-      location: 'Science Lab B',
-      lastMaintenance: '2025-09-15',
-      nextMaintenance: '2026-03-15',
-      cost: '₹45,000',
-      acquiredDate: '2022-11-10',
-      status: 'Critical - Low Stock',
-      assignedTo: null
-    }
-  ];
+  // Icon mapping
+  const iconMap = {
+    FlaskConical: <FlaskConical size={20} />,
+    Book: <Book size={20} />,
+    Monitor: <Monitor size={20} />,
+    Building: <Building size={20} />,
+    Award: <Award size={20} />,
+    Bus: <Bus size={20} />
+  };
 
-  // Resource Reservations
-  const reservations = [
-    {
-      id: 'RES001',
-      resource: 'Science Lab A',
-      type: 'Facility',
-      bookedBy: 'Dr. Sarah Johnson',
-      department: 'Science',
-      purpose: 'Grade 10 Chemistry Practical',
-      date: '2026-01-22',
-      timeSlot: '10:00 AM - 12:00 PM',
-      status: 'Confirmed',
-      students: 45
-    },
-    {
-      id: 'RES002',
-      resource: 'Auditorium',
-      type: 'Facility',
-      bookedBy: 'Michael Chen',
-      department: 'Arts',
-      purpose: 'Annual Day Rehearsal',
-      date: '2026-01-23',
-      timeSlot: '02:00 PM - 05:00 PM',
-      status: 'Confirmed',
-      students: 120
-    },
-    {
-      id: 'RES003',
-      resource: 'School Bus - Route 3',
-      type: 'Transport',
-      bookedBy: 'Emily Rodriguez',
-      department: 'Administration',
-      purpose: 'Field Trip - Science Museum',
-      date: '2026-01-25',
-      timeSlot: '08:00 AM - 04:00 PM',
-      status: 'Pending Approval',
-      students: 50
-    },
-    {
-      id: 'RES004',
-      resource: 'IT Lab',
-      type: 'Facility',
-      bookedBy: 'David Park',
-      department: 'Computer Science',
-      purpose: 'Coding Competition Practice',
-      date: '2026-01-21',
-      timeSlot: '03:00 PM - 05:00 PM',
-      status: 'Confirmed',
-      students: 30
-    }
-  ];
-
-  // Maintenance Log
-  const maintenanceLog = [
-    {
-      id: 'MAINT001',
-      item: 'Dell Latitude Laptops',
-      type: 'Preventive',
-      description: 'Software updates and hardware check',
-      scheduledDate: '2026-01-05',
-      completedDate: '2026-01-05',
-      technician: 'IT Support Team',
-      cost: '₹12,000',
-      status: 'Completed',
-      priority: 'Medium'
-    },
-    {
-      id: 'MAINT002',
-      item: 'School Bus - KA 01 AB 1234',
-      type: 'Preventive',
-      description: 'Quarterly service and oil change',
-      scheduledDate: '2026-01-10',
-      completedDate: '2026-01-10',
-      technician: 'Metro Motors',
-      cost: '₹8,500',
-      status: 'Completed',
-      priority: 'High'
-    },
-    {
-      id: 'MAINT003',
-      item: 'Digital Projectors',
-      type: 'Repair',
-      description: 'Bulb replacement and lens cleaning',
-      scheduledDate: '2026-01-20',
-      completedDate: null,
-      technician: 'TechFix Solutions',
-      cost: '₹15,000',
-      status: 'Scheduled',
-      priority: 'High'
-    },
-    {
-      id: 'MAINT004',
-      item: 'Chemistry Lab Equipment',
-      type: 'Preventive',
-      description: 'Calibration and safety check',
-      scheduledDate: '2026-02-05',
-      completedDate: null,
-      technician: 'LabCare Services',
-      cost: '₹25,000',
-      status: 'Scheduled',
-      priority: 'Critical'
-    },
-    {
-      id: 'MAINT005',
-      item: 'Auditorium AC System',
-      type: 'Repair',
-      description: 'Cooling issue - compressor check',
-      scheduledDate: '2026-01-18',
-      completedDate: null,
-      technician: 'CoolAir Services',
-      cost: '₹35,000',
-      status: 'Overdue',
-      priority: 'Critical'
-    }
-  ];
+  // Process categories with icons
+  const categories = rawCategories.map(cat => ({
+    ...cat,
+    icon: iconMap[cat.icon] || <Package size={20} />
+  }));
 
   // Statistics
   const stats = {
+    ...staticStats,
     totalAssets: inventoryItems.reduce((sum, item) => sum + item.quantity, 0),
-    totalValue: '₹7.58 Cr',
     lowStockItems: inventoryItems.filter(i => i.quantity <= i.minQuantity).length,
     maintenanceDue: maintenanceLog.filter(m => m.status === 'Scheduled' || m.status === 'Overdue').length,
     activeReservations: reservations.filter(r => r.status === 'Confirmed').length,
-    monthlyMaintenanceCost: '₹95,500'
   };
 
   // Alerts

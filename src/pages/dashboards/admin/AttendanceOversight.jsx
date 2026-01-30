@@ -10,66 +10,14 @@ import {
   ClipboardCheck, Phone, Mail, Award, Settings, AlertCircle
 } from 'lucide-react';
 
+import { ADMIN_DATA } from '../../../data/adminData';
+
 const AttendanceOversight = () => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Student Attendance Data
-  const studentAttendance = {
-    summary: {
-      totalStudents: 850,
-      present: 807,
-      absent: 28,
-      late: 15,
-      overallRate: '94.9%',
-      trend: '+2.1%'
-    },
-    byClass: [
-      { grade: 'Grade 1', section: 'A', total: 35, present: 33, absent: 2, late: 0, rate: 94.3, status: 'Good' },
-      { grade: 'Grade 1', section: 'B', total: 34, present: 32, absent: 2, late: 0, rate: 94.1, status: 'Good' },
-      { grade: 'Grade 2', section: 'A', total: 38, present: 36, absent: 1, late: 1, rate: 94.7, status: 'Good' },
-      { grade: 'Grade 3', section: 'A', total: 40, present: 39, absent: 1, late: 0, rate: 97.5, status: 'Excellent' },
-      { grade: 'Grade 4', section: 'A', total: 42, present: 40, absent: 2, late: 0, rate: 95.2, status: 'Good' },
-      { grade: 'Grade 5', section: 'A', total: 45, present: 43, absent: 1, late: 1, rate: 95.6, status: 'Good' },
-      { grade: 'Grade 6', section: 'A', total: 48, present: 45, absent: 3, late: 0, rate: 93.8, status: 'Good' },
-      { grade: 'Grade 7', section: 'A', total: 50, present: 47, absent: 2, late: 1, rate: 94.0, status: 'Good' },
-      { grade: 'Grade 8', section: 'A', total: 52, present: 49, absent: 2, late: 1, rate: 94.2, status: 'Good' },
-      { grade: 'Grade 8', section: 'B', total: 48, present: 40, absent: 7, late: 1, rate: 83.3, status: 'Alert' }
-    ],
-    chronicAbsentees: [
-      { id: 'STU001', name: 'Arjun Sharma', class: 'Grade 8B', consecutiveDays: 4, totalDays: 12, reason: 'Medical', contact: '+91-9876543210' },
-      { id: 'STU002', name: 'Priya Patel', class: 'Grade 6A', consecutiveDays: 5, totalDays: 15, reason: 'Family Emergency', contact: '+91-9876543211' },
-      { id: 'STU003', name: 'Rohan Mehta', class: 'Grade 5A', consecutiveDays: 3, totalDays: 8, reason: 'Unknown', contact: '+91-9876543212' }
-    ]
-  };
-
-  // Staff Attendance Data
-  const staffAttendance = {
-    summary: {
-      totalStaff: 75,
-      present: 71,
-      absent: 2,
-      onLeave: 2,
-      overallRate: '94.7%',
-      trend: '+1.2%'
-    },
-    byDepartment: [
-      { department: 'Mathematics', total: 8, present: 8, absent: 0, onLeave: 0, rate: 100, coverage: 'Complete' },
-      { department: 'Science', total: 10, present: 9, absent: 1, onLeave: 0, rate: 90, coverage: 'Partial' },
-      { department: 'Languages', total: 12, present: 12, absent: 0, onLeave: 0, rate: 100, coverage: 'Complete' },
-      { department: 'Social Studies', total: 8, present: 7, absent: 0, onLeave: 1, rate: 87.5, coverage: 'Complete' },
-      { department: 'Arts & Sports', total: 6, present: 6, absent: 0, onLeave: 0, rate: 100, coverage: 'Complete' },
-      { department: 'Administration', total: 15, present: 14, absent: 1, onLeave: 1, rate: 93.3, coverage: 'Complete' }
-    ],
-    absentStaff: [
-      { id: 'EMP001', name: 'Dr. Sarah Johnson', department: 'Science', subject: 'Physics', reason: 'Sick Leave', substitute: 'Mr. David Park', status: 'Covered' },
-      { id: 'EMP002', name: 'Michael Chen', department: 'Administration', subject: 'Office', reason: 'Personal Leave', substitute: 'N/A', status: 'Not Required' }
-    ],
-    timetableImpact: [
-      { class: 'Grade 10A', period: 'Period 2', subject: 'Physics', teacher: 'Dr. Sarah Johnson', substitute: 'Mr. David Park', status: 'Covered' },
-      { class: 'Grade 9B', period: 'Period 4', subject: 'Physics Lab', teacher: 'Dr. Sarah Johnson', substitute: 'Mr. David Park', status: 'Covered' }
-    ]
-  };
+  const { attendanceOversight } = ADMIN_DATA;
+  const { studentAttendance, staffAttendance } = attendanceOversight;
 
   const getRateColor = (rate) => {
     if (rate >= 95) return { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', icon: 'text-green-500' };

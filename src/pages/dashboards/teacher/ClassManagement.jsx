@@ -27,18 +27,16 @@ const ClassManagement = () => {
     return match ? match[1] : null;
   }).filter(Boolean))];
 
-  // Mock substitution alerts
-  const substitutionAlerts = [
-    {
-      id: 'SUB1',
-      grade: 'Grade 8-B',
-      subject: 'Mathematics',
-      period: 'Period 4',
-      time: '11:30 AM',
-      reason: 'Teacher on Leave',
-      urgent: true
-    }
-  ];
+  // Mock substitution alerts from TEACHER_DATA
+  const substitutionAlerts = TEACHER_DATA.substitutionAlerts.map(alert => ({
+    id: alert.id,
+    grade: alert.class,
+    subject: alert.subject,
+    period: alert.period,
+    time: '11:30 AM', // Default time as it's not in the data
+    reason: alert.teacher,
+    urgent: alert.status === 'Pending'
+  }));
 
   // Filter logic
   useEffect(() => {

@@ -17,77 +17,14 @@ const AcademicCalendar = () => {
   const [showSyllabusOverlay, setShowSyllabusOverlay] = useState(false);
 
   // Sample calendar events
-  const [events] = useState([
-    {
-      id: 'E1',
-      title: 'Mid-term Examinations',
-      type: 'exam',
-      date: '2026-01-22',
-      endDate: '2026-01-24',
-      time: '09:00 AM',
-      duration: '3 days',
-      location: 'Main Hall',
-      source: 'school',
-      color: 'red',
-      description: 'Mid-term examinations for Grade 9 and 10'
-    },
-    {
-      id: 'E2',
-      title: 'Parent-Teacher Meeting',
-      type: 'meeting',
-      date: '2026-01-20',
-      time: '02:00 PM',
-      duration: '2 hours',
-      location: 'Conference Room A',
-      source: 'personal',
-      color: 'purple',
-      description: 'Quarterly parent-teacher meeting for Grade 9-A'
-    },
-    {
-      id: 'E3',
-      title: 'Science Club Session',
-      type: 'club',
-      date: '2026-01-21',
-      time: '03:30 PM',
-      duration: '1 hour',
-      location: 'Physics Lab',
-      source: 'personal',
-      color: 'blue',
-      description: 'Weekly science club activity - Robotics workshop'
-    },
-    {
-      id: 'E4',
-      title: 'Republic Day Holiday',
-      type: 'holiday',
-      date: '2026-01-26',
-      source: 'school',
-      color: 'green',
-      description: 'National Holiday - School Closed'
-    },
-    {
-      id: 'E5',
-      title: 'Assignment Deadline',
-      type: 'assignment',
-      date: '2026-01-23',
-      time: '11:59 PM',
-      location: 'Online Submission',
-      source: 'school',
-      color: 'orange',
-      description: 'Physics Lab Report submission deadline'
-    },
-    {
-      id: 'E6',
-      title: 'Curriculum Review Meeting',
-      type: 'meeting',
-      date: '2026-01-25',
-      time: '10:00 AM',
-      duration: '1.5 hours',
-      location: 'Principal Office',
-      source: 'school',
-      color: 'purple',
-      description: 'Quarterly curriculum review with department head'
-    },
-  ]);
+  // Transform events from TEACHER_DATA to match component format
+  const [events] = useState(TEACHER_DATA.events.map(event => ({
+    ...event,
+    date: event.start.toISOString().split('T')[0],
+    time: event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    source: event.type === 'personal' ? 'personal' : 'school',
+    color: event.type === 'exam' ? 'red' : event.type === 'holiday' ? 'green' : 'blue'
+  })));
 
   // Syllabus progress data
   const [syllabusProgress] = useState([

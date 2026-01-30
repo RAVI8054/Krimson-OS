@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { TEACHER_DATA } from '../../../data/teacherData';
 import { 
   Plus, Clock, Calendar, CheckCircle, Edit, Eye, Trash2,
   Upload, Download, Send, Award, AlertCircle, Filter,
@@ -7,94 +8,11 @@ import {
 } from 'lucide-react';
 
 const TestManager = () => {
-  // Sample test data
-  const [tests] = useState([
-    {
-      id: 'T1',
-      title: 'Mid-term Examination - Physics',
-      type: 'exam',
-      class: 'Grade 9-A',
-      date: '2026-01-22',
-      time: '09:00 AM',
-      duration: 120,
-      totalMarks: 100,
-      status: 'scheduled',
-      questionsTotal: 50,
-      questionsObjective: 40,
-      questionsSubjective: 10,
-      students: 32,
-      submitted: 0,
-      autoGraded: 0,
-      manualGraded: 0
-    },
-    {
-      id: 'T2',
-      title: 'Unit Test 3 - Newton\'s Laws',
-      type: 'test',
-      class: 'Grade 10-B',
-      date: '2026-01-20',
-      time: '10:30 AM',
-      duration: 45,
-      totalMarks: 50,
-      status: 'live',
-      questionsTotal: 25,
-      questionsObjective: 20,
-      questionsSubjective: 5,
-      students: 28,
-      submitted: 12,
-      autoGraded: 12,
-      manualGraded: 0
-    },
-    {
-      id: 'T3',
-      title: 'Pop Quiz - Thermodynamics',
-      type: 'quiz',
-      class: 'Grade 9-A',
-      date: '2026-01-18',
-      time: '11:00 AM',
-      duration: 15,
-      totalMarks: 20,
-      status: 'completed',
-      questionsTotal: 10,
-      questionsObjective: 10,
-      questionsSubjective: 0,
-      students: 32,
-      submitted: 30,
-      autoGraded: 30,
-      manualGraded: 0
-    },
-    {
-      id: 'T4',
-      title: 'Quarterly Assessment - Physics',
-      type: 'exam',
-      class: 'Grade 9-A',
-      date: '2026-01-16',
-      time: '09:00 AM',
-      duration: 180,
-      totalMarks: 150,
-      status: 'grading',
-      questionsTotal: 60,
-      questionsObjective: 45,
-      questionsSubjective: 15,
-      students: 32,
-      submitted: 32,
-      autoGraded: 32,
-      manualGraded: 8
-    },
-  ]);
+  // Tests data mapped from TEACHER_DATA
+  const [tests] = useState(TEACHER_DATA.tests);
 
-  // Question bank
-  const [questionBank] = useState({
-    total: 250,
-    objective: 180,
-    subjective: 70,
-    byTopic: {
-      mechanics: 85,
-      thermodynamics: 60,
-      optics: 45,
-      electricity: 60
-    }
-  });
+  // Question bank data mapped from TEACHER_DATA
+  const [questionBank] = useState(TEACHER_DATA.questionBank);
 
   const [selectedTest, setSelectedTest] = useState(null);
   const [filterType, setFilterType] = useState('all'); // 'all', 'exam', 'test', 'quiz'
