@@ -459,10 +459,10 @@ const AssignmentManager = () => {
 
       {/* Detailed View Modal (when assignment selected) */}
       {selectedAssignment && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl p-6 md:p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-            {/* Modal Header */}
-            <div className="flex items-start justify-between mb-6 pb-6 border-b border-slate-200">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] shadow-2xl flex flex-col">
+            {/* Modal Header - Fixed, No Scroll */}
+            <div className="flex items-start justify-between gap-4 p-6 md:p-8 pb-6 border-b border-slate-200 flex-shrink-0">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-3">
                   <span className={`px-3 py-1.5 bg-gradient-to-r ${getStatusColor(selectedAssignment.status)} text-white rounded-xl font-bold text-sm`}>
@@ -492,14 +492,15 @@ const AssignmentManager = () => {
               </div>
               <button
                 onClick={() => setSelectedAssignment(null)}
-                className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+                className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors flex-shrink-0"
               >
                 <X size={24} />
               </button>
             </div>
 
-            {/* Modal Content */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Modal Content - Scrollable */}
+            <div className="overflow-y-auto p-6 md:p-8 pt-6" style={{ scrollbarWidth: 'thin', scrollbarColor: '#cbd5e1 #f1f5f9' }}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Left Column */}
               <div className="space-y-6">
                 {/* Submission Stats */}
@@ -676,6 +677,7 @@ const AssignmentManager = () => {
                   </div>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </div>
