@@ -4,7 +4,7 @@ import {
   Calendar, Plus, Paperclip, CheckCircle, Clock, BookOpen,
   Target, Package, Link2, Sparkles, ChevronRight, ChevronDown,
   FileText, Upload, Edit, Trash2, Eye, Award, Lightbulb,
-  PlayCircle, Download, Share2, Copy
+  PlayCircle, Download, Share2, Copy, X
 } from 'lucide-react';
 
 const LessonPlanning = () => {
@@ -236,17 +236,24 @@ const LessonPlanning = () => {
                     )}
 
                     {/* Expand indicator */}
-                    <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-center">
-                      <button className="text-xs font-bold text-blue-600 flex items-center gap-1 hover:text-blue-700">
+                    <div className="mt-3 pt-3 border-t border-slate-100">
+                      <button 
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLesson(lesson.id);
+                        }}
+                        className="w-full py-2 bg-blue-50 text-blue-600 rounded-xl text-xs font-bold hover:bg-blue-100 transition-colors flex items-center justify-center gap-2"
+                      >
                         {expandedLesson === lesson.id ? (
                           <>
                             <ChevronDown size={14} />
-                            Less
+                            Hide Details
                           </>
                         ) : (
                           <>
-                            <ChevronRight size={14} />
-                            Details
+                            <Eye size={14} />
+                            View Details
                           </>
                         )}
                       </button>
@@ -359,7 +366,8 @@ const LessonPlanning = () => {
 
       {/* Expanded Lesson Details Modal/Panel */}
       {expandedLesson && (
-        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-xl border-2 border-blue-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 md:p-8 shadow-2xl border-2 border-blue-200 w-full max-w-6xl max-h-[90vh] overflow-y-auto relative">
           {Object.values(lessons).flat().filter(l => l.id === expandedLesson).map((lesson) => (
             <div key={lesson.id} className="space-y-6">
               {/* Header */}
@@ -400,9 +408,12 @@ const LessonPlanning = () => {
                   </button>
                   <button
                     onClick={() => setExpandedLesson(null)}
-                    className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold hover:bg-slate-200 transition-all"
+                    className="group px-6 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold shadow-sm hover:shadow-md hover:border-red-100 hover:bg-red-50/50 transition-all duration-300 flex items-center gap-2.5 active:scale-95"
                   >
-                    Close
+                    <div className="p-1 bg-red-100/50 rounded-full group-hover:bg-red-100 transition-colors">
+                      <X size={14} className="text-red-500 transition-transform group-hover:rotate-90 duration-300" />
+                    </div>
+                    <span>Close</span>
                   </button>
                 </div>
               </div>
@@ -543,6 +554,7 @@ const LessonPlanning = () => {
             </div>
           ))}
         </div>
+      </div>
       )}
     </div>
   );
