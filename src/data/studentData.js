@@ -594,13 +594,44 @@ export const STUDENT_DATA = {
 
   // Screen 7: Grades
   grades: [
-    { subject: "Mathematics", term1: 85, term2: 92, trend: "up" },
-    { subject: "English", term1: 78, term2: 80, trend: "up" },
-    { subject: "Science", term1: 88, term2: 85, trend: "down" },
+    {
+      subject: "Mathematics",
+      term1: 85,
+      term2: 92,
+      trend: "up",
+      teacher: "Ms. Kumar",
+    },
+    {
+      subject: "English",
+      term1: 78,
+      term2: 80,
+      trend: "up",
+      teacher: "Mr. Davis",
+    },
+    {
+      subject: "Science",
+      term1: 88,
+      term2: 85,
+      trend: "down",
+      teacher: "Mr. Sharma",
+    },
   ],
+  gradesTeacherInsights: {
+    remarks:
+      "**Excellent progress this term!** Continue focusing on consistent study habits and active participation in class.",
+    teacherInitials: "MS",
+    teacherName: "Mr. Sharma",
+    teacherRole: "Class Teacher",
+    strengths: [
+      "Problem Solving",
+      "Analytical Thinking",
+      "Class Participation",
+    ],
+    improvements: ["Time Management", "Written Expression"],
+  },
 
   // Screen 8: Communication
-  messages: [
+  communicationMessages: [
     {
       id: 1,
       from: "Mrs. Davis (English)",
@@ -615,6 +646,12 @@ export const STUDENT_DATA = {
       time: "Yesterday",
       unread: false,
     },
+  ],
+  communicationCategories: [
+    { id: "all", label: "All Messages", icon: "MessageCircle", color: "cyan" },
+    { id: "school", label: "From School", icon: "Building2", color: "blue" },
+    { id: "teacher", label: "From Teacher", icon: "BookOpen", color: "purple" },
+    { id: "private", label: "Private Messages", icon: "User", color: "pink" },
   ],
 
   // Screen 9: Analytics
@@ -2454,53 +2491,6 @@ export const STUDENT_DATA = {
     },
   ],
 
-  libraryData: {
-    issuedBooks: [
-      {
-        id: 1,
-        title: "Advanced Physics Concepts",
-        author: "H.C. Verma",
-        issueDate: "2026-01-15",
-        dueDate: "2026-01-29",
-        cover: "https://covers.openlibrary.org/b/id/8259443-M.jpg",
-        status: "Overdue",
-        fine: 15,
-      },
-      {
-        id: 2,
-        title: "To Kill a Mockingbird",
-        author: "Harper Lee",
-        issueDate: "2026-01-20",
-        dueDate: "2026-02-03",
-        cover: "https://covers.openlibrary.org/b/id/12632205-M.jpg",
-        status: "Active",
-        fine: 0,
-      },
-    ],
-    borrowingHistory: [
-      {
-        id: 101,
-        title: "A Brief History of Time",
-        author: "Stephen Hawking",
-        returnedDate: "2025-12-15",
-        status: "Returned",
-      },
-      {
-        id: 102,
-        title: "The Great Gatsby",
-        author: "F. Scott Fitzgerald",
-        returnedDate: "2025-11-20",
-        status: "Returned",
-      },
-    ],
-    stats: {
-      booksRead: 12,
-      currentLoans: 2,
-      fineDue: 15,
-      totalVisits: 45,
-    },
-  },
-
   profileActivityLog: [
     { id: 1, action: "Login", time: "Today, 09:00 AM", ip: "192.168.1.10" },
     {
@@ -2710,5 +2700,13 @@ export const STUDENT_DATA = {
     message:
       "Your Chemistry score (78%) is slightly below your average. Consistent revision of organic compounds is recommended this week.",
     color: "orange",
+  },
+
+  examPerformance: {
+    average: 78,
+    strongest: { subject: "Mathematics", score: 95 },
+    weakest: { subject: "History", score: 65 },
+    term1Avg: 75,
+    term2Avg: 80,
   },
 };

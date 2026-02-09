@@ -1,0 +1,120 @@
+[36mvite v7.3.0 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 1920 modules transformed.
+[31m✗[39m Build failed in 2.81s
+[31merror during build:
+[31m[vite:esbuild] Transform failed with 12 errors:
+R:/Kods Work/Krimson-SSO/Krimson-SSO/src/data/principalData.jsx:893:2: ERROR: The symbol "TrendingUp" has already been declared
+R:/Kods Work/Krimson-SSO/Krimson-SSO/src/data/principalData.jsx:896:2: ERROR: The symbol "Users" has already been declared
+R:/Kods Work/Krimson-SSO/Krimson-SSO/src/data/principalData.jsx:897:2: ERROR: The symbol "AlertCircle" has already been declared
+R:/Kods Work/Krimson-SSO/Krimson-SSO/src/data/principalData.jsx:1154:2: ERROR: The symbol "TrendingUp" has already been declared
+R:/Kods Work/Krimson-SSO/Krimson-SSO/src/data/principalData.jsx:1156:2: ERROR: The symbol "Users" has already been declared
+...[31m
+file: [36mR:/Kods Work/Krimson-SSO/Krimson-SSO/src/data/principalData.jsx:893:2[31m
+[33m
+[33mThe symbol "TrendingUp" has already been declared[33m
+891 |  
+892 |  import {
+893 |    TrendingUp,
+    |    ^
+894 |    DollarSign,
+895 |    UserCheck,
+
+[33mThe symbol "Users" has already been declared[33m
+894 |    DollarSign,
+895 |    UserCheck,
+896 |    Users,
+    |    ^
+897 |    AlertCircle,
+898 |  } from "lucide-react";
+
+[33mThe symbol "AlertCircle" has already been declared[33m
+895 |    UserCheck,
+896 |    Users,
+897 |    AlertCircle,
+    |    ^
+898 |  } from "lucide-react";
+899 |  
+
+[33mThe symbol "TrendingUp" has already been declared[33m
+1152 |  import {
+1153 |    Target,
+1154 |    TrendingUp,
+     |    ^
+1155 |    Zap,
+1156 |    Users,
+
+[33mThe symbol "Users" has already been declared[33m
+1154 |    TrendingUp,
+1155 |    Zap,
+1156 |    Users,
+     |    ^
+1157 |    BookOpen,
+1158 |    Calendar,
+
+[33mThe symbol "DollarSign" has already been declared[33m
+1157 |    BookOpen,
+1158 |    Calendar,
+1159 |    DollarSign,
+     |    ^
+1160 |    CheckCircle,
+1161 |    Sparkles,
+
+[33mThe symbol "CheckCircle" has already been declared[33m
+1158 |    Calendar,
+1159 |    DollarSign,
+1160 |    CheckCircle,
+     |    ^
+1161 |    Sparkles,
+1162 |  } from "lucide-react";
+
+[33mThe symbol "TrendingUp" has already been declared[33m
+1254 |  };
+1255 |  
+1256 |  import { TrendingUp, Award, AlertCircle, BookOpen } from "lucide-react";
+     |           ^
+1257 |  
+1258 |  export const studentTrendsData = {
+
+[33mThe symbol "Award" has already been declared[33m
+1254 |  };
+1255 |  
+1256 |  import { TrendingUp, Award, AlertCircle, BookOpen } from "lucide-react";
+     |                       ^
+1257 |  
+1258 |  export const studentTrendsData = {
+
+[33mThe symbol "AlertCircle" has already been declared[33m
+1254 |  };
+1255 |  
+1256 |  import { TrendingUp, Award, AlertCircle, BookOpen } from "lucide-react";
+     |                              ^
+1257 |  
+1258 |  export const studentTrendsData = {
+
+[33mThe symbol "BookOpen" has already been declared[33m
+1254 |  };
+1255 |  
+1256 |  import { TrendingUp, Award, AlertCircle, BookOpen } from "lucide-react";
+     |                                           ^
+1257 |  
+1258 |  export const studentTrendsData = {
+
+[33mExpected "(" but found "{"[33m
+1327 |      { factor: "Attendance < 85%", count: 12, riskLevel: "High" },
+1328 |      { factor: "Failed > 1 Subject", count: 8, riskLevel: "Critical" },
+1329 |  import {
+     |         ^
+1330 |    TrendingUp,
+1331 |    Award,
+[31m
+    at failureErrorWithLog (R:\Kods Work\Krimson-SSO\Krimson-SSO\node_modules\esbuild\lib\main.js:1467:15)
+    at R:\Kods Work\Krimson-SSO\Krimson-SSO\node_modules\esbuild\lib\main.js:736:50
+    at responseCallbacks.<computed> (R:\Kods Work\Krimson-SSO\Krimson-SSO\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (R:\Kods Work\Krimson-SSO\Krimson-SSO\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (R:\Kods Work\Krimson-SSO\Krimson-SSO\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)[39m
